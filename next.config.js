@@ -1,9 +1,13 @@
+require('dotenv').config();
 const withOffline = require('next-offline');
 
 const nextConfig = {
 	target: 'serverless',
+	env: {
+		API_URL: process.env.API_URL,
+	},
 	transformManifest: manifest => ['/'].concat(manifest),
-	generateInDevMode: true,
+	generateInDevMode: false,
 	workboxOpts: {
 		swDest: 'static/service-worker.js',
 		runtimeCaching: [
