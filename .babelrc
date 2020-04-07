@@ -1,4 +1,12 @@
 {
-	"presets": ["next/babel"],
-	"plugins": [["styled-components", { "ssr": true }]]
+	"env": {
+		"production": {
+			"presets": ["next/babel", "@babel/preset-typescript"],
+			"plugins": ["emotion"]
+		},
+		"development": {
+			"presets": ["next/babel", "@babel/preset-typescript"],
+			"plugins": [["emotion", { "sourceMap": true }]]
+		}
+	}
 }
