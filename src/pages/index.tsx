@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 const Home = () => {
-	return <div>Home</div>;
+	return <div>`import * from 'bartwaardenburg'`</div>;
 };
 
 export default Home;
