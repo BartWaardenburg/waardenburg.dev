@@ -3,16 +3,48 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
+// Custom hook to detect reduced motion preference
+function usePrefersReducedMotion() {
+	const [prefersReducedMotion, setPrefersReducedMotion] = useState(true); // Default to reduced for SSR
+
+	useEffect(() => {
+		const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+		setPrefersReducedMotion(mediaQuery.matches);
+
+		const handler = (event: MediaQueryListEvent) => {
+			setPrefersReducedMotion(event.matches);
+		};
+
+		mediaQuery.addEventListener('change', handler);
+		return () => mediaQuery.removeEventListener('change', handler);
+	}, []);
+
+	return prefersReducedMotion;
+}
+
 function AnimatedImage({ caption, index }: { caption: string; index: number }) {
 	const ref = useRef<HTMLElement>(null);
+	const prefersReducedMotion = usePrefersReducedMotion();
 	const { scrollYProgress } = useScroll({
 		target: ref,
 		offset: ['start end', 'end start'],
 	});
 
-	const y = useTransform(scrollYProgress, [0, 1], [30 + index * 10, -30 - index * 10]);
-	const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.95, 1, 1, 0.98]);
-	const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [2, 0, -2]);
+	const y = useTransform(
+		scrollYProgress,
+		[0, 1],
+		prefersReducedMotion ? [0, 0] : [30 + index * 10, -30 - index * 10]
+	);
+	const scale = useTransform(
+		scrollYProgress,
+		[0, 0.3, 0.7, 1],
+		prefersReducedMotion ? [1, 1, 1, 1] : [0.95, 1, 1, 0.98]
+	);
+	const rotateX = useTransform(
+		scrollYProgress,
+		[0, 0.5, 1],
+		prefersReducedMotion ? [0, 0, 0] : [2, 0, -2]
+	);
 
 	return (
 		<figure ref={ref} className="perspective-1000">
@@ -24,6 +56,7 @@ function AnimatedImage({ caption, index }: { caption: string; index: number }) {
 					rotateX,
 					transformStyle: 'preserve-3d',
 				}}
+				aria-hidden="true"
 			/>
 			<figcaption className="mt-4 text-sm text-neutral-500">{caption}</figcaption>
 		</figure>
@@ -75,16 +108,23 @@ function TalkCard({ talk }: { talk: (typeof talks)[number] }) {
 	const articleRef = useRef<HTMLElement>(null);
 	const progressRef = useRef<HTMLDivElement>(null);
 	const imagesRef = useRef<HTMLDivElement>(null);
+	const [isMounted, setIsMounted] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
 
+	// Prevent hydration mismatch by only rendering after mount
 	useEffect(() => {
+		setIsMounted(true);
+	}, []);
+
+	useEffect(() => {
+		if (!isMounted) return;
 		const checkMobile = () => {
 			setIsMobile(window.innerWidth < 768);
 		};
 		checkMobile();
 		window.addEventListener('resize', checkMobile);
 		return () => window.removeEventListener('resize', checkMobile);
-	}, []);
+	}, [isMounted]);
 
 	useEffect(() => {
 		const handleScroll = () => {
