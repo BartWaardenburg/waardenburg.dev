@@ -22,13 +22,7 @@ function usePrefersReducedMotion() {
 	return prefersReducedMotion;
 }
 
-function AnimatedImage({
-	caption,
-	index,
-}: {
-	caption: string;
-	index: number;
-}) {
+function AnimatedImage({ caption, index }: { caption: string; index: number }) {
 	const ref = useRef<HTMLElement>(null);
 	const prefersReducedMotion = usePrefersReducedMotion();
 	const { scrollYProgress } = useScroll({
@@ -40,19 +34,19 @@ function AnimatedImage({
 	const y = useTransform(
 		scrollYProgress,
 		[0, 1],
-		prefersReducedMotion ? [0, 0] : [30 + index * 10, -30 - index * 10]
+		prefersReducedMotion ? [0, 0] : [30 + index * 10, -30 - index * 10],
 	);
 	// Subtle scale - starts slightly smaller, scales to normal
 	const scale = useTransform(
 		scrollYProgress,
 		[0, 0.3, 0.7, 1],
-		prefersReducedMotion ? [1, 1, 1, 1] : [0.95, 1, 1, 0.98]
+		prefersReducedMotion ? [1, 1, 1, 1] : [0.95, 1, 1, 0.98],
 	);
 	// Subtle rotation for depth
 	const rotateX = useTransform(
 		scrollYProgress,
 		[0, 0.5, 1],
-		prefersReducedMotion ? [0, 0, 0] : [2, 0, -2]
+		prefersReducedMotion ? [0, 0, 0] : [2, 0, -2],
 	);
 
 	return (
@@ -67,7 +61,9 @@ function AnimatedImage({
 				}}
 				aria-hidden="true"
 			/>
-			<figcaption className="mt-4 text-sm text-neutral-500">{caption}</figcaption>
+			<figcaption className="mt-4 text-sm text-neutral-500">
+				{caption}
+			</figcaption>
 		</figure>
 	);
 }
@@ -91,7 +87,8 @@ const projects = [
 			'Building critical digital infrastructure for the Dutch government.',
 			'Working through ICTU on systems for IND (Immigration & Naturalisation Service) and RViG (National Office for Identity Data).',
 		],
-		quote: "Not public, but the kind of work where reliability and security aren't optional.",
+		quote:
+			"Not public, but the kind of work where reliability and security aren't optional.",
 	},
 	{
 		year: '2025',
@@ -120,7 +117,8 @@ const projects = [
 			"Platform for the City of Rotterdam's employment initiative.",
 			'Helping 2,500+ people with support needs find meaningful work.',
 		],
-		quote: 'Technology that creates real opportunities for people who need them most.',
+		quote:
+			'Technology that creates real opportunities for people who need them most.',
 	},
 	{
 		year: '2021',
@@ -129,7 +127,8 @@ const projects = [
 			'Senior Full Stack Developer building complex search and discovery interfaces.',
 			'React, Next.js, Apollo GraphQL. Working on the design system used across all products.',
 		],
-		quote: 'Complex information architecture for professionals who need precision.',
+		quote:
+			'Complex information architecture for professionals who need precision.',
 		link: { url: 'sdu.nl', label: 'sdu.nl' },
 	},
 	{
@@ -266,7 +265,9 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 										{i < IMAGE_COUNT - 1 && (
 											<div
 												className="absolute h-full w-2 bg-neutral-50"
-												style={{ left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)` }}
+												style={{
+													left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)`,
+												}}
 											/>
 										)}
 									</div>
@@ -277,7 +278,9 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 						<span className="mb-3 inline-block rounded bg-neutral-900 px-2 py-0.5 text-xs font-medium text-neutral-50">
 							{project.year}
 						</span>
-						<h3 className="mb-3 text-xl font-medium leading-tight">{project.title}</h3>
+						<h3 className="mb-3 text-xl font-medium leading-tight">
+							{project.title}
+						</h3>
 						<p className="mb-4 text-sm leading-relaxed text-neutral-600">
 							{project.description[0]}
 						</p>
@@ -355,7 +358,9 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 								{i < IMAGE_COUNT - 1 && (
 									<div
 										className="absolute h-full w-2 bg-white"
-										style={{ left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)` }}
+										style={{
+											left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)`,
+										}}
 									/>
 								)}
 							</div>
@@ -366,7 +371,9 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 				<span className="mb-4 inline-block rounded bg-neutral-900 px-3 py-1 text-sm font-medium text-neutral-50">
 					{project.year}
 				</span>
-				<h3 className="mb-6 text-2xl font-medium md:text-3xl">{project.title}</h3>
+				<h3 className="mb-6 text-2xl font-medium md:text-3xl">
+					{project.title}
+				</h3>
 				<div className="mb-8 space-y-4 text-base leading-relaxed text-neutral-600 md:text-lg">
 					{project.description.map((paragraph, i) => (
 						<p key={i}>{paragraph}</p>
@@ -389,7 +396,10 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 
 			{/* Right: Images - 2/3 width */}
 			<div className="space-y-24 md:col-span-2">
-				<AnimatedImage caption="Project overview and main interface" index={0} />
+				<AnimatedImage
+					caption="Project overview and main interface"
+					index={0}
+				/>
 				<AnimatedImage caption="Key feature detail" index={1} />
 				<AnimatedImage caption="Mobile responsive view" index={2} />
 			</div>

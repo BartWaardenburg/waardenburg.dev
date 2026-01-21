@@ -41,7 +41,9 @@ export function About() {
 				<div className="space-y-16">
 					{services.map((service) => (
 						<div key={service.title} className="max-w-3xl">
-							<h3 className="mb-6 text-2xl font-medium md:text-3xl">{service.title}</h3>
+							<h3 className="mb-6 text-2xl font-medium md:text-3xl">
+								{service.title}
+							</h3>
 							<div className="mb-8 space-y-4 text-lg leading-relaxed text-neutral-600 md:text-xl">
 								{service.description.map((paragraph, i) => (
 									<p key={i}>{paragraph}</p>

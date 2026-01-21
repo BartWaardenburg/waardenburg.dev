@@ -14,7 +14,9 @@ export default function Home() {
 		<>
 			<Head>
 				{/* Primary Meta Tags */}
-				<title>Bart Waardenburg — Full-stack Developer & Front-end Expert</title>
+				<title>
+					Bart Waardenburg — Full-stack Developer & Front-end Expert
+				</title>
 				<meta
 					name="description"
 					content="Full-stack developer and front-end expert based in The Hague, Netherlands. Tech lead, design systems architect, and consultant. Building products that matter."
@@ -30,7 +32,11 @@ export default function Home() {
 
 				{/* Font Preconnect */}
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
-				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+				<link
+					rel="preconnect"
+					href="https://fonts.gstatic.com"
+					crossOrigin="anonymous"
+				/>
 
 				{/* Favicon */}
 				<link rel="icon" href="/favicon.ico" sizes="any" />
@@ -42,27 +48,42 @@ export default function Home() {
 				{/* Open Graph / Facebook */}
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://waardenburg.dev" />
-				<meta property="og:title" content="Bart Waardenburg — Full-stack Developer & Front-end Expert" />
+				<meta
+					property="og:title"
+					content="Bart Waardenburg — Full-stack Developer & Front-end Expert"
+				/>
 				<meta
 					property="og:description"
 					content="Full-stack developer and front-end expert based in The Hague, Netherlands. Tech lead, design systems architect, and consultant. Building products that matter."
 				/>
-				<meta property="og:image" content="https://waardenburg.dev/og-image.png" />
+				<meta
+					property="og:image"
+					content="https://waardenburg.dev/og-image.png"
+				/>
 				<meta property="og:image:width" content="1200" />
 				<meta property="og:image:height" content="630" />
-				<meta property="og:image:alt" content="Bart Waardenburg - Full-stack Developer & Front-end Expert" />
+				<meta
+					property="og:image:alt"
+					content="Bart Waardenburg - Full-stack Developer & Front-end Expert"
+				/>
 				<meta property="og:locale" content="en_US" />
 				<meta property="og:site_name" content="Bart Waardenburg" />
 
 				{/* Twitter */}
 				<meta name="twitter:card" content="summary_large_image" />
 				<meta name="twitter:url" content="https://waardenburg.dev" />
-				<meta name="twitter:title" content="Bart Waardenburg — Full-stack Developer & Front-end Expert" />
+				<meta
+					name="twitter:title"
+					content="Bart Waardenburg — Full-stack Developer & Front-end Expert"
+				/>
 				<meta
 					name="twitter:description"
 					content="Full-stack developer and front-end expert based in The Hague, Netherlands. Building products that matter."
 				/>
-				<meta name="twitter:image" content="https://waardenburg.dev/og-image.png" />
+				<meta
+					name="twitter:image"
+					content="https://waardenburg.dev/og-image.png"
+				/>
 			</Head>
 
 			<Header />

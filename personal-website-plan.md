@@ -32,12 +32,14 @@ Bart is also a public speaker, sharing his expertise at meetups like React Amste
 ## Technical Skills
 
 ### Primary Stack
+
 - TypeScript / JavaScript (ES6+)
 - React 19 / Preact / Next.js 16
 - Tailwind CSS 4
 - Vercel / Cloudflare
 
 ### Additional Expertise
+
 - Design Systems & Component Libraries
 - Modern Tooling (Turbopack, Oxlint, pnpm)
 - Edge Computing & Serverless
@@ -47,13 +49,13 @@ Bart is also a public speaker, sharing his expertise at meetups like React Amste
 
 ## Notable Projects & Open Source
 
-| Project | Description | Stars |
-|---------|-------------|-------|
-| recraft-mcp-server | MCP Server for recraft.ai using Model Context Protocol | 8 |
-| redux-queryparam-middleware | Redux middleware for URL query parameters | 6 |
-| angular-es6-webpack | SPA styleguide with Angular.js and ES6 | 5 |
-| redux-simple-storage-middleware | Redux middleware for session/local storage | 4 |
-| apigee-utils | Utility functions for Apigee Edge API platform | 3 |
+| Project                         | Description                                            | Stars |
+| ------------------------------- | ------------------------------------------------------ | ----- |
+| recraft-mcp-server              | MCP Server for recraft.ai using Model Context Protocol | 8     |
+| redux-queryparam-middleware     | Redux middleware for URL query parameters              | 6     |
+| angular-es6-webpack             | SPA styleguide with Angular.js and ES6                 | 5     |
+| redux-simple-storage-middleware | Redux middleware for session/local storage             | 4     |
+| apigee-utils                    | Utility functions for Apigee Edge API platform         | 3     |
 
 ---
 
@@ -82,37 +84,44 @@ The website should reflect Bart's professional identity: **clean, modern, techni
 ### Recommended Sections
 
 #### 1. Hero Section
+
 - Full-viewport landing with name, title, and tagline
 - Subtle animation or gradient background
 - Clear CTA buttons: "View Work" / "Get in Touch"
 - Professional photo (optional)
 
 #### 2. About Section
+
 - Concise bio focusing on expertise and approach
 - Key stats: years of experience, projects delivered, technologies
 - Personal touch: what drives him, interests outside work
 
 #### 3. Skills & Technologies
+
 - Visual representation of tech stack (icons/badges)
 - Grouped by category: Frontend, State Management, Cloud, Tools
 - Skill level indicators (optional)
 
 #### 4. Selected Work / Projects
+
 - Grid or card layout showcasing 4-6 key projects
 - Each card: thumbnail, title, brief description, tech used
 - Links to live sites or case studies where available
 
 #### 5. Open Source
+
 - Featured GitHub repositories
 - Star counts and descriptions
 - Direct links to repos
 
 #### 6. Speaking & Writing
+
 - List of talks with event names
 - Links to slides (Notist) or video recordings
 - Blog posts or articles (if any)
 
 #### 7. Contact Section
+
 - Contact form or direct email link
 - Social links: GitHub, LinkedIn, X/Twitter
 - Location mention (The Netherlands)
@@ -121,6 +130,7 @@ The website should reflect Bart's professional identity: **clean, modern, techni
 ### Design Specifications
 
 #### Color Palette (Suggested)
+
 ```
 Primary:     #2563eb (Blue)
 Secondary:   #1e293b (Dark slate)
@@ -130,17 +140,20 @@ Text:        #1e293b (Light mode) / #f1f5f9 (Dark mode)
 ```
 
 #### Typography
+
 - Headings: Inter or Plus Jakarta Sans (modern, clean)
 - Body: Inter or System fonts for performance
 - Code: JetBrains Mono or Fira Code
 
 #### Layout Principles
+
 - Maximum content width: 1200px
 - Generous whitespace
 - Responsive: mobile-first approach
 - Dark/light mode toggle
 
 #### Animations
+
 - Subtle scroll-triggered reveals
 - Smooth hover transitions
 - No excessive motion (respect prefers-reduced-motion)
@@ -263,6 +276,7 @@ Project is already initialized with Next.js 16, React 19, Tailwind CSS 4, and Ve
 7. **Test across devices and browsers**
 
 **Dev commands:**
+
 ```bash
 pnpm dev          # Start dev server with Turbopack
 pnpm build        # Production build
@@ -273,4 +287,4 @@ pnpm format       # Prettier
 
 ---
 
-*Plan created: January 2026*
+_Plan created: January 2026_
