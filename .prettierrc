@@ -2,6 +2,5 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"trailingComma": "all",
-	"proseWrap": "preserve",
-	"plugins": ["prettier-plugin-tailwindcss"]
+	"proseWrap": "preserve"
 }

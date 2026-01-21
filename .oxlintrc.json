@@ -1,0 +1,10 @@
+{
+	"plugins": ["react", "typescript"],
+	"rules": {
+		"no-unused-vars": "off",
+		"react/jsx-key": "warn",
+		"react/jsx-no-undef": "warn",
+		"typescript/no-duplicate-enum-values": "warn"
+	},
+	"ignorePatterns": ["node_modules/**", ".next/**", "public/**"]
+}
