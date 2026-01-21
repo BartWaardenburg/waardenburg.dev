@@ -8,8 +8,8 @@ const homePageContent: HomePageContentProps = {
 		logo: 'BW',
 		logoHref: '/',
 		navLinks: [
-			{ href: '#work', label: 'Work' },
-			{ href: '#speaking', label: 'Talks' },
+			{ href: '#work', label: 'Work', showOnMobile: false },
+			{ href: '#speaking', label: 'Talks', showOnMobile: false },
 			{ href: '#contact', label: 'Contact' },
 		],
 		skipLinkText: 'Skip to main content',

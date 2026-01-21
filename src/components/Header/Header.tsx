@@ -5,6 +5,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 export interface NavLink {
 	href: string;
 	label: string;
+	showOnMobile?: boolean;
 }
 
 export interface HeaderProps {
@@ -42,7 +43,10 @@ export function Header({
 				</a>
 				<nav className="flex items-center gap-1 text-base">
 					{navLinks.map((link, index) => (
-						<span key={link.href} className="flex items-center gap-1">
+						<span
+							key={link.href}
+							className={`flex items-center gap-1 ${link.showOnMobile === false ? 'hidden md:flex' : ''}`}
+						>
 							<a
 								href={link.href}
 								className="px-3 py-2 transition-colors hover:text-neutral-500 dark:hover:text-neutral-400"
@@ -50,7 +54,7 @@ export function Header({
 								{link.label}
 							</a>
 							{index < navLinks.length - 1 && (
-								<span className="text-neutral-300 dark:text-neutral-600">
+								<span className="hidden text-neutral-300 md:inline dark:text-neutral-600">
 									|
 								</span>
 							)}

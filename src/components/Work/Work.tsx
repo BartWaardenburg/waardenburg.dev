@@ -175,10 +175,10 @@ function ProjectCard({
 							{media.map((item, i) => (
 								<div
 									key={i}
-									className="flex h-full items-center justify-center px-4"
+									className="flex h-full items-start justify-center px-6 pt-4"
 									style={{ width: `${100 / media.length}%` }}
 								>
-									<div className="w-full max-w-lg">
+									<div className="w-full max-w-sm">
 										<MobileMediaCard data={item} />
 									</div>
 								</div>
@@ -188,7 +188,7 @@ function ProjectCard({
 				</div>
 
 				<div
-					className="relative z-10 bg-neutral-50 px-6 py-12 dark:bg-neutral-950"
+					className="relative z-10 bg-neutral-50 px-6 pb-16 pt-24 dark:bg-neutral-950"
 					style={{ marginTop: `${(media.length - 1) * 100}svh` }}
 				>
 					<blockquote className="max-w-md border-l-4 border-neutral-900 py-2 pl-6 text-lg font-medium italic dark:border-neutral-50">

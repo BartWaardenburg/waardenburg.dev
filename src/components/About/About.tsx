@@ -177,7 +177,7 @@ export function About({ title, services }: AboutProps) {
 
 				<div className="flex justify-center">
 					<div className="relative">
-						<div className="relative h-[460px] w-[340px] md:h-[420px] md:w-[500px]">
+						<div className="relative h-[420px] w-[280px] sm:h-[460px] sm:w-[340px] md:h-[420px] md:w-[500px]">
 							{services.map((service, index) => {
 								const number = String(index + 1).padStart(2, '0');
 
@@ -191,31 +191,31 @@ export function About({ title, services }: AboutProps) {
 										style={getCardStyle(index)}
 									>
 										<CardFrame>
-											<div className="flex h-[460px] flex-col rounded-lg bg-neutral-100 p-6 dark:bg-neutral-900 md:h-[420px] md:p-8">
-												<span className="font-mono text-6xl font-bold text-neutral-300 dark:text-neutral-700 md:text-7xl">
+											<div className="flex h-[420px] flex-col rounded-lg bg-neutral-100 p-5 dark:bg-neutral-900 sm:h-[460px] sm:p-6 md:h-[420px] md:p-8">
+												<span className="font-mono text-5xl font-bold text-neutral-300 dark:text-neutral-700 sm:text-6xl md:text-7xl">
 													{number}
 												</span>
 
-												<h3 className="mb-3 mt-3 text-xl font-medium md:text-2xl">
+												<h3 className="mb-2 mt-2 text-lg font-medium sm:mb-3 sm:mt-3 sm:text-xl md:text-2xl">
 													{service.title}
 												</h3>
 
-												<div className="mb-4 flex flex-wrap gap-2">
+												<div className="mb-3 flex flex-wrap gap-1.5 sm:mb-4 sm:gap-2">
 													{service.keywords.map((keyword) => (
 														<span
 															key={keyword}
-															className="rounded-full bg-neutral-200 px-3 py-1 text-xs font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
+															className="rounded-full bg-neutral-200 px-2 py-0.5 text-[10px] font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400 sm:px-3 sm:py-1 sm:text-xs"
 														>
 															{keyword}
 														</span>
 													))}
 												</div>
 
-												<p className="mb-auto text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 md:text-base">
+												<p className="mb-auto text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 sm:text-sm md:text-base">
 													{service.description}
 												</p>
 
-												<blockquote className="border-l-4 border-neutral-900 py-2 pl-4 text-sm font-medium italic dark:border-neutral-50 md:text-base">
+												<blockquote className="border-l-4 border-neutral-900 py-1.5 pl-3 text-xs font-medium italic dark:border-neutral-50 sm:py-2 sm:pl-4 sm:text-sm md:text-base">
 													&ldquo;{service.quote}&rdquo;
 												</blockquote>
 											</div>
