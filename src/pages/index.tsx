@@ -26,7 +26,11 @@ export default function Home() {
 					name="keywords"
 					content="full-stack developer, front-end expert, tech lead, React, Next.js, TypeScript, design systems, The Hague, Netherlands"
 				/>
-				<link rel="canonical" href="https://waardenburg.dev" />
+				<link rel="canonical" href="https://waardenburg.dev/" />
+
+				{/* Font Preconnect */}
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
 				{/* Favicon */}
 				<link rel="icon" href="/favicon.ico" sizes="any" />
@@ -46,6 +50,7 @@ export default function Home() {
 				<meta property="og:image" content="https://waardenburg.dev/og-image.png" />
 				<meta property="og:image:width" content="1200" />
 				<meta property="og:image:height" content="630" />
+				<meta property="og:image:alt" content="Bart Waardenburg - Full-stack Developer & Front-end Expert" />
 				<meta property="og:locale" content="en_US" />
 				<meta property="og:site_name" content="Bart Waardenburg" />
 
@@ -62,7 +67,7 @@ export default function Home() {
 
 			<Header />
 
-			<main>
+			<main id="main">
 				<Hero />
 				<Marquee />
 				<Work />
