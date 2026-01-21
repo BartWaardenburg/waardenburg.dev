@@ -3,6 +3,11 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
+export interface TalkImage {
+	src: string;
+	alt: string;
+}
+
 function usePrefersReducedMotion() {
 	const [prefersReducedMotion, setPrefersReducedMotion] = useState(true);
 
@@ -21,7 +26,15 @@ function usePrefersReducedMotion() {
 	return prefersReducedMotion;
 }
 
-function AnimatedImage({ caption, index }: { caption: string; index: number }) {
+function AnimatedImage({
+	caption,
+	index,
+	image,
+}: {
+	caption: string;
+	index: number;
+	image?: TalkImage;
+}) {
 	const ref = useRef<HTMLElement>(null);
 	const prefersReducedMotion = usePrefersReducedMotion();
 	const { scrollYProgress } = useScroll({
@@ -48,15 +61,24 @@ function AnimatedImage({ caption, index }: { caption: string; index: number }) {
 	return (
 		<figure ref={ref} className="perspective-1000">
 			<motion.div
-				className="aspect-[4/3] w-full rounded-lg bg-neutral-200 dark:bg-neutral-800"
+				className="aspect-video w-full overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800"
 				style={{
 					y,
 					scale,
 					rotateX,
 					transformStyle: 'preserve-3d',
 				}}
-				aria-hidden="true"
-			/>
+			>
+				{image ? (
+					<img
+						src={image.src}
+						alt={image.alt}
+						className="h-full w-full object-cover"
+					/>
+				) : (
+					<div className="h-full w-full" aria-hidden="true" />
+				)}
+			</motion.div>
 			<figcaption className="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
 				{caption}
 			</figcaption>
@@ -69,6 +91,8 @@ export interface Talk {
 	venue: string;
 	description: string[];
 	quote: string;
+	link?: { url: string; label: string };
+	images?: TalkImage[];
 }
 
 export interface SpeakingProps {
@@ -76,7 +100,7 @@ export interface SpeakingProps {
 	talks: Talk[];
 }
 
-const IMAGE_COUNT = 2;
+const DEFAULT_IMAGE_COUNT = 2;
 
 function TalkCard({ talk }: { talk: Talk }) {
 	const articleRef = useRef<HTMLElement>(null);
@@ -84,6 +108,9 @@ function TalkCard({ talk }: { talk: Talk }) {
 	const imagesRef = useRef<HTMLDivElement>(null);
 	const [isMounted, setIsMounted] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
+
+	const images = talk.images ?? [];
+	const imageCount = images.length > 0 ? images.length : DEFAULT_IMAGE_COUNT;
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -121,7 +148,7 @@ function TalkCard({ talk }: { talk: Talk }) {
 				}
 
 				if (imagesRef.current) {
-					const translateX = progress * ((IMAGE_COUNT - 1) / IMAGE_COUNT) * 100;
+					const translateX = progress * ((imageCount - 1) / imageCount) * 100;
 					imagesRef.current.style.transform = `translateX(-${translateX}%)`;
 				}
 			} else {
@@ -161,7 +188,7 @@ function TalkCard({ talk }: { talk: Talk }) {
 							style={{ '--progress': '0' } as React.CSSProperties}
 						>
 							<div className="absolute inset-0 flex gap-2">
-								{Array.from({ length: IMAGE_COUNT }).map((_, i) => (
+								{Array.from({ length: imageCount }).map((_, i) => (
 									<div
 										key={i}
 										className="flex-1 rounded-full bg-neutral-300 dark:bg-neutral-700"
@@ -176,13 +203,13 @@ function TalkCard({ talk }: { talk: Talk }) {
 								}}
 							/>
 							<div className="absolute inset-0 flex gap-2">
-								{Array.from({ length: IMAGE_COUNT }).map((_, i) => (
+								{Array.from({ length: imageCount }).map((_, i) => (
 									<div key={i} className="flex-1">
-										{i < IMAGE_COUNT - 1 && (
+										{i < imageCount - 1 && (
 											<div
 												className="absolute h-full w-2 bg-neutral-50 dark:bg-neutral-950"
 												style={{
-													left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)`,
+													left: `calc(${((i + 1) / imageCount) * 100}% - 4px)`,
 												}}
 											/>
 										)}
@@ -206,15 +233,23 @@ function TalkCard({ talk }: { talk: Talk }) {
 						<div
 							ref={imagesRef}
 							className="flex h-full transition-transform duration-150 ease-out"
-							style={{ width: `${IMAGE_COUNT * 100}%` }}
+							style={{ width: `${imageCount * 100}%` }}
 						>
-							{Array.from({ length: IMAGE_COUNT }).map((_, i) => (
+							{Array.from({ length: imageCount }).map((_, i) => (
 								<div
 									key={i}
 									className="flex h-full items-center justify-center px-4"
-									style={{ width: `${100 / IMAGE_COUNT}%` }}
+									style={{ width: `${100 / imageCount}%` }}
 								>
-									<div className="aspect-[4/3] w-full max-w-lg rounded-lg bg-neutral-200 dark:bg-neutral-800" />
+									<div className="aspect-video w-full max-w-lg overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800">
+										{images[i] ? (
+											<img
+												src={images[i].src}
+												alt={images[i].alt}
+												className="h-full w-full object-cover"
+											/>
+										) : null}
+									</div>
 								</div>
 							))}
 						</div>
@@ -223,11 +258,36 @@ function TalkCard({ talk }: { talk: Talk }) {
 
 				<div
 					className="relative z-10 bg-neutral-50 px-6 py-12 dark:bg-neutral-950"
-					style={{ marginTop: `${(IMAGE_COUNT - 1) * 100}svh` }}
+					style={{ marginTop: `${(imageCount - 1) * 100}svh` }}
 				>
 					<blockquote className="max-w-md border-l-4 border-neutral-900 py-2 pl-6 text-lg font-medium italic dark:border-neutral-50">
 						&ldquo;{talk.quote}&rdquo;
 					</blockquote>
+					{talk.link && (
+						<a
+							href={talk.link.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-4 hover:text-neutral-600 dark:text-neutral-50 dark:hover:text-neutral-300"
+						>
+							{talk.link.label}
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+								<polyline points="15 3 21 3 21 9" />
+								<line x1="10" y1="14" x2="21" y2="3" />
+							</svg>
+						</a>
+					)}
 				</div>
 			</article>
 		);
@@ -236,8 +296,23 @@ function TalkCard({ talk }: { talk: Talk }) {
 	return (
 		<article ref={articleRef} className="grid gap-8 md:grid-cols-3 md:gap-12">
 			<div className="order-2 space-y-24 md:order-1 md:col-span-2">
-				<AnimatedImage caption={`Presenting at ${talk.venue}`} index={0} />
-				<AnimatedImage caption="Slide highlights" index={1} />
+				{images.length > 0 ? (
+					images.map((image, i) => (
+						<AnimatedImage
+							key={i}
+							caption={
+								i === 0 ? `Presenting at ${talk.venue}` : 'Slide highlights'
+							}
+							index={i}
+							image={image}
+						/>
+					))
+				) : (
+					<>
+						<AnimatedImage caption={`Presenting at ${talk.venue}`} index={0} />
+						<AnimatedImage caption="Slide highlights" index={1} />
+					</>
+				)}
 			</div>
 
 			<div className="order-1 md:sticky md:top-32 md:order-2 md:self-start">
@@ -247,7 +322,7 @@ function TalkCard({ talk }: { talk: Talk }) {
 					style={{ '--progress': '0' } as React.CSSProperties}
 				>
 					<div className="absolute inset-0 flex gap-2">
-						{Array.from({ length: IMAGE_COUNT }).map((_, i) => (
+						{Array.from({ length: imageCount }).map((_, i) => (
 							<div
 								key={i}
 								className="flex-1 rounded-full bg-neutral-200 dark:bg-neutral-700"
@@ -262,13 +337,13 @@ function TalkCard({ talk }: { talk: Talk }) {
 						}}
 					/>
 					<div className="absolute inset-0 flex gap-2">
-						{Array.from({ length: IMAGE_COUNT }).map((_, i) => (
+						{Array.from({ length: imageCount }).map((_, i) => (
 							<div key={i} className="flex-1">
-								{i < IMAGE_COUNT - 1 && (
+								{i < imageCount - 1 && (
 									<div
 										className="absolute h-full w-2 bg-white dark:bg-neutral-950"
 										style={{
-											left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)`,
+											left: `calc(${((i + 1) / imageCount) * 100}% - 4px)`,
 										}}
 									/>
 								)}
@@ -289,6 +364,31 @@ function TalkCard({ talk }: { talk: Talk }) {
 				<blockquote className="border-l-4 border-neutral-900 py-2 pl-6 text-lg font-medium italic dark:border-neutral-50 md:text-xl">
 					&ldquo;{talk.quote}&rdquo;
 				</blockquote>
+				{talk.link && (
+					<a
+						href={talk.link.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-4 hover:text-neutral-600 dark:text-neutral-50 dark:hover:text-neutral-300"
+					>
+						{talk.link.label}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+							<polyline points="15 3 21 3 21 9" />
+							<line x1="10" y1="14" x2="21" y2="3" />
+						</svg>
+					</a>
+				)}
 			</div>
 		</article>
 	);
