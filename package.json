@@ -19,22 +19,22 @@
 	"dependencies": {
 		"@phosphor-icons/react": "^2.1.10",
 		"clsx": "^2.1.1",
-		"motion": "^12.27.5",
-		"next": "^16.0.10",
+		"motion": "^12.28.1",
+		"next": "^16.1.4",
 		"react": "^19.2.3",
 		"react-dom": "^19.2.3",
 		"tailwind-merge": "^3.4.0"
 	},
 	"devDependencies": {
 		"@tailwindcss/postcss": "^4.1.18",
-		"@types/node": "^22",
-		"@types/react": "^19",
-		"@types/react-dom": "^19",
+		"@types/node": "^25.0.9",
+		"@types/react": "^19.2.9",
+		"@types/react-dom": "^19.2.3",
 		"husky": "^9.1.7",
 		"next-sitemap": "^4.2.3",
-		"oxlint": "^1.32.0",
+		"oxlint": "^1.41.0",
 		"postcss": "^8.5.6",
-		"prettier": "^3.4.2",
+		"prettier": "^3.8.0",
 		"tailwindcss": "^4.1.18",
 		"typescript": "^5.9.3"
 	}
