@@ -20,6 +20,7 @@ pnpm format:check # Check code formatting
 This is a Next.js 16 personal website.
 
 **Stack:**
+
 - Next.js 16 with Pages Router (`src/pages/`)
 - React 19
 - TypeScript 5.9 with strict mode
@@ -28,14 +29,17 @@ This is a Next.js 16 personal website.
 - Prettier for formatting
 
 **Directory Structure:**
+
 - `src/pages/` - Next.js pages (file-based routing)
 - `src/components/` - React components
 - `src/styles/` - Global CSS (includes Tailwind imports)
 
 **Path Aliases:**
+
 - `@/*` maps to `./src/*` (e.g., `import '@/styles/globals.css'`)
 
 **Code Style:**
+
 - Tabs for indentation
 - Single quotes
 - Trailing commas

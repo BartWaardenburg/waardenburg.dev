@@ -44,6 +44,7 @@ BUILDING PRODUCTS THAT MATTER · BUILDING PRODUCTS THAT MATTER · BUILDING PRODU
 **Title:** Leveret: Precision Tools for Trail Runners
 
 **Description:**
+
 ```
 A running app for serious outdoor athletes.
 High-fidelity topography meets training science.
@@ -56,6 +57,7 @@ planning. Apple Watch sync.
 ```
 
 **Caption under mockup:**
+
 ```
 Leveret treats trail running like the technical
 discipline it is — not a road run with hills.
@@ -72,6 +74,7 @@ discipline it is — not a road run with hills.
 **Title:** ICTU: Immigration & Identity Systems
 
 **Description:**
+
 ```
 Building critical digital infrastructure for
 the Dutch government.
@@ -85,6 +88,7 @@ The Personal Records Database.
 ```
 
 **Caption:**
+
 ```
 Not public, but the kind of work where
 reliability and security aren't optional.
@@ -99,6 +103,7 @@ reliability and security aren't optional.
 **Title:** Zeeuws Museum: Digital Experience
 
 **Description:**
+
 ```
 Website for the museum in Middelburg's
 medieval abbey.
@@ -121,6 +126,7 @@ Focus on performance and accessibility.
 **Title:** Port of Rotterdam: Europe's Largest Port
 
 **Description:**
+
 ```
 Web platform for the port authority.
 
@@ -132,6 +138,7 @@ becoming the world's smartest port.
 ```
 
 **Caption:**
+
 ```
 Building with Norday for one of the most
 economically significant organizations in NL.
@@ -146,6 +153,7 @@ economically significant organizations in NL.
 **Title:** Rotterdam Inclusief: Inclusive Employment
 
 **Description:**
+
 ```
 Platform for the City of Rotterdam's
 employment initiative.
@@ -165,6 +173,7 @@ Coaching. Job matching. Skills development.
 **Title:** SDU: Legal Publishing Platform
 
 **Description:**
+
 ```
 Senior Full Stack Developer building complex
 search and discovery interfaces.
@@ -178,6 +187,7 @@ Tools for lawyers, notaries, tax specialists.
 ```
 
 **Caption:**
+
 ```
 Complex information architecture for
 professionals who need precision.
@@ -194,6 +204,7 @@ professionals who need precision.
 **Title:** Ministerie van VWS: Covid Response Platforms
 
 **Description:**
+
 ```
 Tech Lead for Team Quarantine & Vaccination.
 
@@ -207,6 +218,7 @@ accessibility reviews. CI/CD on OpenShift.
 ```
 
 **Caption:**
+
 ```
 When the whole country needed information fast,
 we shipped it. Accessible to everyone.
@@ -221,6 +233,7 @@ we shipped it. Accessible to everyone.
 **Title:** ANWB: 7 Years, Multiple Roles
 
 **Description:**
+
 ```
 From front-end developer to Chapter Lead
 for 35+ developers over 7 years.
@@ -234,6 +247,7 @@ Website of the Year 2013 (Weather & Traffic).
 ```
 
 **Caption:**
+
 ```
 Where I grew from developer to tech lead.
 3.5 million members. High-volume traffic apps.
@@ -324,31 +338,37 @@ The Hague, Netherlands
 ## Design Notes for Implementation
 
 **Typography:**
+
 - Monospace font (JetBrains Mono, IBM Plex Mono, or similar)
 - Large, confident headings
 - Generous line height
 
 **Layout:**
+
 - Two-column for projects: text left (~40%), mockup right (~60%)
 - Single column on mobile
 - Max-width container (~1200px)
 - Lots of whitespace
 
 **Colors:**
+
 - Primarily black and white
 - Subtle grays for secondary text
 - Optional: one accent color for links/CTAs
 
 **Project cards:**
+
 - Year as small black badge/pill
 - Device mockups for screenshots (laptop, phone frames)
 - Subtle shadows on mockup frames
 
 **Interactions:**
+
 - Smooth scroll
 - Subtle hover states
 - Optional: marquee text dividers between sections
 
 **No dates on:**
+
 - Speaking section (content still relevant)
 - Older projects (except ANWB 2013 as it's an award)

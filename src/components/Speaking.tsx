@@ -33,17 +33,17 @@ function AnimatedImage({ caption, index }: { caption: string; index: number }) {
 	const y = useTransform(
 		scrollYProgress,
 		[0, 1],
-		prefersReducedMotion ? [0, 0] : [30 + index * 10, -30 - index * 10]
+		prefersReducedMotion ? [0, 0] : [30 + index * 10, -30 - index * 10],
 	);
 	const scale = useTransform(
 		scrollYProgress,
 		[0, 0.3, 0.7, 1],
-		prefersReducedMotion ? [1, 1, 1, 1] : [0.95, 1, 1, 0.98]
+		prefersReducedMotion ? [1, 1, 1, 1] : [0.95, 1, 1, 0.98],
 	);
 	const rotateX = useTransform(
 		scrollYProgress,
 		[0, 0.5, 1],
-		prefersReducedMotion ? [0, 0, 0] : [2, 0, -2]
+		prefersReducedMotion ? [0, 0, 0] : [2, 0, -2],
 	);
 
 	return (
@@ -58,7 +58,9 @@ function AnimatedImage({ caption, index }: { caption: string; index: number }) {
 				}}
 				aria-hidden="true"
 			/>
-			<figcaption className="mt-4 text-sm text-neutral-500">{caption}</figcaption>
+			<figcaption className="mt-4 text-sm text-neutral-500">
+				{caption}
+			</figcaption>
 		</figure>
 	);
 }
@@ -208,7 +210,9 @@ function TalkCard({ talk }: { talk: (typeof talks)[number] }) {
 										{i < IMAGE_COUNT - 1 && (
 											<div
 												className="absolute h-full w-2 bg-neutral-50"
-												style={{ left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)` }}
+												style={{
+													left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)`,
+												}}
 											/>
 										)}
 									</div>
@@ -216,9 +220,15 @@ function TalkCard({ talk }: { talk: (typeof talks)[number] }) {
 							</div>
 						</div>
 
-						<p className="mb-2 text-xs font-medium text-neutral-500">{talk.venue}</p>
-						<h3 className="mb-3 text-xl font-medium leading-tight">{talk.title}</h3>
-						<p className="text-sm leading-relaxed text-neutral-600">{talk.description[0]}</p>
+						<p className="mb-2 text-xs font-medium text-neutral-500">
+							{talk.venue}
+						</p>
+						<h3 className="mb-3 text-xl font-medium leading-tight">
+							{talk.title}
+						</h3>
+						<p className="text-sm leading-relaxed text-neutral-600">
+							{talk.description[0]}
+						</p>
 					</div>
 
 					{/* Images below */}
@@ -288,7 +298,9 @@ function TalkCard({ talk }: { talk: (typeof talks)[number] }) {
 								{i < IMAGE_COUNT - 1 && (
 									<div
 										className="absolute h-full w-2 bg-white"
-										style={{ left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)` }}
+										style={{
+											left: `calc(${((i + 1) / IMAGE_COUNT) * 100}% - 4px)`,
+										}}
 									/>
 								)}
 							</div>
@@ -296,7 +308,9 @@ function TalkCard({ talk }: { talk: (typeof talks)[number] }) {
 					</div>
 				</div>
 
-				<p className="mb-4 text-sm font-medium text-neutral-500">{talk.venue}</p>
+				<p className="mb-4 text-sm font-medium text-neutral-500">
+					{talk.venue}
+				</p>
 				<h3 className="mb-6 text-2xl font-medium md:text-3xl">{talk.title}</h3>
 				<div className="mb-8 space-y-4 text-base leading-relaxed text-neutral-600 md:text-lg">
 					{talk.description.map((paragraph, i) => (

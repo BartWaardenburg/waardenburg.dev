@@ -57,7 +57,8 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	background-color: var(--color-neutral-50);
-	background-image: repeating-linear-gradient(
+	background-image:
+		repeating-linear-gradient(
 			0deg,
 			transparent,
 			transparent 79px,

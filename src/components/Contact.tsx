@@ -1,13 +1,18 @@
 export function Contact() {
 	return (
-		<section id="contact" className="flex min-h-screen items-center px-6 md:px-12">
+		<section
+			id="contact"
+			className="flex min-h-screen items-center px-6 md:px-12"
+		>
 			<div className="mx-auto max-w-6xl">
 				<div className="max-w-2xl">
 					<h2 className="mb-8 text-4xl font-medium leading-tight md:text-5xl lg:text-6xl">
 						Let's chat.
 					</h2>
 					<div className="space-y-6 text-xl leading-relaxed text-neutral-700 md:text-2xl">
-						<p>Whether it's a project, a question, or just talking front-end.</p>
+						<p>
+							Whether it's a project, a question, or just talking front-end.
+						</p>
 						<p>
 							Drop me a line at{' '}
 							<a
