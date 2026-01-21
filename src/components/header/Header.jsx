@@ -1,16 +1,5 @@
-/** @jsx jsx */
 import * as React from 'react';
-import { jsx } from '@emotion/core';
 
 export const Header = () => (
-	<div
-		css={{
-			backgroundColor: 'hotpink',
-			'&:hover': {
-				color: 'lightgreen',
-			},
-		}}
-	>
-		Header
-	</div>
+	<div className="bg-pink-500 hover:text-green-300">Header</div>
 );
