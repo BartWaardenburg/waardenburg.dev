@@ -1,28 +1,28 @@
 {
 	"compilerOptions": {
-		// Target latest version of ECMAScript.
-		"target": "esnext",
-		// Search under node_modules for non-relative imports.
-		"moduleResolution": "node",
-		// Process & infer types from .js files.
+		"target": "ES2020",
+		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
-		// Don't emit; allow Babel to transform files.
-		"noEmit": true,
-		// Enable strictest settings like strictNullChecks & noImplicitAny.
+		"skipLibCheck": true,
 		"strict": true,
-		// Disallow features that require cross-file information for emit.
-		"isolatedModules": true,
-		// Import non-ES modules as default imports.
+		"noEmit": true,
 		"esModuleInterop": true,
-		// Preserve the JSX output to use the babel processing for JSX
-		"jsx": "preserve",
-		// Use modern module output for Typescript type checking
 		"module": "esnext",
-		// Don't allow for file naming inconsistencies
-		"forceConsistentCasingInFileNames": true,
-		// Use the DOM and ESNext type libraries
-		"lib": ["dom", "ESNext"]
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"incremental": true,
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
 	"exclude": ["node_modules"]
 }
