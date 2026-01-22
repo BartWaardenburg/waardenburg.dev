@@ -16,16 +16,22 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"generate:favicons": "node scripts/generate-favicons.mjs",
-		"prepare": "husky"
+		"prepare": "husky",
+		"remotion:preview": "remotion studio remotion/index.ts",
+		"remotion:render": "remotion render remotion/index.ts PromoVideo out/promo-video.mp4"
 	},
 	"dependencies": {
 		"@phosphor-icons/react": "^2.1.10",
+		"@remotion/cli": "^4.0.408",
+		"@remotion/google-fonts": "^4.0.408",
+		"@remotion/transitions": "^4.0.408",
 		"clsx": "^2.1.1",
 		"dompurify": "^3.3.1",
 		"motion": "^12.28.1",
 		"next": "^16.1.4",
 		"react": "^19.2.3",
 		"react-dom": "^19.2.3",
+		"remotion": "^4.0.408",
 		"shiki": "^3.21.0",
 		"tailwind-merge": "^3.4.0"
 	},
