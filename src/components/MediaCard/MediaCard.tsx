@@ -3,7 +3,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import DOMPurify from 'dompurify';
 import { useEffect, useRef, useState } from 'react';
-import { codeToHtml, type BundledLanguage } from 'shiki';
 
 import { CardFrame } from '@/components/CardFrame';
 import { useTheme } from '@/components/ThemeProvider';
@@ -46,10 +45,29 @@ export type QuoteCardData = {
 export type CodeCardData = {
 	type: 'code';
 	code: string;
-	language: BundledLanguage;
+	language: 'typescript' | 'json' | 'vue' | 'astro';
 	filename?: string;
 	caption: string;
 };
+
+// Lazy-loaded highlighter (keeps shiki out of critical path)
+type Highlighter = Awaited<
+	ReturnType<typeof import('shiki/bundle/web').createHighlighter>
+>;
+let highlighterPromise: Promise<Highlighter> | null = null;
+
+async function getHighlighter() {
+	if (!highlighterPromise) {
+		highlighterPromise = import('shiki/bundle/web').then(
+			({ createHighlighter }) =>
+				createHighlighter({
+					themes: ['vitesse-dark', 'vitesse-light'],
+					langs: ['typescript', 'json', 'vue', 'astro'],
+				}),
+		);
+	}
+	return highlighterPromise;
+}
 
 export type MediaCardData = ImageCardData | QuoteCardData | CodeCardData;
 
@@ -168,10 +186,13 @@ function CodeCard({ data }: { data: CodeCardData }) {
 	const isDark = resolvedTheme === 'dark';
 
 	useEffect(() => {
-		codeToHtml(data.code, {
-			lang: data.language,
-			theme: isDark ? 'vitesse-dark' : 'vitesse-light',
-		}).then(setHighlightedCode);
+		getHighlighter().then((highlighter) => {
+			const html = highlighter.codeToHtml(data.code, {
+				lang: data.language,
+				theme: isDark ? 'vitesse-dark' : 'vitesse-light',
+			});
+			setHighlightedCode(html);
+		});
 	}, [data.code, data.language, isDark]);
 
 	// Sanitize and set the highlighted code HTML
