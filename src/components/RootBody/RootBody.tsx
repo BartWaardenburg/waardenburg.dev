@@ -1,18 +1,11 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Recursive } from 'next/font/google';
 
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { ThemeScript } from '@/components/ThemeScript';
-
-const recursive = Recursive({
-	subsets: ['latin'],
-	display: 'swap',
-	axes: ['CASL', 'MONO', 'slnt'],
-	fallback: ['JetBrains Mono', 'SF Mono', 'Consolas', 'monospace'],
-});
+import { recursive } from '@/fonts';
 
 interface RootBodyProps {
 	children: ReactNode;
