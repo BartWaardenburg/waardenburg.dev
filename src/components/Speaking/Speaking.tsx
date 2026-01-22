@@ -196,10 +196,9 @@ function TalkCard({ talk }: { talk: Talk }) {
 								))}
 							</div>
 							<div
-								className="absolute inset-0 origin-left rounded-full bg-neutral-900 dark:bg-neutral-50"
+								className="absolute inset-0 origin-left rounded-full bg-neutral-900 will-change-transform dark:bg-neutral-50"
 								style={{
 									transform: 'scaleX(calc(var(--progress) + 0.01))',
-									transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
 								}}
 							/>
 							<div className="absolute inset-0 flex gap-2">
@@ -330,10 +329,9 @@ function TalkCard({ talk }: { talk: Talk }) {
 						))}
 					</div>
 					<div
-						className="absolute inset-0 origin-left rounded-full bg-neutral-900 dark:bg-neutral-50"
+						className="absolute inset-0 origin-left rounded-full bg-neutral-900 will-change-transform dark:bg-neutral-50"
 						style={{
 							transform: 'scaleX(calc(var(--progress) + 0.01))',
-							transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
 						}}
 					/>
 					<div className="absolute inset-0 flex gap-2">
