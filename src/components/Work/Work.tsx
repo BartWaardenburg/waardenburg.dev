@@ -123,10 +123,9 @@ function ProjectCard({
 								))}
 							</div>
 							<div
-								className="absolute inset-0 origin-left rounded-full bg-neutral-900 dark:bg-neutral-50"
+								className="absolute inset-0 origin-left rounded-full bg-neutral-900 will-change-transform dark:bg-neutral-50"
 								style={{
 									transform: 'scaleX(calc(var(--progress) + 0.01))',
-									transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
 								}}
 							/>
 							<div className="absolute inset-0 flex gap-2">
@@ -169,7 +168,7 @@ function ProjectCard({
 					<div className="flex-1 overflow-hidden">
 						<div
 							ref={mediaRef}
-							className="flex h-full transition-transform duration-150 ease-out"
+							className="flex h-full will-change-transform"
 							style={{ width: `${media.length * 100}%` }}
 						>
 							{media.map((item, i) => (
@@ -216,10 +215,9 @@ function ProjectCard({
 						))}
 					</div>
 					<div
-						className="absolute inset-0 origin-left rounded-full bg-neutral-900 dark:bg-neutral-50"
+						className="absolute inset-0 origin-left rounded-full bg-neutral-900 will-change-transform dark:bg-neutral-50"
 						style={{
 							transform: 'scaleX(calc(var(--progress) + 0.01))',
-							transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
 						}}
 					/>
 					<div className="absolute inset-0 flex gap-2">
