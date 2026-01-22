@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://waardenburg.dev
-
-# Sitemaps
-Sitemap: https://waardenburg.dev/sitemap.xml
