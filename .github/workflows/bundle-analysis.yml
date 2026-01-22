@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build and analyze
-        run: ANALYZE=true pnpm build
+        run: pnpm build:analyze
 
       - name: Upload bundle stats
         uses: actions/upload-artifact@v6

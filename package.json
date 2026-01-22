@@ -9,6 +9,7 @@
 	"scripts": {
 		"dev": "next dev --turbopack",
 		"build": "next build",
+		"build:analyze": "ANALYZE=true next build --webpack",
 		"postbuild": "next-sitemap",
 		"start": "next start",
 		"type-check": "tsc --noEmit",
@@ -36,6 +37,7 @@
 		"tailwind-merge": "^3.4.0"
 	},
 	"devDependencies": {
+		"@next/bundle-analyzer": "^16.1.4",
 		"@tailwindcss/postcss": "^4.1.18",
 		"@types/node": "^25.0.10",
 		"@types/react": "^19.2.9",
