@@ -6,6 +6,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
+	productionBrowserSourceMaps: true,
 	poweredByHeader: false,
 	compress: true,
 	async headers() {
