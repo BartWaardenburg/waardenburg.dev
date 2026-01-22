@@ -172,7 +172,7 @@ function TalkCard({ talk }: { talk: Talk }) {
 		handleScroll();
 
 		return () => window.removeEventListener('scroll', handleScroll);
-	}, [isMobile]);
+	}, [isMobile, imageCount]);
 
 	if (isMobile) {
 		return (
@@ -232,7 +232,7 @@ function TalkCard({ talk }: { talk: Talk }) {
 					<div className="flex-1 overflow-hidden">
 						<div
 							ref={imagesRef}
-							className="flex h-full transition-transform duration-150 ease-out"
+							className="flex h-full will-change-transform"
 							style={{ width: `${imageCount * 100}%` }}
 						>
 							{Array.from({ length: imageCount }).map((_, i) => (

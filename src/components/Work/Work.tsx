@@ -169,7 +169,7 @@ function ProjectCard({
 					<div className="flex-1 overflow-hidden">
 						<div
 							ref={mediaRef}
-							className="flex h-full transition-transform duration-150 ease-out"
+							className="flex h-full will-change-transform"
 							style={{ width: `${media.length * 100}%` }}
 						>
 							{media.map((item, i) => (
