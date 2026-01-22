@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'motion/react';
 import DOMPurify from 'dompurify';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 import { CardFrame } from '@/components/CardFrame';
@@ -128,9 +129,12 @@ function ImageCard({ data }: { data: ImageCardData }) {
 	if (data.src) {
 		return (
 			<CardFrame>
-				<img
+				<Image
 					src={data.src}
 					alt={data.alt}
+					width={1200}
+					height={900}
+					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
 					className="aspect-[4/3] w-full rounded-lg object-cover"
 				/>
 			</CardFrame>
