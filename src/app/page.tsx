@@ -95,6 +95,78 @@ const route = await trpc.routes.getById.query({ id });`,
 			},
 			{
 				year: '2025',
+				title: 'Spaceship MCP: AI-Powered Domain Management',
+				description: [
+					'An open-source MCP server that lets AI assistants manage domains, DNS records, and marketplace listings through the Spaceship API.',
+					'47 tools across 8 categories, 13 type-safe DNS record creators, and full input validation with Zod. Published to the official MCP Registry.',
+				],
+				quote:
+					'Domain management through natural language — register, configure DNS, list for sale, all from your AI client.',
+				link: {
+					url: 'github.com/BartWaardenburg/spaceship-mcp',
+					label: 'GitHub',
+				},
+				media: [
+					{
+						type: 'code' as const,
+						language: 'typescript',
+						filename: 'src/tools/dns.ts',
+						caption: 'Type-safe DNS record creation with Zod validation',
+						code: `export const createARecord = (client: SpaceshipClient) =>
+  tool({
+    name: "create_a_record",
+    description: "Create an A record for a domain",
+    parameters: z.object({
+      domain: z.string(),
+      name: z.string(),
+      address: z.string().ip({ version: "v4" }),
+      ttl: z.number().min(300).default(3600),
+    }),
+    execute: async ({ domain, name, address, ttl }) => {
+      await client.dns.createRecord(domain, {
+        type: "A", name, address, ttl,
+      });
+      return { success: true };
+    },
+  });`,
+					},
+					{
+						type: 'code' as const,
+						language: 'json',
+						filename: 'package.json',
+						caption: 'Minimal dependencies — MCP SDK and Zod, nothing else',
+						code: `{
+  "name": "spaceship-mcp",
+  "version": "0.2.3",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^4.3.6"
+  },
+  "bin": {
+    "spaceship-mcp": "dist/index.js"
+  }
+}`,
+					},
+					{
+						type: 'code' as const,
+						language: 'bash',
+						filename: 'terminal',
+						caption: 'One-liner install for Claude Code, Codex, Gemini CLI',
+						code: `# Claude Code
+claude mcp add spaceship-mcp \\
+  --env SPACESHIP_API_KEY=your-key \\
+  --env SPACESHIP_API_SECRET=your-secret \\
+  -- npx -y spaceship-mcp
+
+# Then just ask naturally:
+# "Check if example.com is available"
+# "Set up DNS for my domain with Fly.io"
+# "List my-domain.com for sale at $5000"`,
+					},
+				],
+			},
+			{
+				year: '2025',
 				title: 'ICTU: Immigration & Identity Systems',
 				description: [
 					'Building critical digital infrastructure for the Dutch government.',
