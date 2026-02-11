@@ -94,7 +94,7 @@ const route = await trpc.routes.getById.query({ id });`,
 				],
 			},
 			{
-				year: '2025',
+				year: '2026',
 				title: 'Spaceship MCP: AI-Powered Domain Management',
 				description: [
 					'An open-source MCP server that lets AI assistants manage domains, DNS records, and marketplace listings through the Spaceship API.',
