@@ -46,7 +46,7 @@ export type QuoteCardData = {
 export type CodeCardData = {
 	type: 'code';
 	code: string;
-	language: 'typescript' | 'json' | 'vue' | 'astro' | 'bash';
+	language: 'typescript' | 'json' | 'vue' | 'astro' | 'bash' | 'elixir';
 	filename?: string;
 	caption: string;
 };
@@ -63,7 +63,7 @@ async function getHighlighter() {
 			({ createHighlighter }) =>
 				createHighlighter({
 					themes: ['vitesse-dark', 'vitesse-light'],
-					langs: ['typescript', 'json', 'vue', 'astro', 'bash'],
+					langs: ['typescript', 'json', 'vue', 'astro', 'bash', 'elixir'],
 				}),
 		);
 	}

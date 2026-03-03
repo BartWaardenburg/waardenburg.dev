@@ -95,6 +95,103 @@ const route = await trpc.routes.getById.query({ id });`,
 			},
 			{
 				year: '2026',
+				title: 'IsAgentReady: WebMCP Readiness Scanner',
+				description: [
+					'A tool that scans websites for AI agent readiness — scoring them across 5 categories with letter grades, public rankings, and detailed reports.',
+					'Built with Phoenix LiveView and Elixir. 41 checkpoints across discovery, structured data, semantics, agent protocols, and security.',
+				],
+				quote:
+					'Find out if your website is ready for the age of AI agents — before your competitors do.',
+				link: { url: 'isagentready.com', label: 'isagentready.com' },
+				media: [
+					{
+						type: 'code' as const,
+						language: 'elixir',
+						filename: 'lib/isagentready/scanning/scanner.ex',
+						caption: 'Scan orchestrator — runs 5 category checkers in parallel',
+						code: `defmodule Isagentready.Scanning.Scanner do
+  alias Isagentready.Scanning.Checkers.{
+    DiscoveryChecker,
+    StructuredDataChecker,
+    SemanticsChecker,
+    AgentProtocolChecker,
+    SecurityChecker
+  }
+
+  def run(url) do
+    with {:ok, response} <- Fetcher.fetch(url) do
+      categories =
+        [DiscoveryChecker, StructuredDataChecker,
+         SemanticsChecker, AgentProtocolChecker,
+         SecurityChecker]
+        |> Task.async_stream(&amp;&1.check(response))
+        |> Enum.map(fn {:ok, result} -> result end)
+
+      {:ok, Scoring.calculate(categories)}
+    end
+  end
+end`,
+					},
+					{
+						type: 'code' as const,
+						language: 'elixir',
+						filename: 'lib/isagentready/scanning/scoring.ex',
+						caption: 'Weighted scoring — 5 categories, letter grades A+ to F',
+						code: `defmodule Isagentready.Scanning.Scoring do
+  @weights %{
+    discovery: 0.30,
+    structured_data: 0.20,
+    semantics: 0.20,
+    agent_protocols: 0.15,
+    security: 0.15
+  }
+
+  def calculate(categories) do
+    overall =
+      categories
+      |> Enum.map(& {&1.key, &1.score * @weights[&1.key]})
+      |> Enum.sum_by(&elem(&1, 1))
+      |> round()
+
+    %{overall: overall, grade: letter_grade(overall)}
+  end
+
+  defp letter_grade(s) when s >= 95, do: "A+"
+  defp letter_grade(s) when s >= 80, do: "A"
+  defp letter_grade(s) when s >= 70, do: "B"
+  defp letter_grade(s) when s >= 40, do: "C"
+  defp letter_grade(s) when s >= 20, do: "D"
+  defp letter_grade(_), do: "F"
+end`,
+					},
+					{
+						type: 'code' as const,
+						language: 'elixir',
+						filename: 'mix.exs',
+						caption: 'Phoenix 1.8, LiveView 1.1, Oban jobs, Floki HTML parsing',
+						code: `defp deps do
+  [
+    {:phoenix, "~> 1.8.4"},
+    {:phoenix_live_view, "~> 1.1.0"},
+    {:phoenix_ecto, "~> 4.5"},
+    {:ecto_sql, "~> 3.13"},
+    {:postgrex, "~> 0.22"},
+    {:oban, "~> 2.19"},
+    {:floki, "~> 0.37"},
+    {:req, "~> 0.5"},
+    {:swoosh, "~> 1.16"},
+    {:ex_aws_s3, "~> 2.5"},
+    {:chromic_pdf, "~> 1.17"},
+    {:hammer, "~> 7.0"},
+    {:sentry, "~> 11.0"},
+    {:bandit, "~> 1.5"}
+  ]
+end`,
+					},
+				],
+			},
+			{
+				year: '2026',
 				title: 'Spaceship MCP: AI-Powered Domain Management',
 				description: [
 					'An open-source MCP server that lets AI assistants manage domains, DNS records, and marketplace listings through the Spaceship API.',
