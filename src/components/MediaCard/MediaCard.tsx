@@ -60,11 +60,15 @@ let highlighterPromise: Promise<Highlighter> | null = null;
 async function getHighlighter() {
 	if (!highlighterPromise) {
 		highlighterPromise = import('shiki/bundle/web').then(
-			({ createHighlighter }) =>
-				createHighlighter({
+			async ({ createHighlighter }) => {
+				const highlighter = await createHighlighter({
 					themes: ['vitesse-dark', 'vitesse-light'],
-					langs: ['typescript', 'json', 'vue', 'astro', 'bash', 'elixir'],
-				}),
+					langs: ['typescript', 'json', 'vue', 'astro', 'bash'],
+				});
+				const elixir = await import('shiki/langs/elixir.mjs');
+				await highlighter.loadLanguage(elixir.default);
+				return highlighter;
+			},
 		);
 	}
 	return highlighterPromise;
