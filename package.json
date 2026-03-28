@@ -27,7 +27,7 @@
 		"@remotion/google-fonts": "^4.0.410",
 		"@remotion/transitions": "^4.0.410",
 		"clsx": "^2.1.1",
-		"dompurify": "^3.3.1",
+		"dompurify": "^3.3.2",
 		"motion": "^12.29.2",
 		"next": "^16.1.5",
 		"react": "^19.2.4",
