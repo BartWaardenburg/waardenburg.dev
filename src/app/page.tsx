@@ -699,7 +699,7 @@ export const Button = styled.button<ButtonProps>\`
 				],
 				quote: 'A design system is a product, not a project.',
 				link: {
-					url: 'https://www.youtube.com/watch?v=L2yOoxzXmw8',
+					url: 'https://www.youtube.com/watch?v=piZOil7OicI',
 					label: 'Watch on YouTube',
 				},
 				images: [
@@ -722,7 +722,7 @@ export const Button = styled.button<ButtonProps>\`
 				],
 				quote: 'Tests should give you confidence, not false security.',
 				link: {
-					url: 'https://www.youtube.com/watch?v=piZOil7OicI',
+					url: 'https://www.youtube.com/watch?v=L2yOoxzXmw8',
 					label: 'Watch on YouTube',
 				},
 				images: [
