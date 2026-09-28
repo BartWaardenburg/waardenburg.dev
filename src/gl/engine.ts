@@ -7,8 +7,10 @@ import { lookAt, perspective } from './math';
 import {
 	buildDust,
 	buildScatterShape,
+	buildLogo,
 	buildScene,
 	SCENES,
+	type LogoBox,
 	type BuildOptions,
 	type Dust,
 	type SceneName,
@@ -33,6 +35,8 @@ uniform float uSpinFrom;
 uniform float uSpinTo;
 uniform vec3 uCenterFrom;
 uniform vec3 uCenterTo;
+uniform vec3 uOffsetFrom;
+uniform vec3 uOffsetTo;
 uniform float uScrollY;
 uniform float uVel;
 uniform vec2 uMouse;
@@ -54,8 +58,8 @@ void main() {
 	bool dust = gl_VertexID >= uDustStart;
 	float m = clamp((uMix - aRand.x * 0.4) / 0.6, 0.0, 1.0);
 	m = m * m * (3.0 - 2.0 * m);
-	vec3 a = dust ? aFrom : spin(aFrom, uCenterFrom, uTime * uSpinFrom);
-	vec3 b = dust ? aTo : spin(aTo, uCenterTo, uTime * uSpinTo);
+	vec3 a = dust ? aFrom : spin(aFrom, uCenterFrom, uSpinFrom) + uOffsetFrom;
+	vec3 b = dust ? aTo : spin(aTo, uCenterTo, uSpinTo) + uOffsetTo;
 	vec3 p = mix(a, b, m);
 	float burst = dust ? 0.0 : sin(m * 3.14159265);
 	vec3 n = vec3(
@@ -145,6 +149,10 @@ const MOUSE: Record<SceneName, number> = {
 	portal: 0.7,
 };
 
+const isLogo = (key: string) => key.startsWith('logo:');
+const dimOf = (key: string) => (isLogo(key) ? 1 : DIM[key as SceneName]);
+const mouseOf = (key: string) => (isLogo(key) ? 0.6 : MOUSE[key as SceneName]);
+
 export interface EngineOptions {
 	fontFamily: string;
 	onReady?: () => void;
@@ -216,6 +224,8 @@ export const createEngine = (
 		spinTo: u('uSpinTo'),
 		centerFrom: u('uCenterFrom'),
 		centerTo: u('uCenterTo'),
+		offsetFrom: u('uOffsetFrom'),
+		offsetTo: u('uOffsetTo'),
 		scrollY: u('uScrollY'),
 		vel: u('uVel'),
 		mouse: u('uMouse'),
@@ -254,8 +264,10 @@ export const createEngine = (
 		idx: WebGLBuffer | null;
 		idxCount: number;
 	};
-	let gpu: (GpuShape | null)[] = [];
+	// formations by key: a scene name, or `logo:<src>`
+	let gpu = new Map<string, GpuShape>();
 	let scatter: GpuShape | null = null;
+	const images = new Map<string, Promise<HTMLImageElement | null>>();
 	let dustData: Dust | null = null;
 	let buildOpts: BuildOptions | null = null;
 	let idleJob = 0;
@@ -278,13 +290,13 @@ export const createEngine = (
 	};
 
 	const release = () => {
-		for (const g of [...gpu, scatter]) {
+		for (const g of [...gpu.values(), scatter]) {
 			if (!g) continue;
 			gl.deleteBuffer(g.pos);
 			gl.deleteBuffer(g.col);
 			if (g.idx) gl.deleteBuffer(g.idx);
 		}
-		gpu = [];
+		gpu = new Map();
 		scatter = null;
 	};
 
@@ -292,13 +304,79 @@ export const createEngine = (
 	const proj = new Float32Array(16);
 	const viewMat = new Float32Array(16);
 
-	/** A formation's buffers, built on first use. */
-	const ensure = (k: number): GpuShape => {
-		const have = gpu[k];
+	/** Where a logo lives: inside its anchor element, or on the right like the flagships. */
+	const logoBox = (anchor: HTMLElement | null): LogoBox => {
+		const rect = anchor?.getBoundingClientRect();
+		if (rect && rect.width > 0 && rect.height > 0) {
+			return {
+				width: (rect.width / window.innerWidth) * view.width * 0.82,
+				height: (rect.height / window.innerHeight) * view.height * 0.7,
+				center: [0, 0, 0],
+			};
+		}
+		return view.portrait
+			? {
+					width: view.width * 0.8,
+					height: view.height * 0.2,
+					center: [0, view.height * 0.22, 0],
+				}
+			: {
+					width: view.width * 0.34,
+					height: view.height * 0.34,
+					center: [view.width * 0.22, 0, 0],
+				};
+	};
+
+	const loadImage = (src: string) => {
+		let p = images.get(src);
+		if (!p) {
+			p = new Promise((resolve) => {
+				const img = new Image();
+				img.decoding = 'async';
+				img.onload = () => resolve(img);
+				img.onerror = () => resolve(null);
+				img.src = src;
+			});
+			images.set(src, p);
+		}
+		return p;
+	};
+
+	/** A formation's buffers, built on first use. Logos fall back until their image is in. */
+	const ensure = (key: string): GpuShape => {
+		const have = gpu.get(key);
 		if (have) return have;
-		const made = upload(buildScene(k, buildOpts!, dustData!));
-		gpu[k] = made;
+		if (isLogo(key)) return ensure('constellation');
+		const made = upload(
+			buildScene(SCENES.indexOf(key as SceneName), buildOpts!, dustData!),
+		);
+		gpu.set(key, made);
 		return made;
+	};
+
+	let buildId = 0;
+	const buildLogos = () => {
+		const id = buildId;
+		const seen = new Set<string>();
+		sections.forEach((sec, i) => {
+			if (!sec.logo || seen.has(sec.key)) return;
+			seen.add(sec.key);
+			const { src, anchor } = sec.logo;
+			void loadImage(src).then((img) => {
+				if (!img || id !== buildId || !buildOpts || !dustData) return;
+				requestIdle(() => {
+					if (id !== buildId || !buildOpts || !dustData) return;
+					const shape = buildLogo(
+						img,
+						buildOpts,
+						dustData,
+						logoBox(anchor),
+						500 + i,
+					);
+					if (shape) gpu.set(sec.key, upload(shape));
+				});
+			});
+		});
 	};
 
 	// Build what the first frame needs now, and the rest one formation per idle slot,
@@ -306,22 +384,25 @@ export const createEngine = (
 	const build = () => {
 		release();
 		cancelIdle(idleJob);
+		buildId++;
 		buildOpts = { count, dust, view, fontFamily: opts.fontFamily };
 		dustData = buildDust(buildOpts);
-		gpu = SCENES.map(() => null);
 		const first =
 			sections[Math.min(sections.length - 1, Math.round(targetSection()))]
-				?.scene ?? 0;
+				?.key ?? 'name';
 		ensure(first);
-		if (first === 0) scatter = upload(buildScatterShape(buildOpts, dustData));
-		lastPair = '';
+		if (first === 'name')
+			scatter = upload(buildScatterShape(buildOpts, dustData));
+		lastFrom = null;
+		lastTo = null;
 		const next = () => {
-			const k = gpu.findIndex((g) => g === null);
-			if (k < 0) return;
+			const k = SCENES.find((name) => !gpu.has(name));
+			if (!k) return;
 			ensure(k);
 			idleJob = requestIdle(next);
 		};
 		idleJob = requestIdle(next);
+		buildLogos();
 	};
 
 	let lastW = 0;
@@ -344,11 +425,12 @@ export const createEngine = (
 		}
 	};
 
-	let lastPair = '';
+	let lastFrom: GpuShape | null = null;
+	let lastTo: GpuShape | null = null;
 	const bindPair = (from: GpuShape, to: GpuShape) => {
-		const key = `${gpu.indexOf(from)}:${gpu.indexOf(to)}:${from === scatter}`;
-		if (key === lastPair) return;
-		lastPair = key;
+		if (from === lastFrom && to === lastTo) return;
+		lastFrom = from;
+		lastTo = to;
 		gl.bindBuffer(gl.ARRAY_BUFFER, from.pos);
 		gl.enableVertexAttribArray(0);
 		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
@@ -384,16 +466,41 @@ export const createEngine = (
 	window.addEventListener('pointermove', onMove, { passive: true });
 	document.addEventListener('pointerleave', onLeave);
 
-	let sections: { el: HTMLElement; scene: number }[] = [];
+	type Section = {
+		el: HTMLElement;
+		key: string;
+		logo?: { src: string; anchor: HTMLElement | null };
+	};
+	let sections: Section[] = [];
 	const collect = () => {
-		sections = Array.from(
-			document.querySelectorAll<HTMLElement>('[data-scene]'),
-		)
-			.map((el) => ({
-				el,
-				scene: SCENES.indexOf(el.dataset.scene as SceneName),
-			}))
-			.filter((s) => s.scene >= 0);
+		const found: Section[] = [];
+		for (const el of document.querySelectorAll<HTMLElement>('[data-scene]')) {
+			const scene = el.dataset.scene ?? '';
+			if (scene === 'logo' && el.dataset.logo) {
+				const sel = el.dataset.logoAnchor;
+				found.push({
+					el,
+					key: `logo:${el.dataset.logo}`,
+					logo: {
+						src: el.dataset.logo,
+						anchor: sel ? document.querySelector<HTMLElement>(sel) : null,
+					},
+				});
+			} else if ((SCENES as readonly string[]).includes(scene)) {
+				found.push({ el, key: scene });
+			}
+		}
+		const logosChanged =
+			found
+				.filter((f) => f.logo)
+				.map((f) => f.key)
+				.join() !==
+			sections
+				.filter((f) => f.logo)
+				.map((f) => f.key)
+				.join();
+		sections = found;
+		if (logosChanged && buildOpts) buildLogos();
 	};
 	collect();
 	const recollect = window.setTimeout(collect, 1200);
@@ -466,17 +573,17 @@ export const createEngine = (
 		if (Math.abs(target - sectionF) < 1e-4) sectionF = target;
 		const cur = Math.min(sections.length - 1, Math.floor(sectionF));
 		const next = Math.min(sections.length - 1, cur + 1);
-		const fromIdx = sections[cur]?.scene ?? 0;
-		let toIdx = sections[next]?.scene ?? fromIdx;
+		const fromKey = sections[cur]?.key ?? 'name';
+		let toKey = sections[next]?.key ?? fromKey;
 		let mix = sectionF - cur;
 
-		let from = ensure(fromIdx);
-		let to = ensure(toIdx);
+		let from = ensure(fromKey);
+		let to = ensure(toKey);
 		const intro = introFrom ? Math.min(1, time / 2.8) : 1;
 		if (intro < 1 && scatter && cur === 0 && mix < 0.01) {
 			from = scatter;
-			to = ensure(fromIdx);
-			toIdx = fromIdx;
+			to = ensure(fromKey);
+			toKey = fromKey;
 			mix = 1 - Math.pow(1 - intro, 3);
 		}
 		bindPair(from, to);
@@ -498,8 +605,10 @@ export const createEngine = (
 		];
 		lookAt(viewMat, eye, [pointer.x * 0.1, pointer.y * 0.05, 0]);
 
-		const fromName = SCENES[fromIdx]!;
-		const toName = SCENES[toIdx]!;
+		// the key actually drawn (a logo that is still loading draws its fallback)
+		const fromName =
+			from === scatter ? 'name' : gpu.get(fromKey) ? fromKey : 'constellation';
+		const toName = gpu.get(toKey) ? toKey : 'constellation';
 		const w = from === scatter ? 1 : mix;
 		const lerp = (a: number, b: number) => a + (b - a) * w;
 
@@ -509,8 +618,24 @@ export const createEngine = (
 		gl.uniform1f(U.mix, mix);
 		gl.uniform1f(U.size, view.portrait ? 3.0 : 2.8);
 		gl.uniform1f(U.dpr, dpr);
-		gl.uniform1f(U.spinFrom, from.shape.spin);
-		gl.uniform1f(U.spinTo, to.shape.spin);
+		const angle = (sh: Shape) =>
+			time * sh.spin + (sh.sway ?? 0) * Math.sin(time * 0.5);
+		gl.uniform1f(U.spinFrom, angle(from.shape));
+		gl.uniform1f(U.spinTo, angle(to.shape));
+		const offset = (key: string): [number, number, number] => {
+			const anchor = sections.find((sec) => sec.key === key)?.logo?.anchor;
+			const rect = anchor?.getBoundingClientRect();
+			if (!rect || !rect.width || !gpu.get(key)) return [0, 0, 0];
+			return [
+				(((rect.left + rect.width / 2) / window.innerWidth) * 2 - 1) *
+					(view.width / 2),
+				-(((rect.top + rect.height / 2) / window.innerHeight) * 2 - 1) *
+					(view.height / 2),
+				0,
+			];
+		};
+		gl.uniform3fv(U.offsetFrom, offset(fromName));
+		gl.uniform3fv(U.offsetTo, offset(toName));
 		gl.uniform3fv(U.centerFrom, from.shape.center);
 		gl.uniform3fv(U.centerTo, to.shape.center);
 		gl.uniform1f(U.scrollY, (sy / window.innerHeight) * 1.6);
@@ -522,7 +647,7 @@ export const createEngine = (
 		);
 		gl.uniform1f(
 			U.mouseStr,
-			coarse ? 0 : pointer.active * lerp(MOUSE[fromName], MOUSE[toName]),
+			coarse ? 0 : pointer.active * lerp(mouseOf(fromName), mouseOf(toName)),
 		);
 		gl.uniform1f(
 			U.scan,
@@ -530,9 +655,12 @@ export const createEngine = (
 		);
 		gl.uniform1f(
 			U.dim,
-			lerp(DIM[fromName], DIM[toName]) *
+			lerp(dimOf(fromName), dimOf(toName)) *
 				(view.portrait
-					? lerp(fromName === 'name' ? 1 : 0.55, toName === 'name' ? 1 : 0.55)
+					? lerp(
+							fromName === 'name' || isLogo(fromName) ? 1 : 0.55,
+							toName === 'name' || isLogo(toName) ? 1 : 0.55,
+						)
 					: 1) *
 				(0.25 + 0.75 * intro),
 		);

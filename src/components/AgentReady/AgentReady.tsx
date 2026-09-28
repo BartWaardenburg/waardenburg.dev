@@ -14,7 +14,7 @@ import {
 import { useEffect, useRef } from 'react';
 
 import { Magnetic, Reveal, SplitWords } from '@/components/Motion';
-import { isAgentReady as iar } from '@/content';
+import { isAgentReady as iar, logos } from '@/content';
 import { useDesktop } from '@/lib/useDesktop';
 
 const overall = Math.round(
@@ -182,12 +182,19 @@ export function AgentReady() {
 	}, [desktop, drive, inView, reduce, scrollYProgress]);
 
 	return (
-		<section
-			id="isagentready"
-			data-scene="globe"
-			aria-labelledby="iar-title"
-			className="relative"
-		>
+		<section id="isagentready" aria-labelledby="iar-title" className="relative">
+			{/* the particles form the logo first, then become the globe */}
+			<div
+				aria-hidden
+				data-scene="logo"
+				data-logo={logos.isagentready}
+				className="pointer-events-none absolute inset-x-0 top-0 h-[75vh]"
+			/>
+			<div
+				aria-hidden
+				data-scene="globe"
+				className="pointer-events-none absolute inset-x-0 top-[75vh] bottom-0"
+			/>
 			<div ref={ref} className="relative lg:motion-safe:h-[300vh]">
 				<div className="px-5 py-24 md:px-10 lg:motion-safe:sticky lg:motion-safe:top-0 lg:motion-safe:flex lg:motion-safe:h-svh lg:motion-safe:items-stretch lg:motion-safe:py-24">
 					<div className="mx-auto grid w-full max-w-[1600px] gap-12 lg:grid-cols-[1fr_27rem]">

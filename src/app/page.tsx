@@ -1,5 +1,6 @@
 import { AgentReady } from '@/components/AgentReady';
 import { Career } from '@/components/Career';
+import { Clients } from '@/components/Clients';
 import { Contact } from '@/components/Contact';
 import { Fallow } from '@/components/Fallow';
 import { Header } from '@/components/Header';
@@ -32,6 +33,7 @@ export default async function HomePage() {
 				<OpenSource />
 				<Talks />
 				<Career />
+				<Clients />
 				<Contact />
 			</main>
 			<RevealObserver />

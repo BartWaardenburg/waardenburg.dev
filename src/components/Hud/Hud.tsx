@@ -11,6 +11,7 @@ const SECTIONS = [
 	{ id: 'open-source', label: 'Open source' },
 	{ id: 'talks', label: 'Talks' },
 	{ id: 'career', label: 'Career' },
+	{ id: 'clients', label: 'Built for' },
 	{ id: 'contact', label: 'Contact' },
 ];
 

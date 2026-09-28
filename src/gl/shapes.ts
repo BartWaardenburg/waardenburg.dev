@@ -10,6 +10,7 @@ export interface Shape {
 	col: Float32Array; // rgb + intensity per particle
 	center: Vec3; // pivot for the idle spin
 	spin: number; // radians per second around Y
+	sway?: number; // gentle back-and-forth around Y, in radians
 	pairs?: Uint32Array; // neighbouring particles, drawn as lines near the pointer
 }
 
@@ -749,3 +750,107 @@ export const buildScatterShape = (o: BuildOptions, dust: Dust): Shape =>
 		dust,
 		o.count,
 	);
+
+// ---------------------------------------------------------------------------
+// Logos: any image becomes a formation, in its own brand colours
+
+export interface LogoBox {
+	width: number; // world units available
+	height: number;
+	center: Vec3;
+}
+
+/** Lift dark brand colours so they still read as light on a near-black canvas. */
+const liftColour = (r: number, g: number, b: number): Vec3 => {
+	const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+	if (lum >= 0.42) return [r, g, b];
+	const t = (0.42 - lum) / 0.42;
+	return [
+		r + (0.9 - r) * t * 0.75,
+		g + (0.88 - g) * t * 0.75,
+		b + (0.84 - b) * t * 0.75,
+	];
+};
+
+export const buildLogo = (
+	img: HTMLImageElement,
+	o: BuildOptions,
+	dust: Dust,
+	box: LogoBox,
+	seed: number,
+): Shape | null => {
+	const iw = img.naturalWidth || img.width;
+	const ih = img.naturalHeight || img.height;
+	if (!iw || !ih) return null;
+	const cw = 900;
+	const ch = Math.max(1, Math.round((cw * ih) / iw));
+	const canvas = document.createElement('canvas');
+	canvas.width = cw;
+	canvas.height = ch;
+	const ctx = canvas.getContext('2d', { willReadFrequently: true });
+	if (!ctx) return null;
+	ctx.drawImage(img, 0, 0, cw, ch);
+	const data = ctx.getImageData(0, 0, cw, ch).data;
+	const filled: number[] = [];
+	const edges: number[] = [];
+	const alphaAt = (x: number, y: number) =>
+		x < 0 || y < 0 || x >= cw || y >= ch
+			? 0
+			: (data[(y * cw + x) * 4 + 3] ?? 0);
+	for (let y = 0; y < ch; y += 2) {
+		for (let x = 0; x < cw; x += 2) {
+			if (alphaAt(x, y) < 128) continue;
+			filled.push(x, y);
+			if (
+				alphaAt(x - 3, y) < 128 ||
+				alphaAt(x + 3, y) < 128 ||
+				alphaAt(x, y - 3) < 128 ||
+				alphaAt(x, y + 3) < 128
+			)
+				edges.push(x, y);
+		}
+	}
+	const nFilled = filled.length / 2;
+	if (nFilled === 0) return null;
+	const nEdges = edges.length / 2;
+	const scale = Math.min(box.width / cw, box.height / ch);
+	const r = mulberry32(seed);
+	const w = new Writer(o.count + o.dust);
+	for (let i = 0; i < o.count; i++) {
+		const halo = nEdges > 0 && r() < 0.14;
+		const list = halo ? edges : filled;
+		const k = Math.floor(r() * (list.length / 2));
+		const px = list[k * 2]! + r() * 2;
+		const py = list[k * 2 + 1]! + r() * 2;
+		const pi =
+			(Math.min(ch - 1, Math.floor(py)) * cw +
+				Math.min(cw - 1, Math.floor(px))) *
+			4;
+		const c = liftColour(
+			(data[pi] ?? 255) / 255,
+			(data[pi + 1] ?? 255) / 255,
+			(data[pi + 2] ?? 255) / 255,
+		);
+		const spread = halo ? 0.06 + r() * 0.1 : 0;
+		const a = r() * Math.PI * 2;
+		w.set(
+			i,
+			[
+				box.center[0] + (px - cw / 2) * scale + Math.cos(a) * spread,
+				box.center[1] - (py - ch / 2) * scale + Math.sin(a) * spread,
+				box.center[2] + (r() - 0.5) * 0.18 + (halo ? (r() - 0.5) * 0.3 : 0),
+			],
+			c,
+			halo ? 0.28 : 0.7,
+		);
+	}
+	const shape: Shape = {
+		pos: w.pos,
+		col: w.col,
+		center: box.center,
+		spin: 0,
+		sway: 0.22,
+	};
+	shape.pairs = neighbourPairs(shape.pos, Math.min(o.count, 900));
+	return withDust(shape, dust, o.count);
+};

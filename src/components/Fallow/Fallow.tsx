@@ -12,7 +12,7 @@ import { useRef, type ReactNode } from 'react';
 import { Marquee } from '@/components/Marquee';
 import { Counter, Magnetic, Reveal, SplitWords } from '@/components/Motion';
 import { Terminal } from '@/components/Terminal';
-import { fallow } from '@/content';
+import { fallow, logos } from '@/content';
 import type { Stats } from '@/lib/stats';
 import { useDesktop } from '@/lib/useDesktop';
 
@@ -183,12 +183,19 @@ export function Fallow({ stats }: { stats: Stats }) {
 	const progress = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
 	return (
-		<section
-			id="fallow"
-			data-scene="graph"
-			aria-labelledby="fallow-title"
-			className="relative"
-		>
+		<section id="fallow" aria-labelledby="fallow-title" className="relative">
+			{/* the particles form the logo first, then become the graph */}
+			<div
+				aria-hidden
+				data-scene="logo"
+				data-logo={logos.fallow}
+				className="pointer-events-none absolute inset-x-0 top-0 h-[75vh]"
+			/>
+			<div
+				aria-hidden
+				data-scene="graph"
+				className="pointer-events-none absolute inset-x-0 top-[75vh] bottom-0"
+			/>
 			<div ref={ref} className="relative lg:motion-safe:h-[420vh]">
 				<div className="px-5 py-24 md:px-10 lg:motion-safe:sticky lg:motion-safe:top-0 lg:motion-safe:flex lg:motion-safe:h-svh lg:motion-safe:flex-col lg:motion-safe:pt-28 lg:motion-safe:pb-16">
 					<div className="mx-auto w-full max-w-[1600px]">

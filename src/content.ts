@@ -324,9 +324,89 @@ export const teaching = [
 	{ value: '35', label: 'developers in the chapter I led at ANWB' },
 ];
 
+/** Official logo files in public/logos, drawn by the particle field. */
+export const logos = {
+	anwb: '/logos/anwb.svg',
+	incentro: '/logos/incentro.svg',
+	sdu: '/logos/sdu.svg',
+	rijksoverheid: '/logos/rijksoverheid.svg',
+	ind: '/logos/ind.svg',
+	rvig: '/logos/rvig.svg',
+	ictu: '/logos/ictu.svg',
+	norday: '/logos/norday.svg',
+	portofrotterdam: '/logos/portofrotterdam.svg',
+	zeeuwsmuseum: '/logos/zeeuwsmuseum.svg',
+	vpro: '/logos/vpro.svg',
+	rotterdampas: '/logos/rotterdampas.svg',
+	kpn: '/logos/kpn.svg',
+	fallow: '/logos/fallow.svg',
+	isagentready: '/logos/isagentready.svg',
+} as const;
+
+export interface Client {
+	name: string;
+	logo: string;
+	what: string;
+	via: string;
+	years: string;
+}
+
+export const clients: Client[] = [
+	{
+		name: 'Port of Rotterdam',
+		logo: logos.portofrotterdam,
+		what: 'Innovation Bridge: an interactive map of the port’s innovation ecosystem with a strategy canvas, built solo on Next.js 16, Mapbox and a Statamic back end.',
+		via: 'Norday',
+		years: '2025 — 2026',
+	},
+	{
+		name: 'Zeeuws Museum',
+		logo: logos.zeeuwsmuseum,
+		what: 'The museum’s website: a Next.js front end on Statamic, with Algolia-powered search through the collection.',
+		via: 'Norday',
+		years: '2025',
+	},
+	{
+		name: 'VPRO',
+		logo: logos.vpro,
+		what: 'ClubLees, a reading app for children, in React Native with an immersive reader module.',
+		via: 'Norday',
+		years: '2025 — 2026',
+	},
+	{
+		name: 'RotterdamPas',
+		logo: logos.rotterdampas,
+		what: 'The RotterdamPas app for iOS and Android, built in React Native.',
+		via: 'Norday',
+		years: '2025 — 2026',
+	},
+	{
+		name: 'IND',
+		logo: logos.ind,
+		what: 'A Vue 3 JSON Forms adapter library and form runtime used across about ten register front ends of the Immigration and Naturalisation Service.',
+		via: 'ICTU',
+		years: '2025 —',
+	},
+	{
+		name: 'RvIG',
+		logo: logos.rvig,
+		what: 'Accessible passport and travel-document application flows, with Keycloak and the NL Design System, audited to WCAG AA.',
+		via: 'ICTU',
+		years: '2024 —',
+	},
+	{
+		name: 'KPN',
+		logo: logos.kpn,
+		what: 'Front-end specialist on KPN’s consumer platforms, in the early React and AngularJS years.',
+		via: 'Incentro',
+		years: '2013 — 2016',
+	},
+];
+
 export interface Role {
 	years: string;
 	org: string;
+	logo: string;
 	role: string;
 	body: string;
 	tags: string[];
@@ -336,6 +416,7 @@ export const career: Role[] = [
 	{
 		years: '2025 — 2026',
 		org: 'Norday',
+		logo: logos.norday,
 		role: 'Senior Full-stack Developer',
 		body: 'RotterdamPas and VPRO ClubLees apps in React Native. Built Port of Rotterdam Innovation Bridge solo on Next.js 16 with Mapbox. Zeeuws Museum on Next.js, Statamic and Algolia.',
 		tags: ['React Native', 'Next.js', 'Laravel', 'Mapbox'],
@@ -343,6 +424,7 @@ export const career: Role[] = [
 	{
 		years: '2024 —',
 		org: 'Dutch Government',
+		logo: logos.ictu,
 		role: 'Senior Front-end Developer via ICTU, for the IND and RvIG',
 		body: 'Front ends Dutch residents rely on. A Vue 3 JSON Forms adapter library used in about 10 register front ends at the Immigration and Naturalisation Service. Passport and travel-document application flows for RvIG, with Keycloak, NL Design System and audited WCAG AA accessibility.',
 		tags: ['Vue 3', 'React', 'JSON Schema', 'WCAG AA'],
@@ -350,6 +432,7 @@ export const career: Role[] = [
 	{
 		years: '2022 — 2024',
 		org: 'Sdu',
+		logo: logos.sdu,
 		role: 'Senior Front-end Developer',
 		body: 'Led the rebuild of sdu.nl from scratch on Next.js and Contentful. Worked on a design system shared by many products, and CI/CD on GitHub Actions and AWS.',
 		tags: ['Next.js', 'GraphQL', 'Contentful', 'AWS'],
@@ -357,6 +440,7 @@ export const career: Role[] = [
 	{
 		years: '2020 — 2024',
 		org: 'Ministry of Health (VWS)',
+		logo: logos.rijksoverheid,
 		role: 'Tech Lead, Quarantine & Vaccination',
 		body: 'The Dutch COVID platforms. A setup that took new Rijkshuisstijl sites live within weeks of starting, with OWASP, WCAG 2.1 audits and Kubernetes on OpenShift.',
 		tags: ['React', 'Next.js', 'Sanity', 'Kubernetes'],
@@ -364,6 +448,7 @@ export const career: Role[] = [
 	{
 		years: '2019 — 2020',
 		org: 'ANWB',
+		logo: logos.anwb,
 		role: 'Chapter Lead Front-end',
 		body: 'Set the front-end vision for 35 developers. Designed a micro-frontend architecture over Bloomreach, Sitecore and Magento, and a high-traffic e-commerce platform.',
 		tags: ['Leadership', 'Architecture', 'AWS'],
@@ -371,6 +456,7 @@ export const career: Role[] = [
 	{
 		years: '2016 — 2019',
 		org: 'ANWB',
+		logo: logos.anwb,
 		role: 'Tech Lead, Design System & Traffic',
 		body: 'Built the ANWB design system in Preact. Solution architect for the traffic and route planner apps, which serve about 300,000 visitors a day.',
 		tags: ['Preact', 'Storybook', 'Design systems'],
@@ -378,6 +464,7 @@ export const career: Role[] = [
 	{
 		years: '2013 — 2016',
 		org: 'Incentro',
+		logo: logos.incentro,
 		role: 'Front-end Consultant',
 		body: 'Front-end specialist for KPN and ANWB. Designed and taught the 7-day front-end course for young professionals and the Advanced Front-End program.',
 		tags: ['Teaching', 'AngularJS', 'React'],

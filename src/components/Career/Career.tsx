@@ -45,6 +45,12 @@ export function Career() {
 						systems, accessibility, and architecture for sites with hundreds of
 						thousands of daily users.
 					</p>
+					{/* the particle field draws each employer's logo inside this frame */}
+					<div
+						id="career-logo-stage"
+						aria-hidden
+						className="frame-marks mt-10 hidden h-44 w-full max-w-md lg:block"
+					/>
 				</div>
 
 				<ol ref={list} className="relative">
@@ -63,6 +69,13 @@ export function Career() {
 							key={`${r.org}-${r.years}`}
 							className="relative pb-14 pl-12 last:pb-0"
 						>
+							<span
+								aria-hidden
+								data-scene="logo"
+								data-logo={r.logo}
+								data-logo-anchor="#career-logo-stage"
+								className="pointer-events-none absolute inset-0"
+							/>
 							<span className="absolute top-2 left-0 size-[15px] rotate-45 border border-accent bg-bg" />
 							<p className="font-mono text-xs tracking-[0.16em] text-accent uppercase">
 								{r.years}

@@ -148,6 +148,20 @@ html.gl .hero-name {
 	color: rgb(239 235 227 / 0.06);
 }
 
+/* Registration marks only, no fill: a frame the particle field draws into */
+.frame-marks {
+	--mark: rgb(239 235 227 / 0.35);
+	background:
+		linear-gradient(var(--mark), var(--mark)) top left / 16px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) top left / 1px 16px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) top right / 16px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) top right / 1px 16px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom left / 16px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom left / 1px 16px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom right / 16px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom right / 1px 16px no-repeat;
+}
+
 /* Panels: square, hairline, with registration marks in the corners */
 .glass {
 	--mark: rgb(239 235 227 / 0.55);
