@@ -96,15 +96,21 @@ export const fallow = {
 		'Node bindings',
 		'Agent skills',
 	],
-	cloud:
-		'Fallow Cloud adds production call counts per function, so teams can delete cold code with evidence. I also rendered its launch film from code: a deterministic WebGL renderer, every frame a function of the track time.',
 	ecosystem: [
 		{
+			label: 'Production layer',
+			name: 'Fallow Cloud',
+			url: 'https://fallow.cloud',
+			body: 'Production call counts per function, so teams can delete cold code with evidence.',
+		},
+		{
+			label: 'Also in the toolchain',
 			name: 'srcmap',
 			url: 'https://github.com/fallow-rs/srcmap',
 			body: 'Source map SDK in Rust. ECMA-426 compliant, 3 ns lookups, with WASM and NAPI bindings.',
 		},
 		{
+			label: 'Also in the toolchain',
 			name: 'oxc-coverage-instrument',
 			url: 'https://github.com/fallow-rs/oxc-coverage-instrument',
 			body: 'Istanbul-compatible coverage instrumentation on the Oxc parser, byte-for-byte verified.',
@@ -159,62 +165,66 @@ export interface OssProject {
 	body: string;
 	url: string;
 	tags: string[];
-	stat?: string;
+	wide?: boolean;
 }
 
+// Only public, MIT-licensed repositories.
 export const openSource: OssProject[] = [
 	{
-		name: 'Spaceship MCP',
-		kind: 'MCP server',
-		body: 'Domains, DNS and marketplace listings for AI assistants. 47 tools, 13 type-safe DNS record creators, listed in the official MCP Registry.',
-		url: 'https://github.com/BartWaardenburg/spaceship-mcp',
-		tags: ['TypeScript', 'Zod', 'MCP'],
+		name: 'MCP servers',
+		kind: '8 servers · MCP',
+		body: 'Real APIs turned into typed, validated tools that coding agents can use safely. Spaceship alone has 47 tools and is listed in the official MCP Registry.',
+		url: 'https://github.com/BartWaardenburg?tab=repositories&q=mcp',
+		tags: [
+			'Spaceship',
+			'IsAgentReady',
+			'srcmap',
+			'Recraft',
+			'ANWB',
+			'KVK',
+			'PostNL',
+			'bol',
+		],
+		wide: true,
 	},
 	{
 		name: 'srcmap',
 		kind: 'Rust SDK',
-		body: 'Parse, generate, remap and compose source maps. Full ECMA-426 compliance, 8× faster than trace-mapping on single lookups.',
+		body: 'Parse, generate, remap and compose source maps. Full ECMA-426 compliance, with WASM and NAPI bindings.',
 		url: 'https://github.com/fallow-rs/srcmap',
 		tags: ['Rust', 'WASM', 'NAPI'],
 	},
 	{
 		name: 'oxc-coverage-instrument',
 		kind: 'Rust',
-		body: 'A drop-in, Rust-native replacement for Istanbul instrumentation, built on the Oxc parser.',
+		body: 'Istanbul-compatible coverage instrumentation on the Oxc parser, verified byte for byte against the reference.',
 		url: 'https://github.com/fallow-rs/oxc-coverage-instrument',
 		tags: ['Rust', 'Oxc', 'Coverage'],
 	},
 	{
-		name: 'IsAgentReady CLI & MCP',
-		kind: 'CLI · MCP',
-		body: 'Agent-readiness scans from the terminal, in CI, or inside Claude, Cursor and friends.',
-		url: 'https://github.com/BartWaardenburg/isagentready-mcp',
-		tags: ['TypeScript', 'MCP'],
+		name: 'Agent skills',
+		kind: 'Skills',
+		body: 'Skills that teach Claude Code, Cursor, Codex and 30+ other agents to use Fallow, IsAgentReady and Spaceship well.',
+		url: 'https://github.com/fallow-rs/fallow-skills',
+		tags: ['Agent Skills', 'Markdown'],
 	},
 	{
-		name: 'Dutch services MCP',
-		kind: 'MCP servers',
-		body: 'ANWB, KVK, PostNL and bol: Dutch APIs made usable by agents, with typed tools and validated inputs.',
-		url: 'https://github.com/BartWaardenburg/kvk-mcp',
-		tags: ['TypeScript', 'MCP', 'APIs'],
-	},
-	{
-		name: 'Leveret',
-		kind: 'Product',
-		body: 'Precision tools for trail runners: high-fidelity topography meets training science. Product, design and full stack.',
-		url: 'https://leveret.run',
-		tags: ['Next.js', 'tRPC', 'Drizzle', 'MapTiler'],
+		name: 'IsAgentReady CLI',
+		kind: 'CLI',
+		body: 'Agent-readiness scans from the terminal or in CI, with scores, grades and recommendations.',
+		url: 'https://github.com/BartWaardenburg/isagentready-cli',
+		tags: ['TypeScript', 'npm'],
 	},
 ];
 
 export interface Talk {
 	title: string;
 	event: string;
-	year: string;
+	place: string;
+	date: string;
 	body: string;
-	url?: string;
+	link: { url: string; label: string };
 	youtubeId?: string;
-	image?: string;
 	featured?: boolean;
 	upcoming?: boolean;
 }
@@ -222,74 +232,96 @@ export interface Talk {
 export const talks: Talk[] = [
 	{
 		title: 'JavaScript tooling has a blind spot',
-		event: 'dotJS · Paris',
-		year: '2026',
-		body: 'Linters check files. TypeScript checks types. Who checks the codebase? What one-file-at-a-time tooling misses, and how a project-graph view changes the way we write code with agents.',
-		url: 'https://youtu.be/E2aFrZpnNbo',
+		event: 'dotJS',
+		place: 'Paris',
+		date: 'Sep 2026',
+		body: 'Linters check files and TypeScript checks types, but nothing checks the codebase as a whole. Now that agents write more of our code, the questions that matter are codebase-wide: what is dead, what is duplicated, what crosses a boundary. A look at that blind spot, and at how a project-graph view closes it.',
+		link: { url: 'https://youtu.be/E2aFrZpnNbo', label: 'Watch on YouTube' },
 		youtubeId: 'E2aFrZpnNbo',
 		featured: true,
 	},
 	{
 		title: 'Agentic Engineering for React Teams: Give Your Coding Agent a Map',
-		event: 'React Advanced · London',
-		year: 'Oct 2026',
-		body: 'Changing a real React or Next.js codebase safely: what is dead, where logic is duplicated, and which boundaries a refactor crosses.',
-		url: 'https://reactadvanced.com/',
+		event: 'React Advanced',
+		place: 'London',
+		date: 'Oct 2026',
+		body: 'Generating a React component takes seconds. Changing a real React or Next.js codebase safely does not. How codebase intelligence gives agents the system context to know what is dead, what is duplicated and which boundaries a refactor crosses.',
+		link: { url: 'https://reactadvanced.com/', label: 'Event page' },
 		upcoming: true,
 	},
 	{
-		title: 'Fallow at Frontmania',
+		title: 'Codebase intelligence with Fallow',
 		event: 'Frontmania',
-		year: 'Oct 2026',
-		body: 'Codebase intelligence for TypeScript and JavaScript, live on stage.',
-		url: 'https://frontmania.com/',
+		place: 'Netherlands',
+		date: 'Oct 2026',
+		body: 'What it takes to keep a TypeScript or JavaScript codebase healthy when more of it is written by agents, with Fallow as the working example.',
+		link: { url: 'https://frontmania.com/', label: 'Event page' },
 		upcoming: true,
 	},
 	{
 		title: 'Fast Code Generation Is Easy. Safe System-level Change Is Not.',
-		event: 'AI Coding Summit · London',
-		year: '2026',
-		body: 'Let the agent generate, run deterministic codebase analysis, feed the findings back through CLI and MCP, and gate drift in CI before it lands.',
-		url: 'https://gitnation.com/contents/fast-code-generation-is-easy-safe-system-level-change-is-not',
+		event: 'AI Coding Summit',
+		place: 'London',
+		date: 'Jul 2026',
+		body: 'AI tools write good local diffs but miss repo-wide truth: dead exports, duplicated logic, boundary violations and creeping complexity. A workflow where the agent generates, deterministic analysis checks, findings flow back through CLI and MCP, and CI gates the drift.',
+		link: {
+			url: 'https://gitnation.com/contents/fast-code-generation-is-easy-safe-system-level-change-is-not',
+			label: 'Watch on GitNation',
+		},
 	},
 	{
 		title:
 			"Vibe Coding Doesn't Scale: Deterministic Tooling for Agentic Engineering",
-		event: 'FrontValue · Meetup',
-		year: '2026',
-		body: 'Why agent-written code needs deterministic checks, and what those checks look like in practice.',
-		url: 'https://www.meetup.com/frontvalue/events/314972778/',
+		event: 'FrontValue Meetup',
+		place: 'Netherlands',
+		date: 'Jun 2026',
+		body: 'Vibe coding works until the codebase gets big. Why agent-written code needs deterministic checks, and what those checks look like in a real team.',
+		link: {
+			url: 'https://www.meetup.com/frontvalue/events/314972778/',
+			label: 'Event page',
+		},
 	},
 	{
-		title: 'Building a Design System',
-		event: 'React Amsterdam',
-		year: '2019',
-		body: 'How we built the ANWB design system with (P)React, and how it let teams share code, stay consistent and ship faster.',
-		url: 'https://www.youtube.com/watch?v=L2yOoxzXmw8',
+		title: 'Building a Design System with (P)React',
+		event: 'React Amsterdam Meetup',
+		place: 'Amsterdam',
+		date: 'Feb 2019',
+		body: 'The story of the ANWB design system: moving many front-end applications onto one shared component architecture, the process behind it, and the technical choices along the way.',
+		link: {
+			url: 'https://www.youtube.com/watch?v=L2yOoxzXmw8',
+			label: 'Watch on YouTube',
+		},
 		youtubeId: 'L2yOoxzXmw8',
 	},
 	{
-		title: 'The Three Layers of Testing',
-		event: 'React Amsterdam',
-		year: '2017',
-		body: 'Static analysis, type checking and tests: how to layer them so you can ship with confidence, not a false sense of security.',
-		url: 'https://www.youtube.com/watch?v=piZOil7OicI',
+		title: 'React and the Three Layers of Testing',
+		event: 'React Amsterdam Meetup',
+		place: 'Amsterdam',
+		date: '2017',
+		body: 'Static analysis, type checking and tests: how to layer them in a React codebase so you can ship often with real confidence instead of false security.',
+		link: {
+			url: 'https://www.youtube.com/watch?v=piZOil7OicI',
+			label: 'Watch on YouTube',
+		},
 		youtubeId: 'piZOil7OicI',
 	},
 	{
-		title: 'Building a Component Framework',
-		event: 'Rotterdam The Hague Frontend',
-		year: '2018',
-		body: 'Component architecture for 200 front-end applications and 30 developers: patterns for flexible, composable components that scale.',
-		url: '/talks/buildingacomponentframework.pdf',
-		image: '/images/talks/component-framework-1.png',
+		title: 'Creating a (P)React Component Library',
+		event: 'Rotterdam The Hague Front-end Meetup',
+		place: 'The Hague',
+		date: '2018',
+		body: 'Component architecture for 200 front-end applications and 30 developers: patterns for flexible, composable components that scale across teams.',
+		link: {
+			url: '/talks/buildingacomponentframework.pdf',
+			label: 'Slides (PDF)',
+		},
 	},
 ];
 
 export const teaching = [
-	{ value: '7', label: 'talks given, with React Advanced and Frontmania next' },
+	{ value: '6', label: 'talks given, from meetups to dotJS' },
+	{ value: '2', label: 'more this autumn: React Advanced and Frontmania' },
 	{ value: '35', label: 'developers in the chapter I led at ANWB' },
-	{ value: '7-day', label: 'front-end course I built and taught' },
 ];
 
 export interface Role {
@@ -302,7 +334,7 @@ export interface Role {
 
 export const career: Role[] = [
 	{
-		years: '2025 —',
+		years: '2025 — 2026',
 		org: 'Norday',
 		role: 'Senior Full-stack Developer',
 		body: 'RotterdamPas and VPRO ClubLees apps in React Native. Built Port of Rotterdam Innovation Bridge solo on Next.js 16 with Mapbox. Zeeuws Museum on Next.js, Statamic and Algolia.',
@@ -310,9 +342,9 @@ export const career: Role[] = [
 	},
 	{
 		years: '2024 —',
-		org: 'ICTU · IND & RvIG',
-		role: 'Senior Front-end Developer',
-		body: 'A Vue 3 JSON Forms adapter library used in about 10 IND register frontends. Passport application flows for RvIG with Keycloak, NL Design System and audited WCAG AA.',
+		org: 'Dutch Government',
+		role: 'Senior Front-end Developer via ICTU, for the IND and RvIG',
+		body: 'Front ends Dutch residents rely on. A Vue 3 JSON Forms adapter library used in about 10 register front ends at the Immigration and Naturalisation Service. Passport and travel-document application flows for RvIG, with Keycloak, NL Design System and audited WCAG AA accessibility.',
 		tags: ['Vue 3', 'React', 'JSON Schema', 'WCAG AA'],
 	},
 	{
@@ -359,7 +391,7 @@ export const pillars = [
 	},
 	{
 		title: 'Teach',
-		body: 'Talks at dotJS and React Amsterdam, courses I designed, docs and agent skills. I make hard tooling ideas feel obvious.',
+		body: 'Talks at dotJS, React Advanced and React Amsterdam, plus docs and agent skills. I try to make hard tooling ideas feel obvious.',
 	},
 	{
 		title: 'Grow',

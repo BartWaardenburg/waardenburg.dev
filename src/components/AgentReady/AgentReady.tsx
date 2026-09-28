@@ -256,6 +256,8 @@ export function AgentReady() {
 						<Magnetic>
 							<a
 								href={iar.url}
+								target="_blank"
+								rel="noopener noreferrer"
 								className="inline-flex items-center gap-3 bg-sage px-7 py-4 font-mono text-xs font-bold tracking-[0.14em] text-bg uppercase"
 							>
 								Scan your site ↗

@@ -274,22 +274,23 @@ export function Fallow({ stats }: { stats: Stats }) {
 				</div>
 
 				<div className="mx-auto mt-6 grid max-w-[1600px] gap-6 lg:grid-cols-3">
-					<Reveal className="glass p-8 lg:col-span-1">
-						<p className="font-mono text-[11px] tracking-[0.18em] text-ochre uppercase">
-							Fallow Cloud
-						</p>
-						<p className="mt-4 text-muted">{fallow.cloud}</p>
-					</Reveal>
 					{fallow.ecosystem.map((e, i) => (
-						<Reveal key={e.name} delay={0.1 * (i + 1)}>
-							<a href={e.url} className="glass group block h-full p-8">
-								<p className="font-mono text-[11px] tracking-[0.18em] text-dim uppercase">
-									Also in the toolchain
+						<Reveal key={e.name} delay={0.1 * i}>
+							<a
+								href={e.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="glass group block h-full p-8"
+							>
+								<p
+									className={`font-mono text-[11px] tracking-[0.18em] uppercase ${i === 0 ? 'text-ochre' : 'text-dim'}`}
+								>
+									{e.label}
 								</p>
 								<p className="mt-4 font-sans text-2xl font-bold tracking-tight transition-colors group-hover:text-sage">
 									{e.name}{' '}
 									<span className="inline-block transition-transform group-hover:translate-x-1">
-										→
+										↗
 									</span>
 								</p>
 								<p className="mt-2 text-muted">{e.body}</p>
@@ -301,6 +302,8 @@ export function Fallow({ stats }: { stats: Stats }) {
 					<Magnetic>
 						<a
 							href={fallow.url}
+							target="_blank"
+							rel="noopener noreferrer"
 							className="inline-flex items-center gap-3 bg-sage px-7 py-4 font-mono text-xs font-bold tracking-[0.14em] text-bg uppercase transition-colors hover:bg-fg"
 						>
 							fallow.tools ↗
@@ -309,6 +312,8 @@ export function Fallow({ stats }: { stats: Stats }) {
 					<Magnetic>
 						<a
 							href={fallow.repo}
+							target="_blank"
+							rel="noopener noreferrer"
 							className="inline-flex items-center gap-3 border border-line px-7 py-4 font-mono text-xs font-bold tracking-[0.14em] uppercase transition-colors hover:border-fg"
 						>
 							Star on GitHub ↗

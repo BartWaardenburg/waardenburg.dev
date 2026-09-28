@@ -81,6 +81,8 @@ export function Contact() {
 						<li key={l.label}>
 							<a
 								href={l.href}
+								target="_blank"
+								rel="noopener noreferrer"
 								className="group relative text-muted transition-colors hover:text-fg"
 							>
 								{l.label}
@@ -95,7 +97,6 @@ export function Contact() {
 				<p>
 					© {new Date().getFullYear()} {site.name} · {site.location}
 				</p>
-				<p>Next.js 16 · raw WebGL2, no three.js · Motion · Lenis</p>
 			</footer>
 		</section>
 	);

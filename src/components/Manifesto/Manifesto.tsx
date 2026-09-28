@@ -21,10 +21,7 @@ export function Manifesto() {
 			className="relative px-5 py-32 md:px-10 md:py-48"
 		>
 			<div ref={ref} className="mx-auto max-w-[1600px]">
-				<Reveal className="mb-10 flex items-center gap-4 font-mono text-xs tracking-[0.2em] text-muted uppercase">
-					<span className="h-px w-12 bg-accent" />
-					<h2>About</h2>
-				</Reveal>
+				<h2 className="sr-only">About</h2>
 				<ScrollWords
 					text={manifesto}
 					className="max-w-6xl font-sans text-[clamp(1.75rem,3.6vw,3.75rem)] leading-[1.12] font-semibold tracking-[-0.03em]"

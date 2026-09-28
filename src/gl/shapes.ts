@@ -10,6 +10,7 @@ export interface Shape {
 	col: Float32Array; // rgb + intensity per particle
 	center: Vec3; // pivot for the idle spin
 	spin: number; // radians per second around Y
+	pairs?: Uint32Array; // neighbouring particles, drawn as lines near the pointer
 }
 
 export interface Viewport {
@@ -652,17 +653,95 @@ const withDust = (s: Shape, dust: Dust, count: number): Shape => {
 };
 
 /** One formation by index into SCENES. */
-export const buildScene = (k: number, o: BuildOptions, dust: Dust): Shape =>
-	withDust(
-		BUILDERS[SCENES[k]!](
-			new Writer(o.count + o.dust),
-			o.count,
-			mulberry32(101 + k * 17),
-			o,
-		),
-		dust,
+/**
+ * Pairs of nearby particles among the first `limit` (a uniform random subset), found
+ * with a spatial hash. The engine draws them as lines where the pointer is.
+ */
+const neighbourPairs = (pos: Float32Array, limit: number): Uint32Array => {
+	let minX = Infinity;
+	let minY = Infinity;
+	let minZ = Infinity;
+	let maxX = -Infinity;
+	let maxY = -Infinity;
+	let maxZ = -Infinity;
+	for (let i = 0; i < limit; i++) {
+		const x = pos[i * 3]!;
+		const y = pos[i * 3 + 1]!;
+		const z = pos[i * 3 + 2]!;
+		minX = Math.min(minX, x);
+		maxX = Math.max(maxX, x);
+		minY = Math.min(minY, y);
+		maxY = Math.max(maxY, y);
+		minZ = Math.min(minZ, z);
+		maxZ = Math.max(maxZ, z);
+	}
+	const vol =
+		Math.max(maxX - minX, 0.2) *
+		Math.max(maxY - minY, 0.2) *
+		Math.max(maxZ - minZ, 0.2);
+	const h = Math.max(0.03, Math.cbrt(vol / limit) * 1.3);
+	const maxD2 = (h * 1.6) ** 2;
+	const cell = (v: number, m: number) => Math.floor((v - m) / h);
+	const grid = new Map<string, number[]>();
+	for (let i = 0; i < limit; i++) {
+		const key = `${cell(pos[i * 3]!, minX)},${cell(pos[i * 3 + 1]!, minY)},${cell(pos[i * 3 + 2]!, minZ)}`;
+		const list = grid.get(key);
+		if (list) list.push(i);
+		else grid.set(key, [i]);
+	}
+	const out: number[] = [];
+	const seen = new Set<number>();
+	for (let i = 0; i < limit; i++) {
+		const cx = cell(pos[i * 3]!, minX);
+		const cy = cell(pos[i * 3 + 1]!, minY);
+		const cz = cell(pos[i * 3 + 2]!, minZ);
+		let b1 = -1;
+		let b2 = -1;
+		let d1 = maxD2;
+		let d2 = maxD2;
+		for (let dx = -1; dx <= 1; dx++)
+			for (let dy = -1; dy <= 1; dy++)
+				for (let dz = -1; dz <= 1; dz++) {
+					const list = grid.get(`${cx + dx},${cy + dy},${cz + dz}`);
+					if (!list) continue;
+					for (const j of list) {
+						if (j === i) continue;
+						const d =
+							(pos[i * 3]! - pos[j * 3]!) ** 2 +
+							(pos[i * 3 + 1]! - pos[j * 3 + 1]!) ** 2 +
+							(pos[i * 3 + 2]! - pos[j * 3 + 2]!) ** 2;
+						if (d < d1) {
+							d2 = d1;
+							b2 = b1;
+							d1 = d;
+							b1 = j;
+						} else if (d < d2) {
+							d2 = d;
+							b2 = j;
+						}
+					}
+				}
+		for (const j of [b1, b2]) {
+			if (j < 0) continue;
+			const key = i < j ? i * limit + j : j * limit + i;
+			if (seen.has(key)) continue;
+			seen.add(key);
+			out.push(i, j);
+		}
+	}
+	return new Uint32Array(out);
+};
+
+export const buildScene = (k: number, o: BuildOptions, dust: Dust): Shape => {
+	const shape = BUILDERS[SCENES[k]!](
+		new Writer(o.count + o.dust),
 		o.count,
+		mulberry32(101 + k * 17),
+		o,
 	);
+	shape.pairs = neighbourPairs(shape.pos, Math.min(o.count, 900));
+	return withDust(shape, dust, o.count);
+};
 
 export const buildScatterShape = (o: BuildOptions, dust: Dust): Shape =>
 	withDust(

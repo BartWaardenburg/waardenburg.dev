@@ -36,8 +36,8 @@ uniform vec3 uCenterTo;
 uniform float uScrollY;
 uniform float uVel;
 uniform vec2 uMouse;
-uniform vec2 uMouseVel;
 uniform float uMouseStr;
+uniform int uMode; // 0 points, 1 neighbour lines
 uniform float uScan;
 uniform float uDim;
 uniform int uDustStart;
@@ -69,30 +69,35 @@ void main() {
 		float depth = clamp((p.z + 9.0) / 14.0, 0.0, 1.0);
 		p.y = mod(p.y + uScrollY * (0.15 + depth * 0.9) + 6.0, 12.0) - 6.0;
 	}
-	// The pointer is a lens: particles nearby are drawn into a slowly swirling halo
-	// that trails behind the pointer's motion, and warm up in colour as they pass.
+	// The pointer paints rather than pushes: particles stay put, pick up a colour
+	// field that turns through sage, ochre and wine, and a soft ripple pulses outward.
 	vec2 d = p.xy - uMouse;
 	float r = length(d) + 1e-4;
-	float f = exp(-r * r * 1.7) * uMouseStr;
-	float swirl = f * (2.1 + sin(uTime * 1.1 + aRand.w * 6.2831) * 0.8);
-	float cs = cos(swirl);
-	float sn = sin(swirl);
-	vec2 dir = mat2(cs, sn, -sn, cs) * (d / r);
-	float halo = 0.55 + aRand.y * 0.25;
-	float rr = mix(r, halo + (r - halo) * 0.3, f * 0.75);
-	p.xy = uMouse + dir * rr - uMouseVel * f * 0.9;
-	p.z += f * 0.7 * sin(swirl * 2.0 + aRand.x * 6.2831);
+	float f = exp(-r * r * 1.4) * uMouseStr;
+	float t = fract(atan(d.y, d.x) / 6.2831 + uTime * 0.07 + r * 0.3);
+	vec3 sage = vec3(0.66, 0.8, 0.58);
+	vec3 ochre = vec3(0.92, 0.68, 0.38);
+	vec3 wine = vec3(0.88, 0.38, 0.47);
+	vec3 lens = t < 0.3333
+		? mix(sage, ochre, t * 3.0)
+		: t < 0.6667
+			? mix(ochre, wine, t * 3.0 - 1.0)
+			: mix(wine, sage, t * 3.0 - 2.0);
+	float wave = fract(uTime * 0.4);
+	float ring = exp(-pow((r - wave * 2.4) * 5.0, 2.0)) * (1.0 - wave) * uMouseStr;
 	vec4 mv = uView * vec4(p, 1.0);
 	gl_Position = uProj * mv;
-	float size = uSize * (0.5 + aRand.z * 1.1) * uDpr * (dust ? 0.8 : 1.0) * (1.0 + f * 0.6);
+	float size = uSize * (0.5 + aRand.z * 1.1) * uDpr * (dust ? 0.8 : 1.0) * (1.0 + f * 0.5 + ring * 0.4);
 	gl_PointSize = max(1.0, size * (7.0 / max(0.5, -mv.z)));
 	vec4 col = mix(aFromCol, aToCol, m);
 	float band = exp(-pow((p.y - uCenterTo.y - sin(uTime * 0.8) * 2.0) * 4.0, 2.0));
 	col.rgb = mix(col.rgb, vec3(0.86, 0.66, 0.4), band * uScan * 0.7);
-	float hue = 0.5 + 0.5 * sin(atan(d.y, d.x) * 2.0 + uTime * 0.8);
-	vec3 lens = mix(vec3(0.9, 0.68, 0.4), vec3(0.86, 0.38, 0.46), hue);
-	col.rgb = mix(col.rgb, lens, f * 0.7);
-	col.a *= (dust ? 1.0 : uDim * 1.45) * (1.0 + burst * 0.7 + band * uScan * 1.5 + f * 2.2);
+	if (!dust) col.rgb = mix(col.rgb, lens, min(1.0, f * 0.9 + ring * 0.5));
+	col.a *= (dust ? 1.0 : uDim * 1.45) * (1.0 + burst * 0.7 + band * uScan * 1.5 + f * 1.4 + ring * 1.4);
+	if (uMode == 1) {
+		// constellation lines between neighbours, only where the pointer is
+		col = vec4(lens, smoothstep(0.05, 0.8, f) * 1.4 * (1.0 - burst) * uDim);
+	}
 	vCol = col;
 }`;
 
@@ -100,14 +105,19 @@ const FRAG = /* glsl */ `#version 300 es
 precision mediump float;
 in vec4 vCol;
 out vec4 outColor;
+uniform highp int uMode;
 void main() {
+	if (uMode == 1) {
+		outColor = vec4(vCol.rgb * vCol.a, 1.0);
+		return;
+	}
 	vec2 c = gl_PointCoord - 0.5;
 	float a = smoothstep(0.5, 0.0, length(c));
 	a *= a;
 	outColor = vec4(vCol.rgb * vCol.a * a, 1.0);
 }`;
 
-const BG = [7 / 255, 7 / 255, 10 / 255];
+const BG = [10 / 255, 10 / 255, 9 / 255];
 const FOV = (35 * Math.PI) / 180;
 const CAM_Z = 10;
 
@@ -188,7 +198,10 @@ export const createEngine = (
 	gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERT));
 	gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAG));
 	gl.linkProgram(program);
-	if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+	if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+		console.error(gl.getProgramInfoLog(program));
+		return null;
+	}
 	gl.useProgram(program);
 
 	const u = (name: string) => gl.getUniformLocation(program, name);
@@ -206,7 +219,7 @@ export const createEngine = (
 		scrollY: u('uScrollY'),
 		vel: u('uVel'),
 		mouse: u('uMouse'),
-		mouseVel: u('uMouseVel'),
+		mode: u('uMode'),
 		mouseStr: u('uMouseStr'),
 		scan: u('uScan'),
 		dim: u('uDim'),
@@ -234,7 +247,13 @@ export const createEngine = (
 	gl.enableVertexAttribArray(4);
 	gl.vertexAttribPointer(4, 4, gl.FLOAT, false, 0, 0);
 
-	type GpuShape = { shape: Shape; pos: WebGLBuffer; col: WebGLBuffer };
+	type GpuShape = {
+		shape: Shape;
+		pos: WebGLBuffer;
+		col: WebGLBuffer;
+		idx: WebGLBuffer | null;
+		idxCount: number;
+	};
 	let gpu: (GpuShape | null)[] = [];
 	let scatter: GpuShape | null = null;
 	let dustData: Dust | null = null;
@@ -248,7 +267,14 @@ export const createEngine = (
 		const col = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, col);
 		gl.bufferData(gl.ARRAY_BUFFER, shape.col, gl.STATIC_DRAW);
-		return { shape, pos, col };
+		let idx: WebGLBuffer | null = null;
+		if (shape.pairs && shape.pairs.length > 0) {
+			// bound while the VAO is bound; each draw rebinds the one it needs
+			idx = gl.createBuffer();
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idx);
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, shape.pairs, gl.STATIC_DRAW);
+		}
+		return { shape, pos, col, idx, idxCount: shape.pairs?.length ?? 0 };
 	};
 
 	const release = () => {
@@ -256,6 +282,7 @@ export const createEngine = (
 			if (!g) continue;
 			gl.deleteBuffer(g.pos);
 			gl.deleteBuffer(g.col);
+			if (g.idx) gl.deleteBuffer(g.idx);
 		}
 		gpu = [];
 		scatter = null;
@@ -344,8 +371,6 @@ export const createEngine = (
 		ty: 0,
 		active: 0,
 		tActive: 0,
-		vx: 0,
-		vy: 0,
 	};
 	const onMove = (e: PointerEvent) => {
 		if (e.pointerType === 'touch') return;
@@ -461,23 +486,9 @@ export const createEngine = (
 		lastScroll = sy;
 		vel += (Math.min(1.2, dv * 12) - vel) * (1 - Math.exp(-dt * 6));
 
-		const k = 1 - Math.exp(-dt * 4);
-		const px = pointer.x;
-		const py = pointer.y;
+		const k = 1 - Math.exp(-dt * 7);
 		pointer.x += (pointer.tx - pointer.x) * k;
 		pointer.y += (pointer.ty - pointer.y) * k;
-		// pointer velocity in world units per second, smoothed, for the lens wake
-		const kv = 1 - Math.exp(-dt * 6);
-		const clampV = (v: number) => Math.max(-4, Math.min(4, v));
-		pointer.vx +=
-			(clampV(((pointer.x - px) * view.width) / 2 / Math.max(dt, 1e-3)) * 0.12 -
-				pointer.vx) *
-			kv;
-		pointer.vy +=
-			(clampV(((pointer.y - py) * view.height) / 2 / Math.max(dt, 1e-3)) *
-				0.12 -
-				pointer.vy) *
-			kv;
 		pointer.active += (pointer.tActive - pointer.active) * k;
 
 		const eye: [number, number, number] = [
@@ -504,7 +515,6 @@ export const createEngine = (
 		gl.uniform3fv(U.centerTo, to.shape.center);
 		gl.uniform1f(U.scrollY, (sy / window.innerHeight) * 1.6);
 		gl.uniform1f(U.vel, vel);
-		gl.uniform2f(U.mouseVel, pointer.vx, pointer.vy);
 		gl.uniform2f(
 			U.mouse,
 			(pointer.x * view.width) / 2,
@@ -530,8 +540,17 @@ export const createEngine = (
 
 		gl.clearColor(BG[0]!, BG[1]!, BG[2]!, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT);
+		gl.uniform1i(U.mode, 0);
 		gl.drawArrays(gl.POINTS, 0, drawCount);
 		gl.drawArrays(gl.POINTS, count, dust);
+
+		// neighbour lines light up around the pointer
+		const lineShape = from === scatter || mix >= 0.5 ? to : from;
+		if (lineShape.idx && !coarse && pointer.active > 0.02) {
+			gl.uniform1i(U.mode, 1);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, lineShape.idx);
+			gl.drawElements(gl.LINES, lineShape.idxCount, gl.UNSIGNED_INT, 0);
+		}
 
 		if (!ready) {
 			ready = true;

@@ -36,9 +36,15 @@ function Card({ project, i }: { project: OssProject; i: number }) {
 	};
 
 	return (
-		<Reveal delay={(i % 3) * 0.1} y={60} className="[perspective:1200px]">
+		<Reveal
+			delay={(i % 3) * 0.1}
+			y={60}
+			className={`[perspective:1200px] ${project.wide ? 'md:col-span-2' : ''}`}
+		>
 			<motion.a
 				href={project.url}
+				target="_blank"
+				rel="noopener noreferrer"
 				onPointerMove={onMove}
 				onPointerLeave={onLeave}
 				style={{ rotateX: srx, rotateY: sry }}
@@ -101,7 +107,8 @@ export function OpenSource() {
 						<p className="max-w-lg text-lg text-muted lg:justify-self-end">
 							Tools for developers, and more and more for their agents: Rust
 							SDKs on the Oxc stack, MCP servers that turn real APIs into safe
-							tools, and products I design and build end to end.
+							tools, and skills that teach agents to use them. All public, all
+							MIT licensed.
 						</p>
 					</Reveal>
 				</div>

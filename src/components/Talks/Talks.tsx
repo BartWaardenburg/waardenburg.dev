@@ -7,151 +7,88 @@ import { useEffect, useRef, useState } from 'react';
 import { Reveal, SplitWords } from '@/components/Motion';
 import { talks, teaching, type Talk } from '@/content';
 
-function Video({ talk, sizes }: { talk: Talk; sizes: string }) {
-	const [playing, setPlaying] = useState(false);
-	if (!talk.youtubeId) return null;
+const external = { target: '_blank', rel: 'noopener noreferrer' } as const;
+
+/** The same cover for every talk: the YouTube still when there is a recording, type otherwise. */
+function Cover({ talk, sizes }: { talk: Talk; sizes: string }) {
 	return (
-		<div className="relative aspect-video overflow-hidden bg-bg-2">
-			{playing ? (
-				<iframe
-					className="absolute inset-0 size-full"
-					src={`https://www.youtube-nocookie.com/embed/${talk.youtubeId}?autoplay=1&rel=0`}
-					title={`${talk.title} at ${talk.event}`}
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-					allowFullScreen
-				/>
-			) : (
-				<button
-					type="button"
-					onClick={() => setPlaying(true)}
-					className="group absolute inset-0 size-full cursor-pointer"
-					aria-label={`Play ${talk.title} at ${talk.event}`}
-				>
+		<a
+			href={talk.link.url}
+			{...external}
+			tabIndex={-1}
+			aria-hidden
+			className="group/cover relative block aspect-video overflow-hidden bg-bg-2"
+		>
+			{talk.youtubeId ? (
+				<>
 					<Image
 						src={`https://i.ytimg.com/vi/${talk.youtubeId}/hqdefault.jpg`}
 						alt=""
 						fill
 						sizes={sizes}
-						className="object-cover opacity-70 transition duration-700 group-hover:scale-105 group-hover:opacity-95"
+						className="object-cover opacity-75 transition duration-700 group-hover/cover:scale-105 group-hover/cover:opacity-95"
 					/>
-					<span className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
-					<span className="absolute top-1/2 left-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center border border-fg/40 bg-bg/40 text-fg backdrop-blur-sm transition duration-500 group-hover:border-sage group-hover:bg-sage group-hover:text-bg md:size-20">
+					<span className="absolute inset-0 bg-gradient-to-t from-bg/80 via-transparent to-transparent" />
+					<span className="absolute bottom-4 left-4 grid size-12 place-items-center border border-fg/40 bg-bg/50 text-fg backdrop-blur-sm transition duration-500 group-hover/cover:border-sage group-hover/cover:bg-sage group-hover/cover:text-bg">
 						<svg
 							viewBox="0 0 24 24"
-							className="ml-1 size-6 md:size-7"
+							className="ml-0.5 size-5"
 							fill="currentColor"
-							aria-hidden
 						>
 							<path d="M8 5v14l11-7z" />
 						</svg>
 					</span>
-				</button>
-			)}
-		</div>
-	);
-}
-
-function Featured({ talk }: { talk: Talk }) {
-	return (
-		<article className="glass flex w-[88vw] shrink-0 snap-start flex-col gap-6 p-5 md:p-7 lg:w-[62vw] lg:max-w-[980px]">
-			<Video talk={talk} sizes="(min-width: 1024px) 60vw, 90vw" />
-			<div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
-				<div>
-					<p className="font-mono text-[11px] tracking-[0.16em] text-sage uppercase">
-						Latest · {talk.event} · {talk.year}
-					</p>
-					<h3 className="mt-3 font-sans text-3xl font-bold tracking-tight md:text-4xl">
-						{talk.title}
-					</h3>
-					<p className="mt-3 max-w-2xl text-muted">{talk.body}</p>
-				</div>
-				{talk.url && (
-					<a
-						href={talk.url}
-						className="justify-self-start border border-line px-5 py-3 font-mono text-[11px] tracking-[0.14em] uppercase transition-colors hover:border-sage hover:text-sage"
-					>
-						YouTube ↗
-					</a>
-				)}
-			</div>
-		</article>
-	);
-}
-
-function Card({ talk }: { talk: Talk }) {
-	const cls =
-		'glass group flex w-[85vw] shrink-0 snap-start flex-col p-5 sm:w-[60vw] md:p-6 lg:w-[30vw] lg:max-w-[460px]';
-	const meta = (
-		<p className="mt-5 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-muted uppercase">
-			{talk.upcoming && (
-				<span className="border border-ochre/60 px-2 py-0.5 text-ochre">
-					Upcoming
-				</span>
-			)}
-			{talk.event} · {talk.year}
-		</p>
-	);
-	const text = (
-		<>
-			<h3 className="mt-2 font-sans text-2xl font-bold tracking-tight transition-colors group-hover:text-sage">
-				{talk.title}
-			</h3>
-			<p className="mt-2 text-sm text-muted">{talk.body}</p>
-		</>
-	);
-
-	// cards with a recording play it in place, so the card itself is not a link
-	if (talk.youtubeId) {
-		return (
-			<article className={cls}>
-				<Video talk={talk} sizes="(min-width: 1024px) 30vw, 85vw" />
-				{meta}
-				{text}
-				{talk.url && (
-					<a
-						href={talk.url}
-						className="mt-5 self-start font-mono text-[11px] tracking-[0.14em] text-muted uppercase transition-colors hover:text-sage"
-					>
-						YouTube ↗
-					</a>
-				)}
-			</article>
-		);
-	}
-
-	const cover = (
-		<div className="relative aspect-video overflow-hidden bg-bg-2">
-			{talk.image ? (
-				<Image
-					src={talk.image}
-					alt=""
-					fill
-					sizes="(min-width: 1024px) 30vw, 85vw"
-					className="object-cover opacity-60 grayscale transition duration-700 group-hover:scale-105 group-hover:opacity-90 group-hover:grayscale-0"
-				/>
+				</>
 			) : (
-				<div className="absolute inset-0 flex flex-col justify-between p-5">
+				<span className="absolute inset-0 flex flex-col justify-between p-5">
 					<span
 						className={`block h-1 w-12 ${talk.upcoming ? 'bg-ochre' : 'bg-wine'}`}
 					/>
-					<span className="font-serif text-4xl leading-none text-fg/85 italic md:text-5xl">
-						{talk.event.split(' · ')[0]}
+					<span>
+						<span className="block font-serif text-4xl leading-none text-fg/85 italic md:text-5xl">
+							{talk.event}
+						</span>
 					</span>
-				</div>
+				</span>
 			)}
-		</div>
-	);
-	return talk.url ? (
-		<a href={talk.url} className={cls}>
-			{cover}
-			{meta}
-			{text}
 		</a>
-	) : (
-		<article className={cls}>
-			{cover}
-			{meta}
-			{text}
+	);
+}
+
+function TalkCard({ talk }: { talk: Talk }) {
+	const featured = Boolean(talk.featured);
+	return (
+		<article className="glass flex w-[85vw] shrink-0 snap-start flex-col p-5 sm:w-[60vw] md:p-6 lg:w-[34vw] lg:max-w-[520px]">
+			<Cover talk={talk} sizes="(min-width: 1024px) 34vw, 85vw" />
+			<p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[11px] tracking-[0.16em] text-muted uppercase">
+				{featured && (
+					<span className="border border-sage/60 px-2 py-0.5 text-sage">
+						Latest
+					</span>
+				)}
+				{talk.upcoming && (
+					<span className="border border-ochre/60 px-2 py-0.5 text-ochre">
+						Upcoming
+					</span>
+				)}
+				<span>
+					{talk.event} · {talk.place} · {talk.date}
+				</span>
+			</p>
+			<h3 className="mt-3 font-sans text-2xl font-bold tracking-tight">
+				{talk.title}
+			</h3>
+			<p className="mt-3 text-sm leading-relaxed text-muted md:text-base">
+				{talk.body}
+			</p>
+			<a
+				href={talk.link.url}
+				{...external}
+				className="mt-auto self-start pt-6 font-mono text-[11px] tracking-[0.14em] text-fg uppercase transition-colors hover:text-sage"
+			>
+				{talk.link.label} ↗
+				<span className="sr-only"> (opens in a new tab): {talk.title}</span>
+			</a>
 		</article>
 	);
 }
@@ -182,8 +119,6 @@ export function Talks() {
 			window.removeEventListener('resize', measure);
 		};
 	}, []);
-
-	const [featured, ...rest] = talks;
 
 	return (
 		<section
@@ -231,11 +166,10 @@ export function Talks() {
 						ref={track}
 						style={{ x }}
 						data-lenis-prevent-touch
-						className="flex items-start snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:px-10 lg:motion-safe:snap-none lg:motion-safe:overflow-visible lg:motion-safe:pb-0"
+						className="flex items-stretch snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:px-10 lg:motion-safe:snap-none lg:motion-safe:overflow-visible lg:motion-safe:pb-0"
 					>
-						{featured && <Featured talk={featured} />}
-						{rest.map((t) => (
-							<Card key={t.title} talk={t} />
+						{talks.map((t) => (
+							<TalkCard key={t.title} talk={t} />
 						))}
 						<div aria-hidden className="hidden w-[10vw] shrink-0 lg:block" />
 					</motion.div>
