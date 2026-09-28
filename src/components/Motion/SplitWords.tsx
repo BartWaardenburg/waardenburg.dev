@@ -5,6 +5,8 @@ interface SplitWordsProps {
 	className?: string;
 	delay?: number;
 	stagger?: number;
+	/** colour for the *italic* words */
+	italicClassName?: string;
 	/** play on load instead of when scrolled into view */
 	immediate?: boolean;
 }
@@ -18,21 +20,29 @@ export function SplitWords({
 	className,
 	delay = 0,
 	stagger = 0.06,
+	italicClassName = 'text-accent',
 	immediate = false,
 }: SplitWordsProps) {
-	const words = text.split(' ');
+	// *asterisks* may span several words
+	let open = false;
+	const words = text.split(' ').map((raw) => {
+		const starts = raw.startsWith('*');
+		const ends =
+			raw.replace(/[.,!?]$/, '').endsWith('*') && (raw.length > 1 || !starts);
+		const italic = open || starts;
+		if (starts) open = true;
+		if (ends) open = false;
+		return { word: raw.replaceAll('*', ''), italic };
+	});
 	return (
 		<span className={className}>
 			<span className="sr-only">{text.replaceAll('*', '')}</span>
 			<span aria-hidden data-reveal-words={immediate ? 'now' : ''}>
-				{words.map((raw, i) => {
-					const italic =
-						raw.startsWith('*') && raw.replace(/[.,!?]$/, '').endsWith('*');
-					const word = raw.replaceAll('*', '');
+				{words.map(({ word, italic }, i) => {
 					return (
 						<span key={`${word}-${i}`} className="sw-mask">
 							<span
-								className={`sw-word ${italic ? 'font-serif font-normal text-accent italic' : ''}`}
+								className={`sw-word ${italic ? `font-serif font-normal italic ${italicClassName}` : ''}`}
 								style={{ '--wd': `${delay + i * stagger}s` } as CSSProperties}
 							>
 								{word}

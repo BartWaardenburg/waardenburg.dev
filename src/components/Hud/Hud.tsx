@@ -4,14 +4,14 @@ import { motion, useScroll, useSpring } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 const SECTIONS = [
-	{ id: 'top', code: '00', label: 'Intro' },
-	{ id: 'about', code: '00', label: 'About' },
-	{ id: 'fallow', code: '01', label: 'Fallow' },
-	{ id: 'isagentready', code: '02', label: 'IsAgentReady' },
-	{ id: 'open-source', code: '03', label: 'Open source' },
-	{ id: 'talks', code: '04', label: 'Talks' },
-	{ id: 'career', code: '05', label: 'Career' },
-	{ id: 'contact', code: '06', label: 'Contact' },
+	{ id: 'top', label: 'Intro' },
+	{ id: 'about', label: 'About' },
+	{ id: 'fallow', label: 'Fallow' },
+	{ id: 'isagentready', label: 'IsAgentReady' },
+	{ id: 'open-source', label: 'Open source' },
+	{ id: 'talks', label: 'Talks' },
+	{ id: 'career', label: 'Career' },
+	{ id: 'contact', label: 'Contact' },
 ];
 
 const clock = () =>
@@ -62,8 +62,7 @@ export function Hud() {
 			<div
 				className={`fixed bottom-5 left-5 z-40 hidden transition-opacity duration-500 ${hideBottom} items-center gap-3 font-mono text-[11px] tracking-[0.18em] text-muted uppercase md:left-10 md:flex`}
 			>
-				<span className="tabular-nums text-fg">{current.code}</span>
-				<span className="h-px w-10 bg-line" />
+				<span className="h-px w-10 bg-sage" />
 				<motion.span
 					key={current.id}
 					initial={{ opacity: 0, y: 8 }}

@@ -33,12 +33,12 @@ export function Manifesto() {
 				<motion.p
 					aria-hidden
 					style={{ x: x1 }}
-					className="text-outline pointer-events-none mt-24 font-sans text-[18vw] leading-none font-extrabold tracking-[-0.05em] whitespace-nowrap uppercase select-none"
+					className="text-ghost pointer-events-none mt-24 font-sans text-[18vw] leading-none font-extrabold tracking-[-0.05em] whitespace-nowrap uppercase select-none"
 				>
 					Build · Teach · Grow
 				</motion.p>
 
-				<ol className="mt-16 grid gap-px overflow-hidden rounded-3xl border border-line bg-line md:grid-cols-3">
+				<ol className="mt-16 grid gap-px border border-line bg-line md:grid-cols-3">
 					{pillars.map((p, i) => (
 						<Reveal
 							as="li"
@@ -46,7 +46,9 @@ export function Manifesto() {
 							delay={i * 0.12}
 							className="group relative bg-bg/80 p-8 backdrop-blur-md md:p-10"
 						>
-							<span className="font-mono text-xs text-dim">0{i + 1}</span>
+							<span
+								className={`block size-2 ${['bg-sage', 'bg-wine', 'bg-ochre'][i]}`}
+							/>
 							<h3 className="mt-10 font-sans text-4xl font-bold tracking-tight transition-colors group-hover:text-accent md:text-5xl">
 								{p.title}
 							</h3>

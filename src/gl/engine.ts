@@ -36,6 +36,7 @@ uniform vec3 uCenterTo;
 uniform float uScrollY;
 uniform float uVel;
 uniform vec2 uMouse;
+uniform vec2 uMouseVel;
 uniform float uMouseStr;
 uniform float uScan;
 uniform float uDim;
@@ -68,18 +69,30 @@ void main() {
 		float depth = clamp((p.z + 9.0) / 14.0, 0.0, 1.0);
 		p.y = mod(p.y + uScrollY * (0.15 + depth * 0.9) + 6.0, 12.0) - 6.0;
 	}
+	// The pointer is a lens: particles nearby are drawn into a slowly swirling halo
+	// that trails behind the pointer's motion, and warm up in colour as they pass.
 	vec2 d = p.xy - uMouse;
-	float f = exp(-dot(d, d) * 2.4) * uMouseStr;
-	p.xy += normalize(d + 1e-4) * f * 0.5;
-	p.z += f * 0.8;
+	float r = length(d) + 1e-4;
+	float f = exp(-r * r * 1.7) * uMouseStr;
+	float swirl = f * (2.1 + sin(uTime * 1.1 + aRand.w * 6.2831) * 0.8);
+	float cs = cos(swirl);
+	float sn = sin(swirl);
+	vec2 dir = mat2(cs, sn, -sn, cs) * (d / r);
+	float halo = 0.55 + aRand.y * 0.25;
+	float rr = mix(r, halo + (r - halo) * 0.3, f * 0.75);
+	p.xy = uMouse + dir * rr - uMouseVel * f * 0.9;
+	p.z += f * 0.7 * sin(swirl * 2.0 + aRand.x * 6.2831);
 	vec4 mv = uView * vec4(p, 1.0);
 	gl_Position = uProj * mv;
-	float size = uSize * (0.5 + aRand.z * 1.1) * uDpr * (dust ? 0.8 : 1.0);
+	float size = uSize * (0.5 + aRand.z * 1.1) * uDpr * (dust ? 0.8 : 1.0) * (1.0 + f * 0.6);
 	gl_PointSize = max(1.0, size * (7.0 / max(0.5, -mv.z)));
 	vec4 col = mix(aFromCol, aToCol, m);
 	float band = exp(-pow((p.y - uCenterTo.y - sin(uTime * 0.8) * 2.0) * 4.0, 2.0));
-	col.rgb = mix(col.rgb, vec3(0.8, 1.0, 0.35), band * uScan * 0.7);
-	col.a *= (dust ? 1.0 : uDim * 1.45) * (1.0 + burst * 0.7 + band * uScan * 1.5 + f * 1.5);
+	col.rgb = mix(col.rgb, vec3(0.86, 0.66, 0.4), band * uScan * 0.7);
+	float hue = 0.5 + 0.5 * sin(atan(d.y, d.x) * 2.0 + uTime * 0.8);
+	vec3 lens = mix(vec3(0.9, 0.68, 0.4), vec3(0.86, 0.38, 0.46), hue);
+	col.rgb = mix(col.rgb, lens, f * 0.7);
+	col.a *= (dust ? 1.0 : uDim * 1.45) * (1.0 + burst * 0.7 + band * uScan * 1.5 + f * 2.2);
 	vCol = col;
 }`;
 
@@ -193,6 +206,7 @@ export const createEngine = (
 		scrollY: u('uScrollY'),
 		vel: u('uVel'),
 		mouse: u('uMouse'),
+		mouseVel: u('uMouseVel'),
 		mouseStr: u('uMouseStr'),
 		scan: u('uScan'),
 		dim: u('uDim'),
@@ -323,7 +337,16 @@ export const createEngine = (
 	};
 
 	// --- input -------------------------------------------------------------
-	const pointer = { x: 0, y: 0, tx: 0, ty: 0, active: 0, tActive: 0 };
+	const pointer = {
+		x: 0,
+		y: 0,
+		tx: 0,
+		ty: 0,
+		active: 0,
+		tActive: 0,
+		vx: 0,
+		vy: 0,
+	};
 	const onMove = (e: PointerEvent) => {
 		if (e.pointerType === 'touch') return;
 		pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
@@ -439,8 +462,22 @@ export const createEngine = (
 		vel += (Math.min(1.2, dv * 12) - vel) * (1 - Math.exp(-dt * 6));
 
 		const k = 1 - Math.exp(-dt * 4);
+		const px = pointer.x;
+		const py = pointer.y;
 		pointer.x += (pointer.tx - pointer.x) * k;
 		pointer.y += (pointer.ty - pointer.y) * k;
+		// pointer velocity in world units per second, smoothed, for the lens wake
+		const kv = 1 - Math.exp(-dt * 6);
+		const clampV = (v: number) => Math.max(-4, Math.min(4, v));
+		pointer.vx +=
+			(clampV(((pointer.x - px) * view.width) / 2 / Math.max(dt, 1e-3)) * 0.12 -
+				pointer.vx) *
+			kv;
+		pointer.vy +=
+			(clampV(((pointer.y - py) * view.height) / 2 / Math.max(dt, 1e-3)) *
+				0.12 -
+				pointer.vy) *
+			kv;
 		pointer.active += (pointer.tActive - pointer.active) * k;
 
 		const eye: [number, number, number] = [
@@ -467,6 +504,7 @@ export const createEngine = (
 		gl.uniform3fv(U.centerTo, to.shape.center);
 		gl.uniform1f(U.scrollY, (sy / window.innerHeight) * 1.6);
 		gl.uniform1f(U.vel, vel);
+		gl.uniform2f(U.mouseVel, pointer.vx, pointer.vy);
 		gl.uniform2f(
 			U.mouse,
 			(pointer.x * view.width) / 2,

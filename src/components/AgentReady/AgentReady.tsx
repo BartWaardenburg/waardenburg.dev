@@ -61,11 +61,8 @@ function CategoryBar({
 					{shown}
 				</motion.span>
 			</div>
-			<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
-				<motion.div
-					className="h-full origin-left rounded-full bg-accent"
-					style={{ scaleX }}
-				/>
+			<div className="mt-2 h-1 bg-line">
+				<motion.div className="h-full origin-left bg-sage" style={{ scaleX }} />
 			</div>
 		</motion.li>
 	);
@@ -92,17 +89,11 @@ function ScanCard({ drive }: { drive: MotionValue<number> }) {
 	const scoreText = useTransform(score, (v) => Math.round(v).toString());
 	const gradeOpacity = useTransform(drive, [0.9, 0.95], [0, 1]);
 	const gradeScale = useTransform(drive, [0.9, 0.96], [1.8, 1]);
-	const spinner = useTransform(drive, [0.24, 0.9], [0, 1080]);
 
 	return (
-		<div className="glass w-full max-w-md rounded-3xl p-6 shadow-[0_40px_120px_-40px_rgb(0_0_0/0.9)] md:p-7">
-			<div className="flex items-center gap-3 rounded-full border border-line bg-bg/60 px-4 py-2.5 font-mono text-xs">
-				<motion.span
-					style={{ rotate: spinner }}
-					className="inline-block text-accent"
-				>
-					◌
-				</motion.span>
+		<div className="glass w-full p-6 shadow-[0_40px_120px_-40px_rgb(0_0_0/0.9)] md:w-[27rem] md:p-7">
+			<div className="flex items-center gap-3 border border-line bg-bg/60 px-4 py-2.5 font-mono text-xs">
+				<span className="text-dim">URL</span>
 				<motion.span className="caret truncate">{url}</motion.span>
 			</div>
 			<div className="mt-6 flex items-center gap-6">
@@ -113,7 +104,7 @@ function ScanCard({ drive }: { drive: MotionValue<number> }) {
 							cy="60"
 							r="52"
 							fill="none"
-							stroke="rgb(255 255 255 / 0.08)"
+							stroke="rgb(239 235 227 / 0.08)"
 							strokeWidth="8"
 						/>
 						<motion.circle
@@ -121,9 +112,9 @@ function ScanCard({ drive }: { drive: MotionValue<number> }) {
 							cy="60"
 							r="52"
 							fill="none"
-							stroke="var(--color-accent)"
+							stroke="var(--color-sage)"
 							strokeWidth="8"
-							strokeLinecap="round"
+							strokeLinecap="butt"
 							style={{ pathLength: ring }}
 						/>
 					</svg>
@@ -133,15 +124,15 @@ function ScanCard({ drive }: { drive: MotionValue<number> }) {
 						</motion.span>
 					</div>
 				</div>
-				<div>
-					<motion.p className="font-mono text-[11px] tracking-[0.14em] text-muted uppercase">
+				<div className="min-w-0">
+					<motion.p className="font-mono text-[11px] tracking-[0.14em] whitespace-nowrap text-muted uppercase">
 						{status}
 					</motion.p>
 					<div className="mt-1 flex items-baseline gap-3">
 						<span className="font-mono text-[11px] text-dim">Grade</span>
 						<motion.span
 							style={{ opacity: gradeOpacity, scale: gradeScale }}
-							className="inline-block font-sans text-5xl font-extrabold text-accent"
+							className="inline-block font-sans text-5xl font-extrabold text-ochre"
 						>
 							{grade}
 						</motion.span>
@@ -199,19 +190,11 @@ export function AgentReady() {
 		>
 			<div ref={ref} className="relative lg:motion-safe:h-[300vh]">
 				<div className="px-5 py-24 md:px-10 lg:motion-safe:sticky lg:motion-safe:top-0 lg:motion-safe:flex lg:motion-safe:h-svh lg:motion-safe:items-stretch lg:motion-safe:py-24">
-					<div className="mx-auto grid w-full max-w-[1600px] gap-12 lg:grid-cols-[1fr_auto]">
+					<div className="mx-auto grid w-full max-w-[1600px] gap-12 lg:grid-cols-[1fr_27rem]">
 						<div className="flex flex-col">
-							<div className="flex items-center gap-4 font-mono text-xs tracking-[0.2em] text-muted uppercase">
-								<span className="text-accent">{iar.index}</span>
-								<span className="h-px w-12 bg-line" />
-								Flagship
-								<span className="rounded-full border border-line px-3 py-1 text-[10px]">
-									Builder
-								</span>
-							</div>
 							<h2
 								id="iar-title"
-								className="mt-6 font-sans text-[clamp(3rem,8.4vw,8rem)] leading-[0.85] font-extrabold tracking-[-0.05em]"
+								className="font-sans text-[clamp(3rem,8.4vw,8rem)] leading-[0.85] font-extrabold tracking-[-0.05em]"
 							>
 								<SplitWords text={iar.name} />
 							</h2>
@@ -243,7 +226,7 @@ export function AgentReady() {
 
 			<div className="relative px-5 pb-32 md:px-10">
 				<div className="mx-auto max-w-[1600px]">
-					<ul className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+					<ul className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
 						{iar.surfaces.map((s, i) => (
 							<Reveal
 								as="li"
@@ -251,7 +234,9 @@ export function AgentReady() {
 								delay={i * 0.08}
 								className="bg-bg/80 p-7 backdrop-blur-md"
 							>
-								<p className="font-mono text-[11px] text-accent">0{i + 1}</p>
+								<span
+									className={`block size-2 ${['bg-sage', 'bg-wine', 'bg-ochre', 'bg-slate'][i % 4]}`}
+								/>
 								<p className="mt-6 font-sans text-xl font-bold">{s.name}</p>
 								<p className="mt-2 text-sm text-muted">{s.body}</p>
 							</Reveal>
@@ -262,7 +247,7 @@ export function AgentReady() {
 							{iar.stack.map((t) => (
 								<li
 									key={t}
-									className="rounded-full border border-line px-3 py-1.5 font-mono text-[11px] text-muted"
+									className="border border-line px-3 py-1.5 font-mono text-[11px] text-muted"
 								>
 									{t}
 								</li>
@@ -271,7 +256,7 @@ export function AgentReady() {
 						<Magnetic>
 							<a
 								href={iar.url}
-								className="inline-flex items-center gap-3 rounded-full bg-accent px-7 py-4 font-mono text-xs font-bold tracking-[0.14em] text-bg uppercase"
+								className="inline-flex items-center gap-3 bg-sage px-7 py-4 font-mono text-xs font-bold tracking-[0.14em] text-bg uppercase"
 							>
 								Scan your site ↗
 							</a>

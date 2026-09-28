@@ -45,8 +45,8 @@ export function Marquee({
 
 	const row = items.map((item, i) => (
 		<span key={`${item}-${i}`} className="flex items-center gap-8 pr-8">
-			<span className={i % 2 ? 'text-outline' : ''}>{item}</span>
-			<span className="text-accent">✦</span>
+			<span className={i % 2 ? 'text-muted' : ''}>{item}</span>
+			<span className={['text-sage', 'text-wine', 'text-ochre'][i % 3]}>✦</span>
 		</span>
 	));
 

@@ -60,7 +60,7 @@ export function Hero() {
 								show: { opacity: 1, y: 0 },
 							}}
 							transition={{ duration: 0.8, ease: EASE }}
-							className="rounded-full border border-line bg-bg/40 px-3 py-1 font-mono text-[11px] tracking-[0.16em] text-muted uppercase backdrop-blur-sm"
+							className="border border-line bg-bg/40 px-3 py-1 font-mono text-[11px] tracking-[0.16em] text-muted uppercase backdrop-blur-sm"
 						>
 							{item}
 						</motion.li>
@@ -86,7 +86,6 @@ export function Hero() {
 							{hero.lede}
 						</p>
 						<p className="mt-5 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-fg uppercase">
-							<span className="pulse-dot size-2 rounded-full bg-accent" />
 							{site.availability}
 						</p>
 					</motion.div>

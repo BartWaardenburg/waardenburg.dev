@@ -21,7 +21,7 @@ const STYLE: Record<TerminalLine['kind'], string> = {
 	blank: '',
 	head: 'text-fg font-bold',
 	path: 'text-muted',
-	fail: 'text-ember',
+	fail: 'text-wine',
 };
 
 interface TerminalProps {
@@ -72,18 +72,18 @@ export function Terminal({
 	return (
 		<div
 			ref={ref}
-			className={`glass overflow-hidden rounded-2xl shadow-[0_40px_120px_-40px_rgb(0_0_0/0.9)] ${className ?? ''}`}
+			className={`glass shadow-[0_40px_120px_-40px_rgb(0_0_0/0.9)] ${className ?? ''}`}
 		>
 			<div className="flex items-center gap-2 border-b border-line px-4 py-3">
-				<span className="size-2.5 rounded-full bg-[#ff5f57]" />
-				<span className="size-2.5 rounded-full bg-[#febc2e]" />
-				<span className="size-2.5 rounded-full bg-[#28c840]" />
+				<span className="size-2 bg-wine" />
+				<span className="size-2 bg-ochre" />
+				<span className="size-2 bg-sage" />
 				<span className="ml-3 font-mono text-[11px] text-dim">{title}</span>
 			</div>
 			<p className="sr-only">{lines.map((l) => l.text).join('\n')}</p>
 			<pre
 				aria-hidden
-				className="min-h-[19.5rem] overflow-x-auto p-5 font-mono text-[11px] leading-relaxed sm:text-xs"
+				className="min-h-[19.5rem] p-5 font-mono text-[11px] leading-relaxed break-words whitespace-pre-wrap sm:text-xs"
 			>
 				{lines.map((line, i) => {
 					const len = Math.max(1, line.text.length);

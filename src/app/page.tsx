@@ -1,7 +1,6 @@
 import { AgentReady } from '@/components/AgentReady';
 import { Career } from '@/components/Career';
 import { Contact } from '@/components/Contact';
-import { Cursor } from '@/components/Cursor';
 import { Fallow } from '@/components/Fallow';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
@@ -25,7 +24,6 @@ export default async function HomePage() {
 			<SmoothScroll />
 			<Header />
 			<Hud />
-			<Cursor />
 			<main id="main" className="relative z-10">
 				<Hero />
 				<Manifesto />

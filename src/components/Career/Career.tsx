@@ -23,14 +23,9 @@ export function Career() {
 		>
 			<div className="mx-auto grid max-w-[1600px] gap-16 lg:grid-cols-[0.9fr_1.1fr]">
 				<div className="lg:sticky lg:top-28 lg:self-start">
-					<Reveal className="flex items-center gap-4 font-mono text-xs tracking-[0.2em] text-muted uppercase">
-						<span className="text-accent">05</span>
-						<span className="h-px w-12 bg-line" />
-						Career
-					</Reveal>
 					<h2
 						id="career-title"
-						className="mt-6 font-sans text-[clamp(3rem,7vw,6.5rem)] leading-[0.88] font-extrabold tracking-[-0.05em]"
+						className="font-sans text-[clamp(3rem,7vw,6.5rem)] leading-[0.88] font-extrabold tracking-[-0.05em]"
 					>
 						<SplitWords text="The long *trail* here." />
 					</h2>
@@ -60,7 +55,7 @@ export function Career() {
 					<motion.span
 						aria-hidden
 						style={{ scaleY }}
-						className="absolute top-0 bottom-0 left-[7px] w-px origin-top bg-accent shadow-[0_0_12px_rgb(200_255_77/0.8)]"
+						className="absolute top-0 bottom-0 left-[7px] w-px origin-top bg-accent shadow-[0_0_12px_rgb(169_187_157/0.8)]"
 					/>
 					{career.map((r) => (
 						<Reveal
@@ -68,7 +63,7 @@ export function Career() {
 							key={`${r.org}-${r.years}`}
 							className="relative pb-14 pl-12 last:pb-0"
 						>
-							<span className="absolute top-2 left-0 size-[15px] rounded-full border border-accent bg-bg" />
+							<span className="absolute top-2 left-0 size-[15px] rotate-45 border border-accent bg-bg" />
 							<p className="font-mono text-xs tracking-[0.16em] text-accent uppercase">
 								{r.years}
 							</p>
@@ -83,7 +78,7 @@ export function Career() {
 								{r.tags.map((t) => (
 									<li
 										key={t}
-										className="rounded-full border border-line bg-bg/60 px-2.5 py-1 font-mono text-[10px] text-muted"
+										className="border border-line bg-bg/60 px-2.5 py-1 font-mono text-[10px] text-muted"
 									>
 										{t}
 									</li>

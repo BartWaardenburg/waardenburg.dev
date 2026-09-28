@@ -38,14 +38,17 @@ export function Contact() {
 				className="mx-auto w-full max-w-[1600px] text-center"
 			>
 				<Reveal className="flex items-center justify-center gap-3 font-mono text-xs tracking-[0.2em] text-muted uppercase">
-					<span className="pulse-dot size-2 rounded-full bg-accent" />
 					{site.availability}
 				</Reveal>
 				<h2
 					id="contact-title"
 					className="mt-8 font-sans text-[clamp(4rem,15vw,15rem)] leading-[0.82] font-extrabold tracking-[-0.06em]"
 				>
-					<SplitWords text="Let's *talk.*" stagger={0.12} />
+					<SplitWords
+						text="Let's *talk.*"
+						stagger={0.12}
+						italicClassName="text-wine"
+					/>
 				</h2>
 				<p className="mx-auto mt-8 max-w-xl text-lg text-muted">
 					DevRel, developer tools, growth engineering, or a hard tooling problem
@@ -55,7 +58,7 @@ export function Contact() {
 					<Magnetic strength={0.5}>
 						<a
 							href={`mailto:${site.email}`}
-							className="inline-flex items-center gap-3 rounded-full bg-accent px-8 py-5 font-mono text-sm font-bold tracking-[0.1em] text-bg transition-shadow hover:shadow-[0_0_80px_rgb(200_255_77/0.45)]"
+							className="inline-flex items-center gap-3 bg-sage px-8 py-5 font-mono text-sm font-bold tracking-[0.1em] text-bg transition-colors hover:bg-fg"
 						>
 							{site.email}
 						</a>
@@ -63,7 +66,7 @@ export function Contact() {
 					<button
 						type="button"
 						onClick={copy}
-						className="cursor-pointer rounded-full border border-line px-6 py-5 font-mono text-xs tracking-[0.14em] uppercase transition-colors hover:border-fg"
+						className="cursor-pointer border border-line px-6 py-5 font-mono text-xs tracking-[0.14em] uppercase transition-colors hover:border-fg"
 					>
 						<span aria-live="polite">{copied ? 'Copied ✓' : 'Copy'}</span>
 					</button>

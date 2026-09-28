@@ -27,22 +27,20 @@ export const manifesto =
 	'For twelve years I built the web for other people: design systems, government portals, and apps hundreds of thousands of people use every day. Along the way I kept reaching for tools that did not exist yet. So now I build them, in the open, and I explain them from a stage, in docs, and in the terminal.';
 
 export const fallow = {
-	index: '01',
 	name: 'Fallow',
 	url: 'https://fallow.tools',
 	repo: 'https://github.com/fallow-rs/fallow',
 	tagline: 'Codebase intelligence for TypeScript and JavaScript.',
 	intro:
 		'Linters read your code one file at a time. Fallow reads the whole project graph and tells you what to delete, merge or refactor: dead code, duplication, complexity, circular dependencies, architecture boundaries and design-system drift. It ships as one Rust binary on the Oxc parser, needs no TypeScript compiler, and runs deterministically, with no AI inside the analyzer.',
-	role: 'Creator & maintainer',
 	steps: [
 		{
 			title: 'Your code is a graph.',
 			body: 'Every import is an edge. Fallow resolves all of them across 100+ framework plugins, so it knows which files, exports and dependencies nothing reaches.',
 		},
 		{
-			title: 'Fast enough to run on every keystroke.',
-			body: 'Built in Rust on Oxc. It analyzes preact in 74 ms, 27× faster than knip, and it completes on repos where other tools give up, next.js included.',
+			title: 'One binary. Six kinds of answers.',
+			body: 'Built in Rust on Oxc, with no TypeScript compiler and no Node.js runtime. Deterministic output with typed JSON contracts, so CI and coding agents can act on it without guessing.',
 		},
 		{
 			title: 'Where developers already are.',
@@ -72,11 +70,20 @@ export const fallow = {
 		kind: 'cmd' | 'dim' | 'blank' | 'head' | 'path' | 'fail';
 		text: string;
 	}[],
-	bench: [
-		{ repo: 'preact', fallow: 74, other: 2010 },
-		{ repo: 'fastify', fallow: 64, other: 205 },
+	finds: [
+		{
+			name: 'Dead code',
+			body: 'Unused files, exports, types, members and dependencies',
+		},
+		{ name: 'Duplication', body: 'Clone groups across JS, TS and stylesheets' },
+		{
+			name: 'Complexity',
+			body: 'Hotspots, with a 0–100 health score per file',
+		},
+		{ name: 'Cycles', body: 'Circular imports and re-export loops' },
+		{ name: 'Boundaries', body: 'Layered, hexagonal and feature-sliced rules' },
+		{ name: 'Design drift', body: 'Styling that escapes the design system' },
 	],
-	benchOther: 'knip 6',
 	integrations: [
 		'CLI',
 		'VS Code',
@@ -106,7 +113,6 @@ export const fallow = {
 };
 
 export const isAgentReady = {
-	index: '02',
 	name: 'IsAgentReady',
 	url: 'https://isagentready.com',
 	tagline: 'Is your website ready for AI agents?',
@@ -210,6 +216,7 @@ export interface Talk {
 	youtubeId?: string;
 	image?: string;
 	featured?: boolean;
+	upcoming?: boolean;
 }
 
 export const talks: Talk[] = [
@@ -217,10 +224,41 @@ export const talks: Talk[] = [
 		title: 'JavaScript tooling has a blind spot',
 		event: 'dotJS · Paris',
 		year: '2026',
-		body: 'Linters, type checkers and agents all look at one file at a time. The questions that matter are codebase-wide. What we are missing, and how a project-graph view changes the way we write code with AI.',
+		body: 'Linters check files. TypeScript checks types. Who checks the codebase? What one-file-at-a-time tooling misses, and how a project-graph view changes the way we write code with agents.',
 		url: 'https://youtu.be/E2aFrZpnNbo',
 		youtubeId: 'E2aFrZpnNbo',
 		featured: true,
+	},
+	{
+		title: 'Agentic Engineering for React Teams: Give Your Coding Agent a Map',
+		event: 'React Advanced · London',
+		year: 'Oct 2026',
+		body: 'Changing a real React or Next.js codebase safely: what is dead, where logic is duplicated, and which boundaries a refactor crosses.',
+		url: 'https://reactadvanced.com/',
+		upcoming: true,
+	},
+	{
+		title: 'Fallow at Frontmania',
+		event: 'Frontmania',
+		year: 'Oct 2026',
+		body: 'Codebase intelligence for TypeScript and JavaScript, live on stage.',
+		url: 'https://frontmania.com/',
+		upcoming: true,
+	},
+	{
+		title: 'Fast Code Generation Is Easy. Safe System-level Change Is Not.',
+		event: 'AI Coding Summit · London',
+		year: '2026',
+		body: 'Let the agent generate, run deterministic codebase analysis, feed the findings back through CLI and MCP, and gate drift in CI before it lands.',
+		url: 'https://gitnation.com/contents/fast-code-generation-is-easy-safe-system-level-change-is-not',
+	},
+	{
+		title:
+			"Vibe Coding Doesn't Scale: Deterministic Tooling for Agentic Engineering",
+		event: 'FrontValue · Meetup',
+		year: '2026',
+		body: 'Why agent-written code needs deterministic checks, and what those checks look like in practice.',
+		url: 'https://www.meetup.com/frontvalue/events/314972778/',
 	},
 	{
 		title: 'Building a Design System',
@@ -229,7 +267,6 @@ export const talks: Talk[] = [
 		body: 'How we built the ANWB design system with (P)React, and how it let teams share code, stay consistent and ship faster.',
 		url: 'https://www.youtube.com/watch?v=L2yOoxzXmw8',
 		youtubeId: 'L2yOoxzXmw8',
-		image: '/images/talks/design-system-1.png',
 	},
 	{
 		title: 'The Three Layers of Testing',
@@ -238,7 +275,6 @@ export const talks: Talk[] = [
 		body: 'Static analysis, type checking and tests: how to layer them so you can ship with confidence, not a false sense of security.',
 		url: 'https://www.youtube.com/watch?v=piZOil7OicI',
 		youtubeId: 'piZOil7OicI',
-		image: '/images/talks/testing-1.png',
 	},
 	{
 		title: 'Building a Component Framework',
@@ -248,16 +284,10 @@ export const talks: Talk[] = [
 		url: '/talks/buildingacomponentframework.pdf',
 		image: '/images/talks/component-framework-1.png',
 	},
-	{
-		title: 'Hybrid App Development',
-		event: 'Bloomreach CMS Connect',
-		year: '2015',
-		body: 'Shipping native-feeling apps from one web codebase, with content managed in a headless CMS.',
-	},
 ];
 
 export const teaching = [
-	{ value: '5', label: 'talks on stage, most recently dotJS 2026' },
+	{ value: '7', label: 'talks given, with React Advanced and Frontmania next' },
 	{ value: '35', label: 'developers in the chapter I led at ANWB' },
 	{ value: '7-day', label: 'front-end course I built and taught' },
 ];

@@ -38,11 +38,12 @@ export const SCENES = [
 
 export type SceneName = (typeof SCENES)[number];
 
-const WHITE: Vec3 = [0.94, 0.94, 0.9];
-const ACCENT: Vec3 = [0.78, 1, 0.3];
-const EMBER: Vec3 = [1, 0.38, 0.2];
-const GREY: Vec3 = [0.5, 0.5, 0.56];
-const STEEL: Vec3 = [0.55, 0.65, 0.95];
+const WHITE: Vec3 = [0.94, 0.92, 0.88];
+const ACCENT: Vec3 = [0.66, 0.78, 0.58]; // sage
+const EMBER: Vec3 = [0.86, 0.36, 0.44]; // wine
+const OCHRE: Vec3 = [0.9, 0.66, 0.36];
+const GREY: Vec3 = [0.52, 0.5, 0.48];
+const STEEL: Vec3 = [0.55, 0.62, 0.74]; // slate
 
 const mulberry32 = (seed: number) => () => {
 	seed |= 0;
@@ -150,11 +151,12 @@ const buildName = (w: Writer, n: number, r: Rand, o: BuildOptions): Shape => {
 		const k = Math.floor(r() * count);
 		const px = (points[k * 2] ?? 0) + r() * 2;
 		const py = (points[k * 2 + 1] ?? 0) + r() * 2;
-		const accent = r() < 0.07;
+		const accent = r() < 0.08;
+		const tint = r();
 		w.set(
 			i,
 			[x0 + px * scale, yTop - py * scale, (r() - 0.5) * 0.12],
-			accent ? ACCENT : WHITE,
+			accent ? (tint < 0.5 ? ACCENT : tint < 0.78 ? OCHRE : EMBER) : WHITE,
 			accent ? 0.9 : 0.62,
 		);
 	}
@@ -402,7 +404,7 @@ const buildGlobe = (w: Writer, n: number, r: Rand, o: BuildOptions): Shape => {
 			w.set(
 				i,
 				[p[0] + gauss(r) * s, p[1] + gauss(r) * s, p[2] + gauss(r) * s],
-				ACCENT,
+				OCHRE,
 				0.95,
 			);
 		}
@@ -419,7 +421,7 @@ const buildConstellation = (
 	const { view } = o;
 	const cols = view.portrait ? 3 : 5;
 	const rows = view.portrait ? 5 : 3;
-	const stars: { p: Vec3; s: number; hot: boolean }[] = [];
+	const stars: { p: Vec3; s: number; hot: boolean; tint: Vec3 }[] = [];
 	for (let y = 0; y < rows; y++) {
 		for (let x = 0; x < cols; x++) {
 			stars.push({
@@ -429,7 +431,8 @@ const buildConstellation = (
 					-1 - r() * 3,
 				],
 				s: 0.12 + r() * 0.22,
-				hot: r() < 0.25,
+				hot: r() < 0.3,
+				tint: [ACCENT, OCHRE, EMBER][Math.floor(r() * 3)]!,
 			});
 		}
 	}
@@ -446,7 +449,7 @@ const buildConstellation = (
 			w.set(
 				i,
 				[st.p[0] + d[0] * rad, st.p[1] + d[1] * rad, st.p[2] + d[2] * rad],
-				st.hot ? ACCENT : WHITE,
+				st.hot ? st.tint : WHITE,
 				st.hot ? 0.5 : 0.36,
 			);
 		} else {
@@ -475,7 +478,10 @@ const buildRings = (w: Writer, n: number, r: Rand, o: BuildOptions): Shape => {
 		const x = Math.cos(a) * rad;
 		const z = Math.sin(a) * rad;
 		const y = Math.sin(a * 3 + k) * 0.04 * k;
-		const c = mix3(ACCENT, WHITE, Math.min(1, k / 4));
+		const c =
+			k < 2
+				? mix3(EMBER, OCHRE, k)
+				: mix3(OCHRE, WHITE, Math.min(1, (k - 2) / 3));
 		w.set(
 			i,
 			[center[0] + x, center[1] + y * ct - z * st, center[2] + y * st + z * ct],
@@ -519,7 +525,7 @@ const buildTerrain = (
 			// the trail: a single line through the landscape
 			const z = zFar + r() * (zNear - zFar);
 			const x = trailX(z) + gauss(r) * 0.018;
-			w.set(i, [x, y0 + fbm(x, z) * 0.95 + 0.02, z], ACCENT, 0.9);
+			w.set(i, [x, y0 + fbm(x, z) * 0.95 + 0.02, z], OCHRE, 0.9);
 			continue;
 		}
 		const x = (r() - 0.5) * W;
@@ -557,7 +563,7 @@ const buildPortal = (w: Writer, n: number, r: Rand, o: BuildOptions): Shape => {
 					center[1] + Math.sin(a) * rr,
 					center[2] + Math.sin(twist) * tube,
 				],
-				inner ? ACCENT : WHITE,
+				inner ? EMBER : WHITE,
 				inner ? 0.55 : 0.32,
 			);
 		} else {
@@ -572,7 +578,7 @@ const buildPortal = (w: Writer, n: number, r: Rand, o: BuildOptions): Shape => {
 					center[1] + Math.sin(aa) * rr,
 					center[2] - (1 - t) * 1.5,
 				],
-				ACCENT,
+				t < 0.5 ? OCHRE : ACCENT,
 				0.3 * t + 0.1,
 			);
 		}

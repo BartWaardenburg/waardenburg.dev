@@ -18,7 +18,7 @@ function Card({ project, i }: { project: OssProject; i: number }) {
 	const my = useMotionValue(50);
 	const srx = useSpring(rx, { stiffness: 150, damping: 18 });
 	const sry = useSpring(ry, { stiffness: 150, damping: 18 });
-	const glow = useMotionTemplate`radial-gradient(420px circle at ${mx}% ${my}%, rgb(200 255 77 / 0.14), transparent 60%)`;
+	const glow = useMotionTemplate`radial-gradient(420px circle at ${mx}% ${my}%, rgb(169 187 157 / 0.16), transparent 60%)`;
 
 	const onMove = (e: PointerEvent<HTMLAnchorElement>) => {
 		if (e.pointerType !== 'mouse') return;
@@ -39,11 +39,10 @@ function Card({ project, i }: { project: OssProject; i: number }) {
 		<Reveal delay={(i % 3) * 0.1} y={60} className="[perspective:1200px]">
 			<motion.a
 				href={project.url}
-				data-cursor="Open"
 				onPointerMove={onMove}
 				onPointerLeave={onLeave}
 				style={{ rotateX: srx, rotateY: sry }}
-				className="glass group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-3xl p-7 transition-colors duration-500 [transform-style:preserve-3d] hover:border-accent/40 md:p-8"
+				className="glass group relative flex h-full min-h-[320px] flex-col overflow-hidden p-7 transition-colors duration-500 [transform-style:preserve-3d] md:p-8"
 			>
 				<motion.span
 					aria-hidden
@@ -66,7 +65,7 @@ function Card({ project, i }: { project: OssProject; i: number }) {
 					{project.tags.map((t) => (
 						<li
 							key={t}
-							className="rounded-full border border-line px-2.5 py-1 font-mono text-[10px] text-muted"
+							className="border border-line px-2.5 py-1 font-mono text-[10px] text-muted"
 						>
 							{t}
 						</li>
@@ -88,16 +87,14 @@ export function OpenSource() {
 			<div className="mx-auto max-w-[1600px]">
 				<div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
 					<div>
-						<Reveal className="flex items-center gap-4 font-mono text-xs tracking-[0.2em] text-muted uppercase">
-							<span className="text-accent">03</span>
-							<span className="h-px w-12 bg-line" />
-							In the open
-						</Reveal>
 						<h2
 							id="oss-title"
-							className="mt-6 font-sans text-[clamp(3rem,8vw,7.5rem)] leading-[0.88] font-extrabold tracking-[-0.05em]"
+							className="font-sans text-[clamp(3rem,8vw,7.5rem)] leading-[0.88] font-extrabold tracking-[-0.05em]"
 						>
-							<SplitWords text="Open source, *shipped.*" />
+							<SplitWords
+								text="Open source, *shipped.*"
+								italicClassName="text-ochre"
+							/>
 						</h2>
 					</div>
 					<Reveal delay={0.2}>

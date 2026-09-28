@@ -21,7 +21,7 @@ export function Header() {
 		<>
 			<a
 				href="#main"
-				className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-bg"
+				className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent focus:px-4 focus:py-2 focus:text-bg"
 			>
 				Skip to content
 			</a>
@@ -35,7 +35,7 @@ export function Header() {
 				>
 					<a href="#top" className="group flex items-center gap-3">
 						<span className="sr-only">Bart Waardenburg, back to top: </span>
-						<span className="grid size-9 place-items-center rounded-full border border-line font-mono text-xs font-bold tracking-tight transition-colors group-hover:border-accent group-hover:text-accent">
+						<span className="grid size-9 place-items-center border border-line font-mono text-xs font-bold tracking-tight transition-colors group-hover:border-accent group-hover:text-accent">
 							BW
 						</span>
 						<span className="hidden font-mono text-xs tracking-[0.2em] text-muted uppercase sm:inline">
@@ -48,7 +48,7 @@ export function Header() {
 								<li key={item.href}>
 									<a
 										href={item.href}
-										className="rounded-full px-4 py-2 font-mono text-xs tracking-[0.14em] text-muted uppercase transition-colors hover:text-fg"
+										className="px-4 py-2 font-mono text-xs tracking-[0.14em] text-muted uppercase transition-colors hover:text-fg"
 									>
 										{item.label}
 									</a>
@@ -59,7 +59,7 @@ export function Header() {
 					<Magnetic>
 						<a
 							href="#contact"
-							className="relative flex items-center gap-2 overflow-hidden rounded-full bg-fg px-5 py-2.5 font-mono text-xs font-bold tracking-[0.14em] text-bg uppercase transition-colors hover:bg-accent"
+							className="relative flex items-center gap-2 overflow-hidden bg-fg px-5 py-2.5 font-mono text-xs font-bold tracking-[0.14em] text-bg uppercase transition-colors hover:bg-accent"
 						>
 							Let&apos;s talk
 						</a>

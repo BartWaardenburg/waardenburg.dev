@@ -5,16 +5,20 @@
 	--font-mono: var(--font-code), ui-monospace, 'SF Mono', monospace;
 	--font-serif: var(--font-italic), ui-serif, Georgia, serif;
 
-	--color-bg: #07070a;
-	--color-bg-2: #0e0e13;
-	--color-fg: #f2f1ec;
-	--color-muted: #8b8b95;
-	--color-dim: #7c7c86;
-	--color-line: rgb(255 255 255 / 0.09);
-	--color-accent: #c8ff4d;
-	--color-accent-deep: #9fdc1a;
-	--color-ember: #ff6133;
-	--color-steel: #8ca6f2;
+	--color-bg: #0a0a09;
+	--color-bg-2: #11100e;
+	--color-fg: #efebe3;
+	--color-muted: #9a958c;
+	--color-dim: #858075;
+	--color-line: rgb(239 235 227 / 0.1);
+	/* sage leads; wine, ochre and slate answer it */
+	--color-accent: #a9bb9d;
+	--color-sage: #a9bb9d;
+	--color-sage-deep: #6f8464;
+	--color-wine: #c9606f;
+	--color-burgundy: #7a2433;
+	--color-ochre: #d4a35e;
+	--color-slate: #8c9db5;
 
 	--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -139,20 +143,38 @@ html.gl .hero-name {
 	}
 }
 
-.text-outline {
-	-webkit-text-stroke: 1px rgb(255 255 255 / 0.28);
-	color: transparent;
+/* Oversized background type: filled, barely there */
+.text-ghost {
+	color: rgb(239 235 227 / 0.06);
 }
 
+/* Panels: square, hairline, with registration marks in the corners */
 .glass {
-	background: linear-gradient(
-		180deg,
-		rgb(20 20 26 / 0.72),
-		rgb(10 10 14 / 0.72)
-	);
-	backdrop-filter: blur(14px) saturate(1.2);
-	-webkit-backdrop-filter: blur(14px) saturate(1.2);
+	--mark: rgb(239 235 227 / 0.55);
+	position: relative;
+	background: rgb(14 13 12 / 0.74);
+	backdrop-filter: blur(14px) saturate(1.1);
+	-webkit-backdrop-filter: blur(14px) saturate(1.1);
 	border: 1px solid var(--color-line);
+}
+.glass::before {
+	content: '';
+	position: absolute;
+	inset: -1px;
+	pointer-events: none;
+	background:
+		linear-gradient(var(--mark), var(--mark)) top left / 12px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) top left / 1px 12px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) top right / 12px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) top right / 1px 12px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom left / 12px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom left / 1px 12px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom right / 12px 1px no-repeat,
+		linear-gradient(var(--mark), var(--mark)) bottom right / 1px 12px no-repeat;
+	transition: --mark 0.4s ease;
+}
+.glass:hover {
+	--mark: var(--color-accent);
 }
 
 .caret::after {
@@ -163,24 +185,7 @@ html.gl .hero-name {
 	margin-left: 2px;
 	vertical-align: -0.2em;
 	background: var(--color-accent);
-	animation: blink 1s steps(1) infinite;
-}
-@keyframes blink {
-	50% {
-		opacity: 0;
-	}
-}
-
-@keyframes pulse-dot {
-	0% {
-		box-shadow: 0 0 0 0 rgb(200 255 77 / 0.6);
-	}
-	100% {
-		box-shadow: 0 0 0 10px rgb(200 255 77 / 0);
-	}
-}
-.pulse-dot {
-	animation: pulse-dot 1.6s ease-out infinite;
+	opacity: 0.8;
 }
 
 @keyframes scroll-cue {
@@ -214,4 +219,10 @@ html.gl .hero-name {
 		transition-duration: 0.001ms !important;
 		scroll-behavior: auto !important;
 	}
+}
+
+@property --mark {
+	syntax: '<color>';
+	inherits: false;
+	initial-value: rgb(239 235 227 / 0.55);
 }
