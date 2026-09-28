@@ -778,6 +778,8 @@ export const buildLogo = (
 	dust: Dust,
 	box: LogoBox,
 	seed: number,
+	/** 'lift' brightens dark colours; 'dim' keeps them as a faint backdrop (for dark badges) */
+	dark: 'lift' | 'dim' = 'lift',
 ): Shape | null => {
 	const iw = img.naturalWidth || img.width;
 	const ih = img.naturalHeight || img.height;
@@ -826,11 +828,12 @@ export const buildLogo = (
 			(Math.min(ch - 1, Math.floor(py)) * cw +
 				Math.min(cw - 1, Math.floor(px))) *
 			4;
-		const c = liftColour(
-			(data[pi] ?? 255) / 255,
-			(data[pi + 1] ?? 255) / 255,
-			(data[pi + 2] ?? 255) / 255,
-		);
+		const rr = (data[pi] ?? 255) / 255;
+		const gg = (data[pi + 1] ?? 255) / 255;
+		const bb = (data[pi + 2] ?? 255) / 255;
+		const isDark = 0.2126 * rr + 0.7152 * gg + 0.0722 * bb < 0.15;
+		const faint = dark === 'dim' && isDark;
+		const c = faint ? ([0.5, 0.5, 0.5] as Vec3) : liftColour(rr, gg, bb);
 		const spread = halo ? 0.06 + r() * 0.1 : 0;
 		const a = r() * Math.PI * 2;
 		w.set(
@@ -841,7 +844,7 @@ export const buildLogo = (
 				box.center[2] + (r() - 0.5) * 0.18 + (halo ? (r() - 0.5) * 0.3 : 0),
 			],
 			c,
-			halo ? 0.28 : 0.7,
+			faint ? 0.07 : halo ? 0.28 : 0.7,
 		);
 	}
 	const shape: Shape = {
@@ -849,7 +852,7 @@ export const buildLogo = (
 		col: w.col,
 		center: box.center,
 		spin: 0,
-		sway: 0.22,
+		sway: 0.16,
 	};
 	shape.pairs = neighbourPairs(shape.pos, Math.min(o.count, 900));
 	return withDust(shape, dust, o.count);

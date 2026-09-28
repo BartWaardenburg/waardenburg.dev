@@ -305,13 +305,20 @@ export const createEngine = (
 	const viewMat = new Float32Array(16);
 
 	/** Where a logo lives: inside its anchor element, or on the right like the flagships. */
-	const logoBox = (anchor: HTMLElement | null): LogoBox => {
+	const logoBox = (anchor: HTMLElement | null, place = 'right'): LogoBox => {
 		const rect = anchor?.getBoundingClientRect();
 		if (rect && rect.width > 0 && rect.height > 0) {
 			return {
 				width: (rect.width / window.innerWidth) * view.width * 0.82,
 				height: (rect.height / window.innerHeight) * view.height * 0.7,
 				center: [0, 0, 0],
+			};
+		}
+		if (place === 'left' && !view.portrait) {
+			return {
+				width: view.width * 0.26,
+				height: view.height * 0.26,
+				center: [-view.width * 0.24, -view.height * 0.13, 0],
 			};
 		}
 		return view.portrait
@@ -361,7 +368,7 @@ export const createEngine = (
 		sections.forEach((sec, i) => {
 			if (!sec.logo || seen.has(sec.key)) return;
 			seen.add(sec.key);
-			const { src, anchor } = sec.logo;
+			const { src, anchor, place, dark } = sec.logo;
 			void loadImage(src).then((img) => {
 				if (!img || id !== buildId || !buildOpts || !dustData) return;
 				requestIdle(() => {
@@ -370,8 +377,9 @@ export const createEngine = (
 						img,
 						buildOpts,
 						dustData,
-						logoBox(anchor),
+						logoBox(anchor, place),
 						500 + i,
+						dark,
 					);
 					if (shape) gpu.set(sec.key, upload(shape));
 				});
@@ -469,7 +477,12 @@ export const createEngine = (
 	type Section = {
 		el: HTMLElement;
 		key: string;
-		logo?: { src: string; anchor: HTMLElement | null };
+		logo?: {
+			src: string;
+			anchor: HTMLElement | null;
+			place: string;
+			dark: 'lift' | 'dim';
+		};
 	};
 	let sections: Section[] = [];
 	const collect = () => {
@@ -484,6 +497,8 @@ export const createEngine = (
 					logo: {
 						src: el.dataset.logo,
 						anchor: sel ? document.querySelector<HTMLElement>(sel) : null,
+						place: el.dataset.logoPlace ?? 'right',
+						dark: el.dataset.logoDark === 'dim' ? 'dim' : 'lift',
 					},
 				});
 			} else if ((SCENES as readonly string[]).includes(scene)) {

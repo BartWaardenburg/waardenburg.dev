@@ -331,7 +331,7 @@ export const logos = {
 	sdu: '/logos/sdu.svg',
 	rijksoverheid: '/logos/rijksoverheid.svg',
 	ind: '/logos/ind.svg',
-	rvig: '/logos/rvig.svg',
+	rvig: '/logos/rvig.png',
 	ictu: '/logos/ictu.svg',
 	norday: '/logos/norday.svg',
 	portofrotterdam: '/logos/portofrotterdam.svg',

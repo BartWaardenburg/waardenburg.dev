@@ -188,6 +188,7 @@ export function AgentReady() {
 				aria-hidden
 				data-scene="logo"
 				data-logo={logos.isagentready}
+				data-logo-place="left"
 				className="pointer-events-none absolute inset-x-0 top-0 h-[75vh]"
 			/>
 			<div

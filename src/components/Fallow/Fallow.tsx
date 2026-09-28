@@ -189,6 +189,7 @@ export function Fallow({ stats }: { stats: Stats }) {
 				aria-hidden
 				data-scene="logo"
 				data-logo={logos.fallow}
+				data-logo-dark="dim"
 				className="pointer-events-none absolute inset-x-0 top-0 h-[75vh]"
 			/>
 			<div
