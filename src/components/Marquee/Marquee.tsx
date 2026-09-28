@@ -1,71 +1,67 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import {
+	motion,
+	useAnimationFrame,
+	useMotionValue,
+	useReducedMotion,
+	useScroll,
+	useSpring,
+	useTransform,
+	useVelocity,
+	wrap,
+} from 'motion/react';
+import { useRef } from 'react';
 
-interface MarqueeProps {
-	text: string;
-}
+/** An endless ticker that speeds up, reverses and leans with the scroll velocity. */
+export function Marquee({
+	items,
+	baseVelocity = -2.5,
+}: {
+	items: string[];
+	baseVelocity?: number;
+}) {
+	const reduce = useReducedMotion();
+	const x = useMotionValue(0);
+	const { scrollY } = useScroll();
+	const velocity = useVelocity(scrollY);
+	const smooth = useSpring(velocity, { damping: 50, stiffness: 400 });
+	const factor = useTransform(smooth, [-2000, 0, 2000], [-4, 0, 4], {
+		clamp: false,
+	});
+	const skew = useTransform(smooth, [-3000, 0, 3000], [8, 0, -8]);
+	const dir = useRef(1);
+	const pos = useTransform(x, (v) => `${wrap(-50, 0, v)}%`);
 
-export function Marquee({ text }: MarqueeProps) {
-	const containerRef = useRef<HTMLDivElement>(null);
-	const [offset, setOffset] = useState(0);
+	useAnimationFrame((_, delta) => {
+		if (reduce) return;
+		const f = factor.get();
+		if (f < 0) dir.current = -1;
+		else if (f > 0) dir.current = 1;
+		x.set(
+			x.get() + dir.current * baseVelocity * (delta / 1000) * (1 + Math.abs(f)),
+		);
+	});
 
-	useEffect(() => {
-		const handleScroll = () => {
-			if (!containerRef.current) return;
-			const rect = containerRef.current.getBoundingClientRect();
-			const windowHeight = window.innerHeight;
-			// Only start moving once the screen is fully black (sticky is locked)
-			if (rect.top > 0) {
-				setOffset(0);
-				return;
-			}
-			// Calculate how far we've scrolled past the lock point
-			const scrolledPast = Math.abs(rect.top);
-			const scrollRange = rect.height - windowHeight;
-			const progress = Math.min(scrolledPast / scrollRange, 1);
-			setOffset(progress * 3500);
-		};
-
-		window.addEventListener('scroll', handleScroll, { passive: true });
-		handleScroll();
-		return () => window.removeEventListener('scroll', handleScroll);
-	}, []);
+	const row = items.map((item, i) => (
+		<span key={`${item}-${i}`} className="flex items-center gap-8 pr-8">
+			<span className={i % 2 ? 'text-outline' : ''}>{item}</span>
+			<span className="text-accent">✦</span>
+		</span>
+	));
 
 	return (
-		<div ref={containerRef} className="relative h-[300vh]">
-			<div className="sticky top-0 h-screen overflow-hidden bg-neutral-900 transition-colors duration-500 dark:bg-amber-50">
-				{/* Stroke text - offset vertically, different horizontal range */}
-				<div
-					className="absolute left-0 top-1/2 whitespace-nowrap will-change-transform"
-					style={{
-						transform: `translateX(calc(100vw - ${offset * 1.15}px)) translateY(-80%)`,
-					}}
-				>
-					<span
-						className="marquee-stroke text-[12rem] font-bold leading-none tracking-tighter text-transparent"
-						style={{
-							fontVariationSettings: "'MONO' 1, 'CASL' 0, 'slnt' -15",
-						}}
-					>
-						{text}
-					</span>
-				</div>
-				{/* Solid text - starts off-screen right, scrolls left */}
-				<div
-					className="absolute left-0 top-1/2 whitespace-nowrap will-change-transform"
-					style={{
-						transform: `translateX(calc(100vw - ${offset}px)) translateY(-50%)`,
-					}}
-				>
-					<span
-						className="text-[12rem] font-bold leading-none tracking-tighter text-neutral-50 transition-colors duration-500 dark:text-amber-900"
-						style={{ fontVariationSettings: "'MONO' 1, 'CASL' 0, 'slnt' -15" }}
-					>
-						{text}
-					</span>
-				</div>
-			</div>
+		<div
+			aria-hidden
+			className="relative z-10 overflow-hidden border-y border-line bg-bg/70 py-5 backdrop-blur-sm"
+		>
+			<motion.div
+				className="flex w-max font-sans text-4xl font-extrabold tracking-tight whitespace-nowrap uppercase md:text-6xl"
+				style={{ x: pos, skewX: skew }}
+			>
+				<div className="flex">{row}</div>
+				<div className="flex">{row}</div>
+			</motion.div>
 		</div>
 	);
 }

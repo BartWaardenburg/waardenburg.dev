@@ -6,22 +6,27 @@ const personSchema: WithContext<Person> = {
 	name: 'Bart Waardenburg',
 	url: 'https://waardenburg.dev',
 	image: 'https://waardenburg.dev/og-image.png',
-	jobTitle: 'Full-stack Developer & Front-end Expert',
-	worksFor: {
-		'@type': 'Organization',
-		name: 'Freelance / Consultant',
-	},
+	jobTitle: 'Creator of Fallow · Developer tools engineer',
 	address: {
 		'@type': 'PostalAddress',
 		addressLocality: 'The Hague',
-		addressCountry: 'Netherlands',
+		addressCountry: 'NL',
 	},
 	sameAs: [
 		'https://github.com/BartWaardenburg',
 		'https://linkedin.com/in/bartwaardenburg',
 		'https://twitter.com/bartwaardenburg',
+		'https://github.com/fallow-rs/fallow',
+		'https://isagentready.com',
 	],
 	knowsAbout: [
+		'Developer tools',
+		'Static analysis',
+		'Rust',
+		'Oxc',
+		'Developer relations',
+		'Answer engine optimization',
+		'Model Context Protocol',
 		'React',
 		'Next.js',
 		'TypeScript',
@@ -41,7 +46,7 @@ const websiteSchema: WithContext<WebSite> = {
 	alternateName: 'waardenburg.dev',
 	url: 'https://waardenburg.dev',
 	description:
-		'Full-stack developer and front-end expert based in The Hague, Netherlands. Tech lead, design systems architect, and consultant.',
+		'Bart Waardenburg builds developer tools (Fallow, IsAgentReady), speaks at conferences like dotJS, and has shipped for the web for twelve years.',
 	author: {
 		'@type': 'Person',
 		name: 'Bart Waardenburg',
