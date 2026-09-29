@@ -1,31 +1,36 @@
 import type { Metadata, Viewport } from 'next';
 
 import { JsonLd } from '@/components/JsonLd';
-import { RootBody } from '@/components/RootBody';
-import { RootHead } from '@/components/RootHead';
-import { RootHtml } from '@/components/RootHtml';
+import { display, mono, serif } from '@/fonts';
 import '@/styles/globals.css';
+
+const title = 'Bart Waardenburg — Developer tools, talks & teaching';
+const description =
+	'Creator of Fallow, the Rust-powered codebase analyzer for TypeScript and JavaScript built on Oxc, and builder of IsAgentReady. Speaker at dotJS. Twelve years of shipping for the web.';
 
 export const metadata: Metadata = {
 	title: {
-		default: 'Bart Waardenburg — Full-stack Developer & Front-end Expert',
+		default: title,
 		template: '%s | Bart Waardenburg',
 	},
-	description:
-		'Full-stack developer and front-end expert based in The Hague, Netherlands. Tech lead, design systems architect, and consultant. Building products that matter.',
+	description,
 	keywords: [
-		'full-stack developer',
-		'front-end expert',
-		'tech lead',
-		'React',
-		'Next.js',
+		'Bart Waardenburg',
+		'Fallow',
+		'IsAgentReady',
+		'developer tools',
+		'developer relations',
+		'DevRel',
+		'Oxc',
+		'Rust',
 		'TypeScript',
-		'design systems',
+		'JavaScript tooling',
+		'static analysis',
+		'AEO',
+		'agent readiness',
+		'MCP',
+		'dotJS',
 		'The Hague',
-		'Netherlands',
-		'software engineer',
-		'web development',
-		'consultant',
 	],
 	authors: [{ name: 'Bart Waardenburg', url: 'https://waardenburg.dev' }],
 	creator: 'Bart Waardenburg',
@@ -48,15 +53,14 @@ export const metadata: Metadata = {
 	openGraph: {
 		type: 'website',
 		url: 'https://waardenburg.dev',
-		title: 'Bart Waardenburg — Full-stack Developer & Front-end Expert',
-		description:
-			'Full-stack developer and front-end expert based in The Hague, Netherlands. Tech lead, design systems architect, and consultant. Building products that matter.',
+		title,
+		description,
 		images: [
 			{
 				url: '/og-image.png',
 				width: 1200,
 				height: 630,
-				alt: 'Bart Waardenburg - Full-stack Developer & Front-end Expert',
+				alt: 'Bart Waardenburg — Developer tools, talks & teaching',
 			},
 		],
 		locale: 'en_US',
@@ -66,15 +70,14 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		site: '@bartwaardenburg',
 		creator: '@bartwaardenburg',
-		title: 'Bart Waardenburg — Full-stack Developer & Front-end Expert',
-		description:
-			'Full-stack developer and front-end expert based in The Hague, Netherlands. Building products that matter.',
+		title,
+		description,
 		images: [
 			{
 				url: '/twitter-image.png',
 				width: 1200,
 				height: 600,
-				alt: 'Bart Waardenburg - Full-stack Developer & Front-end Expert',
+				alt: 'Bart Waardenburg — Developer tools, talks & teaching',
 			},
 		],
 	},
@@ -89,11 +92,6 @@ export const metadata: Metadata = {
 		apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
 	},
 	manifest: '/site.webmanifest',
-	verification: {
-		// Add your verification codes here when you have them
-		// google: 'your-google-verification-code',
-		// yandex: 'your-yandex-verification-code',
-	},
 	category: 'technology',
 };
 
@@ -101,11 +99,13 @@ export const viewport: Viewport = {
 	width: 'device-width',
 	initialScale: 1,
 	maximumScale: 5,
-	themeColor: [
-		{ media: '(prefers-color-scheme: light)', color: '#fafafa' },
-		{ media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
-	],
+	themeColor: '#07070a',
+	colorScheme: 'dark',
 };
+
+// Decide before first paint whether the particle field will draw the hero name,
+// so the fallback text never flashes.
+const glProbe = `(function(){document.documentElement.classList.add('js');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var c=document.createElement('canvas');if(c.getContext('webgl2'))document.documentElement.classList.add('gl');}catch(e){}})();`;
 
 export default function RootLayout({
 	children,
@@ -113,11 +113,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<RootHtml>
-			<RootHead>
+		<html
+			lang="en"
+			className={`${display.variable} ${mono.variable} ${serif.variable}`}
+			suppressHydrationWarning
+		>
+			<head>
+				<script dangerouslySetInnerHTML={{ __html: glProbe }} />
 				<JsonLd />
-			</RootHead>
-			<RootBody>{children}</RootBody>
-		</RootHtml>
+			</head>
+			<body>{children}</body>
+		</html>
 	);
 }

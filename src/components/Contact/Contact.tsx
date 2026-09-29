@@ -1,65 +1,103 @@
-export interface SocialLink {
-	url: string;
-	label: string;
-}
+'use client';
 
-export interface ContactProps {
-	title: string;
-	intro: string;
-	email: string;
-	emailLabel: string;
-	socialIntro: string;
-	socialLinks: SocialLink[];
-}
+import { motion, useScroll, useTransform } from 'motion/react';
+import { useRef, useState } from 'react';
 
-export function Contact({
-	title,
-	intro,
-	email,
-	emailLabel,
-	socialIntro,
-	socialLinks,
-}: ContactProps) {
+import { Magnetic, Reveal, SplitWords } from '@/components/Motion';
+import { site } from '@/content';
+
+export function Contact() {
+	const ref = useRef<HTMLElement>(null);
+	const [copied, setCopied] = useState(false);
+	const { scrollYProgress } = useScroll({
+		target: ref,
+		offset: ['start end', 'end end'],
+	});
+	const scale = useTransform(scrollYProgress, [0, 1], [0.86, 1]);
+
+	const copy = async () => {
+		try {
+			await navigator.clipboard.writeText(site.email);
+			setCopied(true);
+			window.setTimeout(() => setCopied(false), 1800);
+		} catch {
+			window.location.href = `mailto:${site.email}`;
+		}
+	};
+
 	return (
 		<section
 			id="contact"
-			className="flex min-h-screen items-center px-6 md:px-12"
+			ref={ref}
+			data-scene="monogram"
+			aria-labelledby="contact-title"
+			className="relative flex min-h-svh flex-col justify-between px-5 pt-40 pb-8 md:px-10"
 		>
-			<div className="mx-auto max-w-6xl">
-				<div className="max-w-2xl">
-					<h2 className="mb-8 text-4xl font-medium leading-tight md:text-5xl lg:text-6xl">
-						{title}
-					</h2>
-					<div className="space-y-6 text-xl leading-relaxed text-neutral-700 dark:text-neutral-300 md:text-2xl">
-						<p>{intro}</p>
-						<p>
-							{emailLabel}{' '}
-							<a
-								href={`mailto:${email}`}
-								className="text-neutral-900 underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-900 dark:text-neutral-50 dark:decoration-neutral-600 dark:hover:decoration-neutral-50"
-							>
-								{email}
-							</a>
-						</p>
-						<p className="pt-4 text-neutral-900 dark:text-neutral-50">
-							{socialIntro}{' '}
-							{socialLinks.map((link, index) => (
-								<span key={link.url}>
-									<a
-										href={link.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-900 dark:decoration-neutral-600 dark:hover:decoration-neutral-50"
-									>
-										{link.label}
-									</a>
-									{index < socialLinks.length - 1 ? ' and ' : '.'}
-								</span>
-							))}
-						</p>
-					</div>
+			<motion.div
+				style={{ scale }}
+				className="mx-auto w-full max-w-[1600px] text-center"
+			>
+				<Reveal className="flex items-center justify-center gap-3 font-mono text-xs tracking-[0.2em] text-muted uppercase">
+					{site.availability}
+				</Reveal>
+				<h2
+					id="contact-title"
+					className="mt-8 font-sans text-[clamp(4rem,15vw,15rem)] leading-[0.82] font-extrabold tracking-[-0.06em]"
+				>
+					<SplitWords
+						text="Let's *talk.*"
+						stagger={0.12}
+						italicClassName="text-wine"
+					/>
+				</h2>
+				<p className="mx-auto mt-8 max-w-xl text-lg text-muted">
+					DevRel, developer tools, growth engineering, or a hard tooling problem
+					you want explained well. I would love to hear about it.
+				</p>
+				<div className="mt-12 flex flex-wrap items-center justify-center gap-4">
+					<Magnetic strength={0.5}>
+						<a
+							href={`mailto:${site.email}`}
+							className="inline-flex items-center gap-3 bg-sage px-8 py-5 font-mono text-sm font-bold tracking-[0.1em] text-bg transition-colors hover:bg-fg"
+						>
+							{site.email}
+						</a>
+					</Magnetic>
+					<button
+						type="button"
+						onClick={copy}
+						className="cursor-pointer border border-line px-6 py-5 font-mono text-xs tracking-[0.14em] uppercase transition-colors hover:border-fg"
+					>
+						<span aria-live="polite">{copied ? 'Copied ✓' : 'Copy'}</span>
+					</button>
 				</div>
-			</div>
+				<ul className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3 font-mono text-xs tracking-[0.16em] uppercase">
+					{[
+						{ href: site.github, label: 'GitHub' },
+						{ href: site.linkedin, label: 'LinkedIn' },
+						{ href: 'https://fallow.tools', label: 'Fallow' },
+						{ href: 'https://isagentready.com', label: 'IsAgentReady' },
+					].map((l) => (
+						<li key={l.label}>
+							<a
+								href={l.href}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="group relative text-muted transition-colors hover:text-fg"
+							>
+								{l.label}
+								<span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-0 bg-accent transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
+							</a>
+						</li>
+					))}
+				</ul>
+			</motion.div>
+
+			<footer className="mx-auto mt-24 flex w-full max-w-[1600px] flex-col gap-3 border-t border-line pt-6 font-mono text-[11px] tracking-[0.12em] text-dim uppercase md:flex-row md:justify-between">
+				<p>
+					© {new Date().getFullYear()} {site.name} · {site.location}
+				</p>
+			</footer>
 		</section>
 	);
 }
