@@ -29,7 +29,7 @@ export function Contact() {
 		<section
 			id="contact"
 			ref={ref}
-			data-scene="portal"
+			data-scene="monogram"
 			aria-labelledby="contact-title"
 			className="relative flex min-h-svh flex-col justify-between px-5 pt-40 pb-8 md:px-10"
 		>
@@ -71,7 +71,7 @@ export function Contact() {
 						<span aria-live="polite">{copied ? 'Copied ✓' : 'Copy'}</span>
 					</button>
 				</div>
-				<ul className="mt-10 flex justify-center gap-8 font-mono text-xs tracking-[0.16em] uppercase">
+				<ul className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3 font-mono text-xs tracking-[0.16em] uppercase">
 					{[
 						{ href: site.github, label: 'GitHub' },
 						{ href: site.linkedin, label: 'LinkedIn' },

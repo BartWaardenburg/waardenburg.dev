@@ -134,7 +134,7 @@ const DIM: Record<SceneName, number> = {
 	constellation: 0.7,
 	rings: 0.8,
 	terrain: 1,
-	portal: 1,
+	monogram: 0.6,
 };
 
 // how strongly the pointer pushes particles around
@@ -146,7 +146,7 @@ const MOUSE: Record<SceneName, number> = {
 	constellation: 0.35,
 	rings: 0.35,
 	terrain: 0.3,
-	portal: 0.7,
+	monogram: 0.7,
 };
 
 const isLogo = (key: string) => key.startsWith('logo:');

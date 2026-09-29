@@ -35,7 +35,7 @@ export const SCENES = [
 	'constellation',
 	'rings',
 	'terrain',
-	'portal',
+	'monogram',
 ] as const;
 
 export type SceneName = (typeof SCENES)[number];
@@ -545,47 +545,95 @@ const buildTerrain = (
 	return { pos: w.pos, col: w.col, center: [0, 0, 0], spin: 0 };
 };
 
-const buildPortal = (w: Writer, n: number, r: Rand, o: BuildOptions): Shape => {
+/** The BW monogram from the header, inside a square with registration-mark corners. */
+const buildMonogram = (
+	w: Writer,
+	n: number,
+	r: Rand,
+	o: BuildOptions,
+): Shape => {
 	const { view } = o;
-	const R = Math.min(view.height * 0.36, view.width * 0.4);
-	const center: Vec3 = [0, 0, -1];
+	const { points, w: cw, h: ch } = sampleText(['BW'], o.fontFamily);
+	const count = points.length / 2;
+	const side = Math.min(
+		view.height * 0.62,
+		view.width * (view.portrait ? 0.8 : 0.42),
+	);
+	const center: Vec3 = [
+		0,
+		view.portrait ? view.height * 0.05 : -view.height * 0.02,
+		-1.2,
+	];
+	// the letters sit inside the square with a comfortable margin, like the header badge
+	let scale = (side * 0.8) / cw;
+	if (ch * scale > side * 0.62) scale = (side * 0.62) / ch;
+	// sampleText left-aligns with a 1% inset; centre the glyph box
+	let minX = Infinity;
+	let maxX = -Infinity;
+	let minY = Infinity;
+	let maxY = -Infinity;
+	for (let k = 0; k < count; k++) {
+		minX = Math.min(minX, points[k * 2]!);
+		maxX = Math.max(maxX, points[k * 2]!);
+		minY = Math.min(minY, points[k * 2 + 1]!);
+		maxY = Math.max(maxY, points[k * 2 + 1]!);
+	}
+	const gx = (minX + maxX) / 2;
+	const gy = (minY + maxY) / 2;
+	const half = side / 2;
+	const mark = side * 0.16;
 	for (let i = 0; i < n; i++) {
-		const a = r() * Math.PI * 2;
-		if (r() < 0.8) {
-			// a twisted torus
-			const b = r() * Math.PI * 2;
-			const tube = R * 0.13 * Math.pow(r(), 0.5);
-			const twist = b + a * 3;
-			const rr = R + Math.cos(twist) * tube;
-			const inner = Math.cos(twist) < 0;
+		const roll = r();
+		if (roll < 0.72 && count > 0) {
+			const k = Math.floor(r() * count);
+			const px = points[k * 2]! + r() * 2;
+			const py = points[k * 2 + 1]! + r() * 2;
+			const t = (px - minX) / Math.max(1, maxX - minX);
+			// the letters warm from sage through ochre to wine, left to right
+			const c =
+				t < 0.5
+					? mix3(ACCENT, OCHRE, t * 2)
+					: mix3(OCHRE, EMBER, (t - 0.5) * 2);
+			const accent = r() < 0.35;
 			w.set(
 				i,
 				[
-					center[0] + Math.cos(a) * rr,
-					center[1] + Math.sin(a) * rr,
-					center[2] + Math.sin(twist) * tube,
+					center[0] + (px - gx) * scale,
+					center[1] - (py - gy) * scale,
+					center[2] + (r() - 0.5) * 0.14,
 				],
-				inner ? EMBER : WHITE,
-				inner ? 0.55 : 0.32,
+				accent ? c : WHITE,
+				accent ? 0.75 : 0.5,
+			);
+		} else if (roll < 0.9) {
+			// registration marks at the four corners
+			const corner = Math.floor(r() * 4);
+			const sx = corner % 2 === 0 ? -1 : 1;
+			const sy = corner < 2 ? 1 : -1;
+			const along = r() * mark;
+			const horizontal = r() < 0.5;
+			const x = sx * half - (horizontal ? sx * along : 0);
+			const y = sy * half - (horizontal ? 0 : sy * along);
+			w.set(
+				i,
+				[
+					center[0] + x + gauss(r) * 0.006,
+					center[1] + y + gauss(r) * 0.006,
+					center[2],
+				],
+				WHITE,
+				0.7,
 			);
 		} else {
-			// particles spiralling into the centre
-			const t = Math.pow(r(), 1.6);
-			const rr = R * t;
-			const aa = a + (1 - t) * 4;
-			w.set(
-				i,
-				[
-					center[0] + Math.cos(aa) * rr,
-					center[1] + Math.sin(aa) * rr,
-					center[2] - (1 - t) * 1.5,
-				],
-				t < 0.5 ? OCHRE : ACCENT,
-				0.3 * t + 0.1,
-			);
+			// a faint hairline square joining them
+			const edge = Math.floor(r() * 4);
+			const t = r() * 2 - 1;
+			const x = edge < 2 ? t * half : (edge === 2 ? -1 : 1) * half;
+			const y = edge < 2 ? (edge === 0 ? -1 : 1) * half : t * half;
+			w.set(i, [center[0] + x, center[1] + y, center[2]], GREY, 0.14);
 		}
 	}
-	return { pos: w.pos, col: w.col, center, spin: 0.1 };
+	return { pos: w.pos, col: w.col, center, spin: 0, sway: 0.12 };
 };
 
 const BUILDERS: Record<
@@ -599,7 +647,7 @@ const BUILDERS: Record<
 	constellation: buildConstellation,
 	rings: buildRings,
 	terrain: buildTerrain,
-	portal: buildPortal,
+	monogram: buildMonogram,
 };
 
 /** Particles thrown through the whole volume, the state before the intro. */
