@@ -1,69 +1,71 @@
 'use client';
 
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { motion, useMotionValueEvent, useScroll } from 'motion/react';
+import { useState } from 'react';
 
-export interface NavLink {
-	href: string;
-	label: string;
-	showOnMobile?: boolean;
-}
+import { Magnetic } from '@/components/Motion';
+import { nav } from '@/content';
 
-export interface HeaderProps {
-	logo: string;
-	logoHref: string;
-	navLinks: NavLink[];
-	skipLinkText: string;
-}
+export function Header() {
+	const { scrollY } = useScroll();
+	const [hidden, setHidden] = useState(false);
+	const [solid, setSolid] = useState(false);
 
-export function Header({
-	logo,
-	logoHref,
-	navLinks,
-	skipLinkText,
-}: HeaderProps) {
+	useMotionValueEvent(scrollY, 'change', (y) => {
+		const prev = scrollY.getPrevious() ?? 0;
+		setHidden(y > prev && y > 400);
+		setSolid(y > 40);
+	});
+
 	return (
-		<header
-			className="fixed left-0 right-0 top-0 z-50 bg-neutral-50/80 backdrop-blur-sm dark:bg-neutral-950/80"
-			style={{ viewTransitionName: 'header' }}
-		>
-			{/* Skip navigation link for accessibility */}
+		<>
 			<a
 				href="#main"
-				className="absolute left-4 top-4 -translate-y-16 rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-50 transition-transform focus:translate-y-0 dark:bg-neutral-50 dark:text-neutral-900"
+				className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent focus:px-4 focus:py-2 focus:text-bg"
 			>
-				{skipLinkText}
+				Skip to content
 			</a>
-			<div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 md:px-12">
-				<a
-					href={logoHref}
-					className="text-2xl font-bold tracking-tight"
-					style={{ viewTransitionName: 'logo' }}
+			<motion.header
+				className="fixed inset-x-0 top-0 z-50"
+				animate={{ y: hidden ? '-110%' : '0%' }}
+				transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+			>
+				<div
+					className={`mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 transition-colors duration-500 md:px-10 ${solid ? 'bg-bg/60 backdrop-blur-md' : ''}`}
 				>
-					{logo}
-				</a>
-				<nav className="flex items-center gap-1 text-base">
-					{navLinks.map((link, index) => (
-						<span
-							key={link.href}
-							className={`flex items-center gap-1 ${link.showOnMobile === false ? 'hidden md:flex' : ''}`}
-						>
-							<a
-								href={link.href}
-								className="px-3 py-2 transition-colors hover:text-neutral-500 dark:hover:text-neutral-400"
-							>
-								{link.label}
-							</a>
-							{index < navLinks.length - 1 && (
-								<span className="hidden text-neutral-300 md:inline dark:text-neutral-600">
-									|
-								</span>
-							)}
+					<a href="#top" className="group flex items-center gap-3">
+						<span className="sr-only">Bart Waardenburg, back to top: </span>
+						<span className="grid size-9 place-items-center border border-line font-mono text-xs font-bold tracking-tight transition-colors group-hover:border-accent group-hover:text-accent">
+							BW
 						</span>
-					))}
-					<span className="text-neutral-300 dark:text-neutral-600">|</span>
-					<ThemeToggle />
-				</nav>
-			</div>
-		</header>
+						<span className="hidden font-mono text-xs tracking-[0.2em] text-muted uppercase sm:inline">
+							waardenburg.dev
+						</span>
+					</a>
+					<nav aria-label="Primary" className="hidden lg:block">
+						<ul className="flex items-center gap-1">
+							{nav.map((item) => (
+								<li key={item.href}>
+									<a
+										href={item.href}
+										className="px-4 py-2 font-mono text-xs tracking-[0.14em] text-muted uppercase transition-colors hover:text-fg"
+									>
+										{item.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+					<Magnetic>
+						<a
+							href="#contact"
+							className="relative flex items-center gap-2 overflow-hidden bg-fg px-5 py-2.5 font-mono text-xs font-bold tracking-[0.14em] text-bg uppercase transition-colors hover:bg-accent"
+						>
+							Let&apos;s talk
+						</a>
+					</Magnetic>
+				</div>
+			</motion.header>
+		</>
 	);
 }

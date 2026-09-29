@@ -1,1 +1,1 @@
-export { Contact, type ContactProps, type SocialLink } from './Contact';
+export { Contact } from './Contact';
