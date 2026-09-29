@@ -88,10 +88,11 @@ html.gl .hero-name {
 
 /* Scroll reveals (see RevealObserver). Content stays visible without JS. */
 .sw-mask {
+	/* room on every side so overhanging glyphs are never cut, without changing layout */
 	display: inline-block;
 	overflow: hidden;
-	padding-bottom: 0.12em;
-	margin-bottom: -0.12em;
+	padding: 0.14em 0.12em 0.16em;
+	margin: -0.14em -0.12em -0.16em;
 	vertical-align: top;
 }
 .sw-word {
