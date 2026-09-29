@@ -202,28 +202,6 @@ html.gl .hero-name {
 	opacity: 0.8;
 }
 
-@keyframes scroll-cue {
-	0% {
-		transform: scaleY(0);
-		transform-origin: top;
-	}
-	45% {
-		transform: scaleY(1);
-		transform-origin: top;
-	}
-	55% {
-		transform: scaleY(1);
-		transform-origin: bottom;
-	}
-	100% {
-		transform: scaleY(0);
-		transform-origin: bottom;
-	}
-}
-.scroll-cue {
-	animation: scroll-cue 2.2s var(--ease-out-expo) infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,

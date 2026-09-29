@@ -61,19 +61,6 @@ export function Hud() {
 				style={{ scaleX }}
 			/>
 			<div
-				className={`fixed bottom-5 left-5 z-40 hidden transition-opacity duration-500 ${hideBottom} items-center gap-3 font-mono text-[11px] tracking-[0.18em] text-muted uppercase md:left-10 md:flex`}
-			>
-				<span className="h-px w-10 bg-sage" />
-				<motion.span
-					key={current.id}
-					initial={{ opacity: 0, y: 8 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5 }}
-				>
-					{current.label}
-				</motion.span>
-			</div>
-			<div
 				className={`fixed right-5 bottom-5 z-40 hidden transition-opacity duration-500 ${hideBottom} font-mono text-[11px] tracking-[0.18em] text-muted uppercase md:right-10 md:block`}
 			>
 				The Hague{' '}

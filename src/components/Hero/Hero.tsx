@@ -90,13 +90,6 @@ export function Hero() {
 						</p>
 					</motion.div>
 				</div>
-
-				<div className="mt-12 flex items-center gap-4 font-mono text-[11px] tracking-[0.2em] text-dim uppercase">
-					<span className="relative block h-10 w-px overflow-hidden bg-line">
-						<span className="scroll-cue absolute inset-0 bg-accent" />
-					</span>
-					Scroll to explore
-				</div>
 			</motion.div>
 		</section>
 	);
