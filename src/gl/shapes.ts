@@ -820,19 +820,26 @@ const liftColour = (r: number, g: number, b: number): Vec3 => {
 	];
 };
 
+export type LogoDark = 'lift' | 'dim' | 'text';
+
 export const buildLogo = (
 	img: HTMLImageElement,
 	o: BuildOptions,
 	dust: Dust,
 	box: LogoBox,
 	seed: number,
-	/** 'lift' brightens dark colours; 'dim' keeps them as a faint backdrop (for dark badges) */
-	dark: 'lift' | 'dim' = 'lift',
+	/**
+	 * How to treat dark colours on the dark canvas:
+	 * 'lift' brightens them; 'dim' keeps them as a faint backdrop (dark badges);
+	 * 'text' turns dark coloured fills into a faint backdrop and dark neutral text into
+	 * bright text (the Rijksoverheid family: blue bar, white emblem, dark wordmark).
+	 */
+	dark: LogoDark = 'lift',
 ): Shape | null => {
 	const iw = img.naturalWidth || img.width;
 	const ih = img.naturalHeight || img.height;
 	if (!iw || !ih) return null;
-	const cw = 900;
+	const cw = 1200;
 	const ch = Math.max(1, Math.round((cw * ih) / iw));
 	const canvas = document.createElement('canvas');
 	canvas.width = cw;
@@ -866,22 +873,53 @@ export const buildLogo = (
 	const scale = Math.min(box.width / cw, box.height / ch);
 	const r = mulberry32(seed);
 	const w = new Writer(o.count + o.dust);
+	const TEXT: Vec3 = [0.93, 0.91, 0.87];
+	type Look = { c: Vec3; alpha: number; weight: number; crisp: boolean };
+	const look = (rr: number, gg: number, bb: number): Look => {
+		const lum = 0.2126 * rr + 0.7152 * gg + 0.0722 * bb;
+		const max = Math.max(rr, gg, bb);
+		const sat = max > 0 ? (max - Math.min(rr, gg, bb)) / max : 0;
+		if (dark === 'dim' && lum < 0.15)
+			return { c: [0.5, 0.5, 0.5], alpha: 0.07, weight: 0.2, crisp: false };
+		if (dark === 'text' && lum < 0.5 && sat > 0.35)
+			return {
+				c: liftColour(rr, gg, bb),
+				alpha: 0.08,
+				weight: 0.15,
+				crisp: false,
+			};
+		if (dark === 'text' && lum < 0.4)
+			return { c: TEXT, alpha: 0.8, weight: 1.8, crisp: true };
+		return {
+			c: liftColour(rr, gg, bb),
+			alpha: 0.7,
+			weight: 1,
+			crisp: dark === 'text',
+		};
+	};
+	const pick = (list: number[]) => {
+		// weighted by look, so thin text gets dense particles and big fills stay light
+		for (let tries = 0; tries < 12; tries++) {
+			const k = Math.floor(r() * (list.length / 2));
+			const px = list[k * 2]! + r() * 2;
+			const py = list[k * 2 + 1]! + r() * 2;
+			const pi =
+				(Math.min(ch - 1, Math.floor(py)) * cw +
+					Math.min(cw - 1, Math.floor(px))) *
+				4;
+			const l = look(
+				(data[pi] ?? 255) / 255,
+				(data[pi + 1] ?? 255) / 255,
+				(data[pi + 2] ?? 255) / 255,
+			);
+			if (r() * 1.8 <= l.weight || tries === 11) return { px, py, l };
+		}
+		return null;
+	};
 	for (let i = 0; i < o.count; i++) {
-		const halo = nEdges > 0 && r() < 0.14;
-		const list = halo ? edges : filled;
-		const k = Math.floor(r() * (list.length / 2));
-		const px = list[k * 2]! + r() * 2;
-		const py = list[k * 2 + 1]! + r() * 2;
-		const pi =
-			(Math.min(ch - 1, Math.floor(py)) * cw +
-				Math.min(cw - 1, Math.floor(px))) *
-			4;
-		const rr = (data[pi] ?? 255) / 255;
-		const gg = (data[pi + 1] ?? 255) / 255;
-		const bb = (data[pi + 2] ?? 255) / 255;
-		const isDark = 0.2126 * rr + 0.7152 * gg + 0.0722 * bb < 0.15;
-		const faint = dark === 'dim' && isDark;
-		const c = faint ? ([0.5, 0.5, 0.5] as Vec3) : liftColour(rr, gg, bb);
+		const halo = nEdges > 0 && r() < (dark === 'text' ? 0.05 : 0.14);
+		const got = pick(halo ? edges : filled)!;
+		const { px, py, l } = got;
 		const spread = halo ? 0.06 + r() * 0.1 : 0;
 		const a = r() * Math.PI * 2;
 		w.set(
@@ -889,10 +927,12 @@ export const buildLogo = (
 			[
 				box.center[0] + (px - cw / 2) * scale + Math.cos(a) * spread,
 				box.center[1] - (py - ch / 2) * scale + Math.sin(a) * spread,
-				box.center[2] + (r() - 0.5) * 0.18 + (halo ? (r() - 0.5) * 0.3 : 0),
+				box.center[2] +
+					(r() - 0.5) * (l.crisp ? 0.04 : 0.18) +
+					(halo ? (r() - 0.5) * 0.3 : 0),
 			],
-			c,
-			faint ? 0.07 : halo ? 0.28 : 0.7,
+			l.c,
+			halo ? Math.min(l.alpha, 0.28) : l.alpha,
 		);
 	}
 	const shape: Shape = {

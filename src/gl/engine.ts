@@ -11,6 +11,7 @@ import {
 	buildScene,
 	SCENES,
 	type LogoBox,
+	type LogoDark,
 	type BuildOptions,
 	type Dust,
 	type SceneName,
@@ -320,6 +321,19 @@ export const createEngine = (
 				center: [0, 0, 0],
 			};
 		}
+		if (place === 'wide') {
+			return view.portrait
+				? {
+						width: view.width * 0.9,
+						height: view.height * 0.24,
+						center: [0, view.height * 0.2, 0],
+					}
+				: {
+						width: view.width * 0.58,
+						height: view.height * 0.5,
+						center: [view.width * 0.17, -view.height * 0.02, 0],
+					};
+		}
 		if (place === 'center') {
 			return view.portrait
 				? {
@@ -347,9 +361,9 @@ export const createEngine = (
 					center: [0, view.height * 0.22, 0],
 				}
 			: {
-					width: view.width * 0.34,
-					height: view.height * 0.34,
-					center: [view.width * 0.22, 0, 0],
+					width: view.width * 0.4,
+					height: view.height * 0.42,
+					center: [view.width * 0.21, 0, 0],
 				};
 	};
 
@@ -500,7 +514,7 @@ export const createEngine = (
 			src: string;
 			anchor: HTMLElement | null;
 			place: string;
-			dark: 'lift' | 'dim';
+			dark: LogoDark;
 		};
 	};
 	let sections: Section[] = [];
@@ -517,7 +531,10 @@ export const createEngine = (
 						src: el.dataset.logo,
 						anchor: sel ? document.querySelector<HTMLElement>(sel) : null,
 						place: el.dataset.logoPlace ?? 'right',
-						dark: el.dataset.logoDark === 'dim' ? 'dim' : 'lift',
+						dark:
+							el.dataset.logoDark === 'dim' || el.dataset.logoDark === 'text'
+								? el.dataset.logoDark
+								: 'lift',
 					},
 				});
 			} else if ((SCENES as readonly string[]).includes(scene)) {

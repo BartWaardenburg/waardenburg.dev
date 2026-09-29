@@ -190,6 +190,7 @@ export function Fallow({ stats }: { stats: Stats }) {
 				data-scene="logo"
 				data-logo={logos.fallow}
 				data-logo-dark="dim"
+				data-logo-place="wide"
 				className="pointer-events-none absolute inset-x-0 top-0 h-[75vh]"
 			/>
 			<div

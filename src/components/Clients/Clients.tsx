@@ -9,7 +9,7 @@ import {
 import { useRef, useState, type CSSProperties } from 'react';
 
 import { SplitWords } from '@/components/Motion';
-import { clients } from '@/content';
+import { clients, logoTone } from '@/content';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -52,6 +52,7 @@ export function Clients() {
 						aria-hidden
 						data-scene="logo"
 						data-logo={c.logo}
+						data-logo-dark={logoTone[c.logo]}
 						className="pointer-events-none absolute inset-x-0"
 						style={{ top: `${(i * 100) / n}%`, height: `${100 / n}%` }}
 					/>

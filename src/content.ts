@@ -343,6 +343,13 @@ export const logos = {
 	isagentready: '/logos/isagentready.svg',
 } as const;
 
+/** How a logo's dark colours should render on the dark particle canvas. */
+export const logoTone: Partial<Record<string, 'dim' | 'text'>> = {
+	[logos.rijksoverheid]: 'text',
+	[logos.ind]: 'text',
+	[logos.rvig]: 'text',
+};
+
 export interface Client {
 	name: string;
 	logo: string;

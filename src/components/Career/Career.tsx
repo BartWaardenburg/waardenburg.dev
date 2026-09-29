@@ -4,7 +4,7 @@ import { motion, useScroll, useSpring } from 'motion/react';
 import { useRef } from 'react';
 
 import { Counter, Reveal, SplitWords } from '@/components/Motion';
-import { career } from '@/content';
+import { career, logoTone } from '@/content';
 
 export function Career() {
 	const list = useRef<HTMLOListElement>(null);
@@ -68,6 +68,7 @@ export function Career() {
 								data-scene="logo"
 								data-logo={r.logo}
 								data-logo-place="center"
+								data-logo-dark={logoTone[r.logo]}
 								className="pointer-events-none absolute inset-0"
 							/>
 							<span className="absolute top-2 left-0 size-[15px] rotate-45 border border-accent bg-bg" />
