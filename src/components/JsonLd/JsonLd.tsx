@@ -15,7 +15,7 @@ const personSchema: WithContext<Person> = {
 	sameAs: [
 		'https://github.com/BartWaardenburg',
 		'https://linkedin.com/in/bartwaardenburg',
-		'https://twitter.com/bartwaardenburg',
+		'https://x.com/bartwaardenburg',
 		'https://github.com/fallow-rs/fallow',
 		'https://isagentready.com',
 	],

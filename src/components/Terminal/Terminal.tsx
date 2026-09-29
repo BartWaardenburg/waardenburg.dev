@@ -10,7 +10,7 @@ import {
 } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
-export interface TerminalLine {
+interface TerminalLine {
 	kind: 'cmd' | 'dim' | 'blank' | 'head' | 'path' | 'fail';
 	text: string;
 }
