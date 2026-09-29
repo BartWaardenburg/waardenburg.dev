@@ -9,7 +9,7 @@ import {
 import type { PointerEvent } from 'react';
 
 import { Reveal, SplitWords } from '@/components/Motion';
-import { openSource, type OssProject } from '@/content';
+import { contributions, openSource, type OssProject } from '@/content';
 
 function Card({ project, i }: { project: OssProject; i: number }) {
 	const rx = useMotionValue(0);
@@ -116,6 +116,46 @@ export function OpenSource() {
 					{openSource.map((p, i) => (
 						<Card key={p.name} project={p} i={i} />
 					))}
+				</div>
+
+				<div className="mt-24 grid gap-10 lg:grid-cols-[1fr_2fr]">
+					<Reveal>
+						<h3 className="font-sans text-3xl font-bold tracking-tight md:text-4xl">
+							Contributed{' '}
+							<span className="font-serif font-normal text-sage italic">
+								upstream
+							</span>
+						</h3>
+						<p className="mt-4 max-w-sm text-muted">
+							Merged pull requests to projects I use every day, from Preact
+							support in Storybook to a coverage hook in Vitest.
+						</p>
+					</Reveal>
+					<ul className="border-t border-line">
+						{contributions.map((c, i) => (
+							<Reveal as="li" key={c.url} delay={i * 0.05} y={16}>
+								<a
+									href={c.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="group grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 border-b border-line py-5 transition-colors hover:bg-fg/[0.03] md:grid-cols-[14rem_1fr_auto]"
+								>
+									<span className="font-sans font-semibold transition-colors group-hover:text-sage">
+										{c.project}
+									</span>
+									<span className="col-span-2 row-start-2 text-sm text-muted md:col-span-1 md:row-start-auto md:text-base">
+										{c.what}
+									</span>
+									<span className="col-start-2 row-start-1 flex items-center gap-3 font-mono text-[11px] text-dim md:col-start-auto md:row-start-auto">
+										{c.year}
+										<span className="transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-fg">
+											↗
+										</span>
+									</span>
+								</a>
+							</Reveal>
+						))}
+					</ul>
 				</div>
 			</div>
 		</section>

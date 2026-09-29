@@ -217,6 +217,59 @@ export const openSource: OssProject[] = [
 	},
 ];
 
+export interface Contribution {
+	project: string;
+	what: string;
+	year: string;
+	url: string;
+}
+
+// Merged pull requests to other projects, newest first.
+export const contributions: Contribution[] = [
+	{
+		project: 'Turso · libsql-client-ts',
+		what: 'Fixed silent data loss when using transactions on in-memory databases',
+		year: '2026',
+		url: 'https://github.com/tursodatabase/libsql-client-ts/pull/342',
+	},
+	{
+		project: 'Vitest',
+		what: 'Added the coverage.instrumenter option, so Istanbul coverage can use native instrumenters',
+		year: '2026',
+		url: 'https://github.com/vitest-dev/vitest/pull/10119',
+	},
+	{
+		project: 'vite-plugin-istanbul',
+		what: 'Support for a custom instrumenter',
+		year: '2026',
+		url: 'https://github.com/iFaxity/vite-plugin-istanbul/pull/402',
+	},
+	{
+		project: 'Homebrew',
+		what: 'Added the fallow formula to homebrew-core',
+		year: '2026',
+		url: 'https://github.com/Homebrew/homebrew-core/pull/280721',
+	},
+	{
+		project: 'Statamic · Eloquent driver',
+		what: 'Fixed stale Blink caches after saves and taxonomy null caching',
+		year: '2026',
+		url: 'https://github.com/statamic/eloquent-driver/pull/586',
+	},
+	{
+		project: 'Preact SSR prepass',
+		what: 'Skip effects during prepass so components with layout effects render on the server',
+		year: '2020',
+		url: 'https://github.com/preactjs/preact-ssr-prepass/pull/6',
+	},
+	{
+		project: 'Storybook',
+		what: 'Added Preact support: the @storybook/preact package',
+		year: '2018',
+		url: 'https://github.com/storybookjs/storybook/pull/4912',
+	},
+];
+
 export interface Talk {
 	title: string;
 	event: string;
