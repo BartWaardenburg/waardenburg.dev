@@ -150,7 +150,13 @@ const MOUSE: Record<SceneName, number> = {
 };
 
 const isLogo = (key: string) => key.startsWith('logo:');
-const dimOf = (key: string) => (isLogo(key) ? 1 : DIM[key as SceneName]);
+// logos placed behind the content are drawn softer so the text stays readable
+const dimOf = (key: string) =>
+	isLogo(key)
+		? key.startsWith('logo:center:')
+			? 0.5
+			: 1
+		: DIM[key as SceneName];
 const mouseOf = (key: string) => (isLogo(key) ? 0.6 : MOUSE[key as SceneName]);
 
 export interface EngineOptions {
@@ -313,6 +319,19 @@ export const createEngine = (
 				height: (rect.height / window.innerHeight) * view.height * 0.7,
 				center: [0, 0, 0],
 			};
+		}
+		if (place === 'center') {
+			return view.portrait
+				? {
+						width: view.width * 0.9,
+						height: view.height * 0.3,
+						center: [0, 0, -1],
+					}
+				: {
+						width: view.width * 0.62,
+						height: view.height * 0.5,
+						center: [0, 0, -1],
+					};
 		}
 		if (place === 'left' && !view.portrait) {
 			return {
@@ -493,7 +512,7 @@ export const createEngine = (
 				const sel = el.dataset.logoAnchor;
 				found.push({
 					el,
-					key: `logo:${el.dataset.logo}`,
+					key: `logo:${el.dataset.logoPlace ?? 'right'}:${el.dataset.logo}`,
 					logo: {
 						src: el.dataset.logo,
 						anchor: sel ? document.querySelector<HTMLElement>(sel) : null,

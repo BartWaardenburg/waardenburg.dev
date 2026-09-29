@@ -394,13 +394,6 @@ export const clients: Client[] = [
 		via: 'ICTU',
 		years: '2024 —',
 	},
-	{
-		name: 'KPN',
-		logo: logos.kpn,
-		what: 'Front-end specialist on KPN’s consumer platforms, in the early React and AngularJS years.',
-		via: 'Incentro',
-		years: '2013 — 2016',
-	},
 ];
 
 export interface Role {
