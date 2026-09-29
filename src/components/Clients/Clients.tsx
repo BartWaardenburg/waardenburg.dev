@@ -42,7 +42,7 @@ export function Clients() {
 			className="relative"
 			style={{ '--n': n } as CSSProperties}
 		>
-			<div className="relative lg:motion-safe:h-[calc(var(--n)*70svh+100svh)]">
+			<div className="relative lg:motion-safe:h-[calc(var(--n)*55svh+100svh)]">
 				{clients.map((c, i) => (
 					<div
 						key={c.name}

@@ -810,14 +810,34 @@ export interface LogoBox {
 
 /** Lift dark brand colours so they still read as light on a near-black canvas. */
 const liftColour = (r: number, g: number, b: number): Vec3 => {
-	const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-	if (lum >= 0.42) return [r, g, b];
-	const t = (0.42 - lum) / 0.42;
-	return [
-		r + (0.9 - r) * t * 0.75,
-		g + (0.88 - g) * t * 0.75,
-		b + (0.84 - b) * t * 0.75,
-	];
+	// Keep the brand's hue and raise its lightness, so dark green stays green and
+	// navy stays blue. Near-neutral darks (black text) become warm off-white.
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
+	const l = (max + min) / 2;
+	if (l >= 0.5) return [r, g, b];
+	const d = max - min;
+	const sat = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+	if (sat < 0.12) return [0.93, 0.91, 0.87];
+	let h = 0;
+	if (d > 0) {
+		if (max === r) h = ((g - b) / d + 6) % 6;
+		else if (max === g) h = (b - r) / d + 2;
+		else h = (r - g) / d + 4;
+		h /= 6;
+	}
+	const L = 0.62;
+	const S = Math.max(0.45, Math.min(0.85, sat));
+	const q = L < 0.5 ? L * (1 + S) : L + S - L * S;
+	const p = 2 * L - q;
+	const hue = (t: number) => {
+		const tt = (t + 1) % 1;
+		if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+		if (tt < 1 / 2) return q;
+		if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+		return p;
+	};
+	return [hue(h + 1 / 3), hue(h), hue(h - 1 / 3)];
 };
 
 export type LogoDark = 'lift' | 'dim' | 'text';
@@ -889,10 +909,10 @@ export const buildLogo = (
 				crisp: false,
 			};
 		if (dark === 'text' && lum < 0.4)
-			return { c: TEXT, alpha: 0.8, weight: 1.8, crisp: true };
+			return { c: TEXT, alpha: 1.15, weight: 1.8, crisp: true };
 		return {
 			c: liftColour(rr, gg, bb),
-			alpha: 0.7,
+			alpha: 1.1,
 			weight: 1,
 			crisp: dark === 'text',
 		};

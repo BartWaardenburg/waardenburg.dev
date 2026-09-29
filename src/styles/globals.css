@@ -144,6 +144,14 @@ html.gl .hero-name {
 	}
 }
 
+/* A soft dark halo behind running text, a second guard for legibility over particles */
+main :is(h2, h3, p, dd, dt, li > a) {
+	text-shadow:
+		0 0 1px rgb(10 10 9 / 0.9),
+		0 0 12px rgb(10 10 9 / 0.85),
+		0 0 28px rgb(10 10 9 / 0.6);
+}
+
 /* Oversized background type: filled, barely there */
 .text-ghost {
 	color: rgb(239 235 227 / 0.06);

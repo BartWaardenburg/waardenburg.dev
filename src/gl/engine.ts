@@ -43,6 +43,10 @@ uniform float uVel;
 uniform vec2 uMouse;
 uniform float uMouseStr;
 uniform int uMode; // 0 points, 1 neighbour lines
+// on-screen text boxes in NDC (minX, minY, maxX, maxY); particles make room for them
+uniform vec4 uText[96];
+uniform int uTextCount;
+uniform vec2 uTextPad;
 uniform float uScan;
 uniform float uDim;
 uniform int uDustStart;
@@ -103,6 +107,16 @@ void main() {
 		// constellation lines between neighbours, only where the pointer is
 		col = vec4(lens, smoothstep(0.05, 0.8, f) * 1.4 * (1.0 - burst) * uDim);
 	}
+	// Particles step aside from text: fade them inside visible text boxes, softly.
+	vec2 ndc = gl_Position.xy / gl_Position.w;
+	float veil = 0.0;
+	for (int i = 0; i < 96; i++) {
+		if (i >= uTextCount) break;
+		vec4 box = uText[i];
+		vec2 out2 = max(max(box.xy - ndc, ndc - box.zw), 0.0) / uTextPad;
+		veil = max(veil, 1.0 - smoothstep(0.0, 1.0, length(out2)));
+	}
+	col.a *= 1.0 - veil * 0.9;
 	vCol = col;
 }`;
 
@@ -241,6 +255,9 @@ export const createEngine = (
 		scan: u('uScan'),
 		dim: u('uDim'),
 		dustStart: u('uDustStart'),
+		text: u('uText'),
+		textCount: u('uTextCount'),
+		textPad: u('uTextPad'),
 	};
 
 	const small = window.innerWidth < 768;
@@ -554,7 +571,60 @@ export const createEngine = (
 		if (logosChanged && buildOpts) buildLogos();
 	};
 	collect();
-	const recollect = window.setTimeout(collect, 1200);
+	const recollect = window.setTimeout(() => {
+		collect();
+		watchText();
+	}, 1200);
+
+	// --- text the particles make room for ------------------------------------
+	const MAX_TEXT = 96;
+	const textBoxes = new Float32Array(MAX_TEXT * 4);
+	const range = document.createRange();
+	let textCount = 0;
+	const visibleText = new Set<Element>();
+	const textObserver = new IntersectionObserver((entries) => {
+		for (const e of entries) {
+			if (e.isIntersecting) visibleText.add(e.target);
+			else visibleText.delete(e.target);
+		}
+	});
+	const watchText = () => {
+		textObserver.disconnect();
+		visibleText.clear();
+		document
+			.querySelectorAll('main :is(h2, h3, p, dd, dt, li > a, [data-legible])')
+			.forEach((el) => {
+				if (!el.closest('.glass, .hero-name, [aria-hidden="true"], .sr-only'))
+					textObserver.observe(el);
+			});
+	};
+	watchText();
+	const measureText = () => {
+		const vw = window.innerWidth;
+		const vh = window.innerHeight;
+		let n = 0;
+		// one box per rendered line, so only the text itself is cleared, not whole blocks
+		for (const el of visibleText) {
+			if (n >= MAX_TEXT) break;
+			range.selectNodeContents(el);
+			for (const rect of range.getClientRects()) {
+				if (n >= MAX_TEXT) break;
+				if (
+					rect.width < 2 ||
+					rect.height < 2 ||
+					rect.bottom < 0 ||
+					rect.top > vh
+				)
+					continue;
+				textBoxes[n * 4] = (rect.left / vw) * 2 - 1;
+				textBoxes[n * 4 + 1] = 1 - (rect.bottom / vh) * 2;
+				textBoxes[n * 4 + 2] = (rect.right / vw) * 2 - 1;
+				textBoxes[n * 4 + 3] = 1 - (rect.top / vh) * 2;
+				n++;
+			}
+		}
+		textCount = n;
+	};
 
 	// continuous position through the section list: 2.4 = 40% of the way from section 2 to 3
 	const targetSection = () => {
@@ -667,7 +737,11 @@ export const createEngine = (
 		gl.uniformMatrix4fv(U.view, false, viewMat);
 		gl.uniform1f(U.time, time);
 		gl.uniform1f(U.mix, mix);
-		gl.uniform1f(U.size, view.portrait ? 3.0 : 2.8);
+		gl.uniform1f(
+			U.size,
+			(view.portrait ? 3.0 : 2.8) *
+				lerp(isLogo(fromName) ? 1.3 : 1, isLogo(toName) ? 1.3 : 1),
+		);
 		gl.uniform1f(U.dpr, dpr);
 		const angle = (sh: Shape) =>
 			time * sh.spin + (sh.sway ?? 0) * Math.sin(time * 0.5);
@@ -716,6 +790,11 @@ export const createEngine = (
 				(0.25 + 0.75 * intro),
 		);
 		gl.uniform1i(U.dustStart, count);
+		if (frames % 2 === 0) measureText();
+		gl.uniform4fv(U.text, textBoxes);
+		gl.uniform1i(U.textCount, textCount);
+		// soft edge of roughly 18px around each line of text
+		gl.uniform2f(U.textPad, 36 / window.innerWidth, 30 / window.innerHeight);
 
 		gl.clearColor(BG[0]!, BG[1]!, BG[2]!, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT);
@@ -753,6 +832,7 @@ export const createEngine = (
 			window.removeEventListener('resize', onResize);
 			canvas.removeEventListener('webglcontextlost', onLostCtx);
 			window.clearTimeout(recollect);
+			textObserver.disconnect();
 			cancelIdle(idleJob);
 			release();
 			gl.deleteBuffer(randBuf);
