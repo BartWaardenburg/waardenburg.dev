@@ -6,6 +6,7 @@ export const site = {
 	location: 'The Hague, NL',
 	github: 'https://github.com/BartWaardenburg',
 	linkedin: 'https://www.linkedin.com/in/bartwaardenburg',
+	twitter: 'https://x.com/bartwaardenburg',
 	availability: 'Building Fallow · open to DevRel & developer-tools roles',
 };
 

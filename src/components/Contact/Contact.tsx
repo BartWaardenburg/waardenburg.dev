@@ -75,6 +75,7 @@ export function Contact() {
 					{[
 						{ href: site.github, label: 'GitHub' },
 						{ href: site.linkedin, label: 'LinkedIn' },
+						{ href: site.twitter, label: 'X / Twitter' },
 						{ href: 'https://fallow.tools', label: 'Fallow' },
 						{ href: 'https://isagentready.com', label: 'IsAgentReady' },
 					].map((l) => (
