@@ -1,1 +1,1 @@
-export { Terminal, type TerminalLine } from './Terminal';
+export { Terminal } from './Terminal';
