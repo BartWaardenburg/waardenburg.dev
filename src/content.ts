@@ -391,7 +391,6 @@ export const logos = {
 	zeeuwsmuseum: '/logos/zeeuwsmuseum.svg',
 	vpro: '/logos/vpro.svg',
 	rotterdampas: '/logos/rotterdampas.svg',
-	kpn: '/logos/kpn.svg',
 	acorn: '/logos/acorn.svg',
 	oorlogsbronnen: '/logos/oorlogsbronnen.svg',
 	rotterdam: '/logos/rotterdam.svg',
@@ -551,7 +550,7 @@ export const career: Role[] = [
 		org: 'Incentro',
 		logo: logos.incentro,
 		role: 'Front-end Consultant',
-		body: 'Front-end specialist for KPN and ANWB. Designed and taught the 7-day front-end course for young professionals and the Advanced Front-End program.',
+		body: 'Front-end specialist for ANWB. Designed and taught the 7-day front-end course for young professionals and the Advanced Front-End program.',
 		tags: ['Teaching', 'AngularJS', 'React'],
 	},
 ];
