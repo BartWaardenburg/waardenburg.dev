@@ -31,7 +31,7 @@ jobs:
           node-version-file: '.nvmrc'
 
       - name: Update lockfile
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --no-frozen-lockfile --lockfile-only --ignore-scripts
 
       - name: Commit updated lockfile
         run: |
