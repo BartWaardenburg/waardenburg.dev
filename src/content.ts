@@ -285,23 +285,13 @@ export interface Talk {
 
 export const talks: Talk[] = [
 	{
-		title: 'JavaScript tooling has a blind spot',
-		event: 'dotJS',
-		place: 'Paris',
-		date: 'Sep 2026',
-		body: 'Linters check files and TypeScript checks types, but nothing checks the codebase as a whole. Now that agents write more of our code, the questions that matter are codebase-wide: what is dead, what is duplicated, what crosses a boundary. A look at that blind spot, and at how a project-graph view closes it.',
-		link: { url: 'https://youtu.be/E2aFrZpnNbo', label: 'Watch on YouTube' },
-		youtubeId: 'E2aFrZpnNbo',
-		featured: true,
-	},
-	{
 		title: 'Agentic Engineering for React Teams: Give Your Coding Agent a Map',
 		event: 'React Advanced',
 		place: 'London',
 		date: 'Oct 2026',
 		body: 'Generating a React component takes seconds. Changing a real React or Next.js codebase safely does not. How codebase intelligence gives agents the system context to know what is dead, what is duplicated and which boundaries a refactor crosses.',
 		link: { url: 'https://reactadvanced.com/', label: 'Event page' },
-		upcoming: true,
+		featured: true,
 	},
 	{
 		title: 'Codebase intelligence with Fallow',
@@ -310,7 +300,15 @@ export const talks: Talk[] = [
 		date: 'Oct 2026',
 		body: 'What it takes to keep a TypeScript or JavaScript codebase healthy when more of it is written by agents, with Fallow as the working example.',
 		link: { url: 'https://frontmania.com/', label: 'Event page' },
-		upcoming: true,
+	},
+	{
+		title: 'JavaScript tooling has a blind spot',
+		event: 'dotJS',
+		place: 'Paris',
+		date: 'Sep 2026',
+		body: 'Linters check files and TypeScript checks types, but nothing checks the codebase as a whole. Now that agents write more of our code, the questions that matter are codebase-wide: what is dead, what is duplicated, what crosses a boundary. A look at that blind spot, and at how a project-graph view closes it.',
+		link: { url: 'https://youtu.be/E2aFrZpnNbo', label: 'Watch on YouTube' },
+		youtubeId: 'E2aFrZpnNbo',
 	},
 	{
 		title: 'Fast Code Generation Is Easy. Safe System-level Change Is Not.',
@@ -373,8 +371,8 @@ export const talks: Talk[] = [
 ];
 
 export const teaching = [
-	{ value: '6', label: 'talks given, from meetups to dotJS' },
-	{ value: '2', label: 'more this autumn: React Advanced and Frontmania' },
+	{ value: '8', label: 'talks given, from meetups to dotJS' },
+	{ value: '5', label: 'of them in 2026' },
 	{ value: '35', label: 'developers in the chapter I led at ANWB' },
 ];
 
