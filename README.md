@@ -21,6 +21,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 - `pnpm type-check` - Run TypeScript type checking
 - `pnpm lint` - Run Oxlint
 - `pnpm format` - Format code with Prettier
+- `pnpm generate:favicons` - Make the favicons and app icons from `scripts/art/icon.jpg`
+- `pnpm generate:logo-masks` - Make the paint masks for the logos from `public/logos`
 
 ## Editing content
 

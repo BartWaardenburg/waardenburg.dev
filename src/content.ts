@@ -424,7 +424,7 @@ export const clients: Client[] = [
 		logo: logos.portofrotterdam,
 		what: 'Innovation Bridge: an interactive map of the port’s innovation ecosystem with a strategy canvas, built solo on Next.js 16, Mapbox and a Statamic back end.',
 		via: 'Norday',
-		years: '2025 — 2026',
+		years: '2025 – 2026',
 	},
 	{
 		name: 'Acorn',
@@ -438,7 +438,7 @@ export const clients: Client[] = [
 		logo: logos.oorlogsbronnen,
 		what: 'The national WWII sources platform, linking millions of records into life stories for more than 750,000 people.',
 		via: 'Norday',
-		years: '2025 — 2026',
+		years: '2025 – 2026',
 	},
 	{
 		name: 'Rotterdam Inclusief',
@@ -452,7 +452,7 @@ export const clients: Client[] = [
 		logo: logos.nldesignsystem,
 		what: 'The new Rijkshuisstijl as open-source NL Design System components and design tokens, for central-government websites and apps.',
 		via: 'Norday',
-		years: '2025 — 2026',
+		years: '2025 – 2026',
 	},
 	{
 		name: 'Zeeuws Museum',
@@ -466,28 +466,28 @@ export const clients: Client[] = [
 		logo: logos.vpro,
 		what: 'ClubLees, a reading app for children, in React Native with an immersive reader module.',
 		via: 'Norday',
-		years: '2025 — 2026',
+		years: '2025 – 2026',
 	},
 	{
 		name: 'RotterdamPas',
 		logo: logos.rotterdampas,
 		what: 'The RotterdamPas app for iOS and Android, built in React Native.',
 		via: 'Norday',
-		years: '2025 — 2026',
+		years: '2025 – 2026',
 	},
 	{
 		name: 'IND',
 		logo: logos.ind,
 		what: 'A Vue 3 JSON Forms adapter library and form runtime used across about ten register front ends of the Immigration and Naturalisation Service.',
 		via: 'ICTU',
-		years: '2025 —',
+		years: '2025 –',
 	},
 	{
 		name: 'RvIG',
 		logo: logos.rvig,
 		what: 'Accessible passport and travel-document application flows, with Keycloak and the NL Design System, audited to WCAG AA.',
 		via: 'ICTU',
-		years: '2024 —',
+		years: '2024 –',
 	},
 ];
 
@@ -502,7 +502,7 @@ export interface Role {
 
 export const career: Role[] = [
 	{
-		years: '2025 — 2026',
+		years: '2025 – 2026',
 		org: 'Norday',
 		logo: logos.norday,
 		role: 'Senior Full-stack Developer',
@@ -510,7 +510,7 @@ export const career: Role[] = [
 		tags: ['Next.js', 'React Native', 'NL Design System', 'Laravel'],
 	},
 	{
-		years: '2024 —',
+		years: '2024 –',
 		org: 'Dutch Government',
 		logo: logos.ictu,
 		role: 'Senior Front-end Developer via ICTU, for the IND and RvIG',
@@ -518,7 +518,7 @@ export const career: Role[] = [
 		tags: ['Vue 3', 'React', 'JSON Schema', 'WCAG AA'],
 	},
 	{
-		years: '2022 — 2024',
+		years: '2022 – 2024',
 		org: 'Sdu',
 		logo: logos.sdu,
 		role: 'Senior Front-end Developer',
@@ -526,7 +526,7 @@ export const career: Role[] = [
 		tags: ['Next.js', 'GraphQL', 'Contentful', 'AWS'],
 	},
 	{
-		years: '2020 — 2024',
+		years: '2020 – 2024',
 		org: 'Ministry of Health (VWS)',
 		logo: logos.rijksoverheid,
 		role: 'Tech Lead, Quarantine & Vaccination',
@@ -534,7 +534,7 @@ export const career: Role[] = [
 		tags: ['React', 'Next.js', 'Sanity', 'Kubernetes'],
 	},
 	{
-		years: '2019 — 2020',
+		years: '2019 – 2020',
 		org: 'ANWB',
 		logo: logos.anwb,
 		role: 'Chapter Lead Front-end',
@@ -542,7 +542,7 @@ export const career: Role[] = [
 		tags: ['Leadership', 'Architecture', 'AWS'],
 	},
 	{
-		years: '2016 — 2019',
+		years: '2016 – 2019',
 		org: 'ANWB',
 		logo: logos.anwb,
 		role: 'Tech Lead, Design System & Traffic',
@@ -550,7 +550,7 @@ export const career: Role[] = [
 		tags: ['Preact', 'Storybook', 'Design systems'],
 	},
 	{
-		years: '2013 — 2016',
+		years: '2013 – 2016',
 		org: 'Incentro',
 		logo: logos.incentro,
 		role: 'Front-end Consultant',
