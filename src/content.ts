@@ -376,7 +376,7 @@ export const teaching = [
 	{ value: '35', label: 'developers in the chapter I led at ANWB' },
 ];
 
-/** Official logo files in public/logos, drawn by the particle field. */
+/** Official logo files in public/logos. */
 export const logos = {
 	anwb: '/logos/anwb.svg',
 	incentro: '/logos/incentro.svg',
@@ -397,13 +397,6 @@ export const logos = {
 	fallow: '/logos/fallow.svg',
 	isagentready: '/logos/isagentready.svg',
 } as const;
-
-/** How a logo's dark colours should render on the dark particle canvas. */
-export const logoTone: Partial<Record<string, 'dim' | 'text'>> = {
-	[logos.rijksoverheid]: 'text',
-	[logos.ind]: 'text',
-	[logos.rvig]: 'text',
-};
 
 export interface Client {
 	name: string;

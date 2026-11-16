@@ -6,8 +6,11 @@ import {
 	useScroll,
 	useTransform,
 } from 'motion/react';
+import Image from 'next/image';
 import { useRef } from 'react';
 
+import allotment from '@/assets/allotment.jpg';
+import { Arrow } from '@/components/Arrow';
 import { SplitWords } from '@/components/Motion';
 import { hero, site } from '@/content';
 
@@ -20,76 +23,74 @@ export function Hero() {
 		target: ref,
 		offset: ['start start', 'end start'],
 	});
-	const y = useTransform(scrollYProgress, [0, 1], ['0%', '-35%']);
-	const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-	const nameY = useTransform(scrollYProgress, [0, 1], ['0%', '-60%']);
+	// the painting falls behind the text as the page moves on
+	const paintingY = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
+	const copyY = useTransform(scrollYProgress, [0, 1], ['0%', '-18%']);
 
 	return (
 		<section
 			id="top"
 			ref={ref}
-			data-scene="name"
-			className="relative flex min-h-svh flex-col justify-end overflow-hidden px-5 pt-28 pb-10 md:px-10 md:pb-14"
+			className="paint wash-sky isolate flex min-h-[min(100svh,1080px)] flex-col overflow-hidden px-5 pt-28 pb-[clamp(300px,34vw,430px)] md:px-10 md:pt-36"
 		>
-			<motion.h1
-				style={{ y: nameY }}
-				className="hero-name pointer-events-none absolute top-[16vh] left-[7vw] w-[86vw] font-sans text-[16vw] leading-[0.84] font-extrabold tracking-[-0.045em] uppercase md:top-[18vh] md:left-[8vw] md:w-[84vw] md:text-[12.4vw]"
+			{/* the painting stands on the bottom edge; its sky fades into the wash above it */}
+			<motion.div
+				aria-hidden
+				style={reduce ? {} : { y: paintingY }}
+				className="absolute inset-x-0 bottom-0 -z-20 h-[min(86%,118vw)] [mask-image:linear-gradient(to_bottom,transparent,black_24%)]"
 			>
-				Bart
-				<br />
-				Waardenburg
-			</motion.h1>
+				<Image
+					src={allotment}
+					alt=""
+					fill
+					priority
+					placeholder="blur"
+					sizes="(max-aspect-ratio: 2/1) 205vh, 100vw"
+					className="object-cover object-[82%_100%]"
+				/>
+			</motion.div>
 
 			<motion.div
-				style={reduce ? {} : { y, opacity }}
-				className="relative z-10 mx-auto w-full max-w-[1600px]"
+				style={reduce ? {} : { y: copyY }}
+				className="mx-auto w-full max-w-[1440px]"
 			>
-				<motion.ul
-					className="mb-6 flex flex-wrap gap-2"
-					initial={reduce ? false : 'hidden'}
-					animate="show"
-					variants={{
-						show: { transition: { staggerChildren: 0.08, delayChildren: 0.9 } },
-					}}
+				<h1 className="display -ml-[0.04em] text-[clamp(5rem,15.5vw,11.5rem)] leading-[0.82]">
+					<span className="sr-only">{site.name}: </span>
+					<SplitWords text="Build." immediate className="block" />
+					<SplitWords
+						text="*Teach.*"
+						immediate
+						delay={0.12}
+						italicClassName="text-pine"
+						className="block"
+					/>
+				</h1>
+				<motion.div
+					initial={reduce ? false : { opacity: 0, y: 18 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 1, delay: 0.45, ease: EASE }}
+					className="max-w-[34rem]"
 				>
-					{hero.eyebrow.map((item) => (
-						<motion.li
-							key={item}
-							variants={{
-								hidden: { opacity: 0, y: 12 },
-								show: { opacity: 1, y: 0 },
-							}}
-							transition={{ duration: 0.8, ease: EASE }}
-							className="border border-line bg-bg/40 px-3 py-1 font-mono text-[11px] tracking-[0.16em] text-muted uppercase backdrop-blur-sm"
-						>
-							{item}
-						</motion.li>
-					))}
-				</motion.ul>
-
-				<div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
-					<p className="max-w-4xl font-sans text-[clamp(2rem,4.6vw,4.6rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance">
-						<SplitWords
-							text="I build *developer tools,* and I teach people how to use them."
-							delay={0.25}
-							stagger={0.05}
-							immediate
-						/>
+					<p className="mt-6 text-[clamp(1.25rem,1.05rem+0.9vw,1.75rem)] leading-[1.25] font-semibold tracking-[-0.015em] text-balance">
+						{hero.title}
 					</p>
-					<motion.div
-						initial={reduce ? false : { opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 1.2, delay: 1.7, ease: EASE }}
-						className="max-w-md lg:justify-self-end"
-					>
-						<p className="text-base leading-relaxed text-muted md:text-lg">
-							{hero.lede}
-						</p>
-						<p className="mt-5 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-fg uppercase">
-							{site.availability}
-						</p>
-					</motion.div>
-				</div>
+					<p className="mt-4 max-w-md text-pretty">{hero.lede}</p>
+					<div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-4">
+						<a href="#fallow" className="btn">
+							See Fallow
+						</a>
+						<a href="#contact" className="stroke-link">
+							Get in touch <Arrow />
+						</a>
+					</div>
+					<p className="sheet mt-7 inline-flex items-center gap-3 !rounded-full px-4 py-2 text-sm font-semibold">
+						<span
+							aria-hidden
+							className="dab h-3 w-3 rotate-0 [--dab:var(--color-clay)]"
+						/>
+						{site.availability}
+					</p>
+				</motion.div>
 			</motion.div>
 		</section>
 	);

@@ -4,7 +4,9 @@ import { motion, useScroll, useSpring } from 'motion/react';
 import { useRef } from 'react';
 
 import { Counter, Reveal, SplitWords } from '@/components/Motion';
-import { career, logoTone } from '@/content';
+import { career } from '@/content';
+
+const FIRST_YEAR = 2013;
 
 export function Career() {
 	const list = useRef<HTMLOListElement>(null);
@@ -17,23 +19,22 @@ export function Career() {
 	return (
 		<section
 			id="career"
-			data-scene="terrain"
 			aria-labelledby="career-title"
-			className="relative px-5 py-32 md:px-10 md:py-44"
+			className="paint brushed wash-forest px-5 pt-28 pb-20 md:px-10 md:pt-40 md:pb-28"
 		>
-			<div className="mx-auto grid max-w-[1600px] gap-16 lg:grid-cols-[0.9fr_1.1fr]">
+			<div className="mx-auto grid max-w-[1440px] gap-16 lg:grid-cols-[0.9fr_1.1fr]">
 				<div className="lg:sticky lg:top-28 lg:self-start">
 					<h2
 						id="career-title"
-						className="font-sans text-[clamp(3rem,7vw,6.5rem)] leading-[0.88] font-extrabold tracking-[-0.05em]"
+						className="display text-[clamp(3.25rem,8vw,7rem)] leading-[0.86]"
 					>
 						<SplitWords text="The long *trail* here." />
 					</h2>
 					<div className="mt-10 flex items-end gap-4">
-						<span className="font-sans text-[clamp(5rem,12vw,11rem)] leading-none font-extrabold tracking-[-0.06em] text-accent">
-							<Counter value={new Date().getFullYear() - 2013} />
+						<span className="display text-[clamp(5.5rem,12vw,10.5rem)] leading-[0.8] text-accent">
+							<Counter value={new Date().getFullYear() - FIRST_YEAR} />
 						</span>
-						<span className="mb-4 font-mono text-xs tracking-[0.16em] text-muted uppercase">
+						<span className="mb-1 font-semibold">
 							years
 							<br />
 							shipping for the web
@@ -50,12 +51,12 @@ export function Career() {
 				<ol ref={list} className="relative">
 					<span
 						aria-hidden
-						className="absolute top-0 bottom-0 left-[7px] w-px bg-line"
+						className="absolute top-0 bottom-0 left-[7px] w-0.5 rounded-full bg-line"
 					/>
 					<motion.span
 						aria-hidden
 						style={{ scaleY }}
-						className="absolute top-0 bottom-0 left-[7px] w-px origin-top bg-accent shadow-[0_0_12px_rgb(169_187_157/0.8)]"
+						className="absolute top-0 bottom-0 left-[7px] w-0.5 origin-top rounded-full bg-accent"
 					/>
 					{career.map((r) => (
 						<Reveal
@@ -65,29 +66,17 @@ export function Career() {
 						>
 							<span
 								aria-hidden
-								data-scene="logo"
-								data-logo={r.logo}
-								data-logo-place="center"
-								data-logo-dark={logoTone[r.logo]}
-								className="pointer-events-none absolute inset-0"
+								className="dab absolute top-2 -left-[2px] h-4 w-5 [--dab:var(--color-sun)]"
 							/>
-							<span className="absolute top-2 left-0 size-[15px] rotate-45 border border-accent bg-bg" />
-							<p className="font-mono text-xs tracking-[0.16em] text-accent uppercase">
-								{r.years}
-							</p>
-							<h3 className="mt-2 font-sans text-3xl font-bold tracking-tight md:text-4xl">
-								{r.org}
-							</h3>
-							<p className="mt-1 font-serif text-xl text-fg/80 italic">
+							<p className="font-mono text-xs text-accent">{r.years}</p>
+							<h3 className="display mt-2 text-4xl md:text-5xl">{r.org}</h3>
+							<p className="mt-2 font-serif text-2xl leading-tight italic">
 								{r.role}
 							</p>
 							<p className="mt-4 max-w-2xl text-muted">{r.body}</p>
 							<ul className="mt-4 flex flex-wrap gap-2">
 								{r.tags.map((t) => (
-									<li
-										key={t}
-										className="border border-line bg-bg/60 px-2.5 py-1 font-mono text-[10px] text-muted"
-									>
+									<li key={t} className="tag">
 										{t}
 									</li>
 								))}

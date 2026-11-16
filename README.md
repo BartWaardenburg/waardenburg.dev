@@ -2,7 +2,7 @@
 
 Personal site of Bart Waardenburg: developer tools (Fallow, IsAgentReady), talks and career.
 
-Built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, Motion and Lenis. The particle field behind the page is raw WebGL2 with a single draw call: every section morphs the same particles into a new formation as you scroll.
+Built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, Motion and Lenis. The page is styled as one oil painting: an allotment garden in the hero, then paint washes that go from the sky down to the soil.
 
 ## Development
 
