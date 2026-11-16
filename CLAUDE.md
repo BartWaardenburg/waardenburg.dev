@@ -35,13 +35,13 @@ This is a Next.js 16 personal website: a single page, styled as an oil painting.
 - `src/components/` - One folder per component (`Name/Name.tsx` + `index.ts`)
 - `src/components/Motion/` - Animation primitives. `Reveal` and `SplitWords` are CSS-only and driven by one shared `RevealObserver`; keep them that way so they cost nothing to hydrate
 - `src/assets/` - The hero painting, imported statically so `next/image` knows its size
-- `public/art/` - The paint texture tiles and the brush-stroke edge mask used by the CSS
+- `public/art/` - The paint texture tiles, the letter fills and the brush-stroke edge mask used by the CSS
 - `src/lib/` - Stats fetching and hooks
 - `src/styles/` - Global CSS (includes Tailwind imports)
 
 **How the painted look works:**
 
-All of it lives in `src/styles/globals.css`. A section takes `paint` plus one wash class (`wash-cloud`, `wash-dawn`, `wash-sage`, `wash-grass`, `wash-clay`, `wash-forest`, `wash-soil`); the washes go from the sky down to the soil. `brushed` adds a row of brush-stroke ends on top of the section. Dark washes and `sheet` (a cream card) set `--color-fg`, and the muted and line colours follow it. `btn`, `stroke-link`, `dab` and `tag` are the only interface primitives. Headings use `display` (Bricolage Grotesque, narrow and heavy) with Instrument Serif italic for the words in `*asterisks*`.
+All of it lives in `src/styles/globals.css`. A section takes `paint` plus one wash class (`wash-cloud`, `wash-dawn`, `wash-sage`, `wash-grass`, `wash-clay`, `wash-forest`, `wash-soil`); the washes go from the sky down to the soil. `brushed` adds a row of brush-stroke ends on top of the section. Dark washes and `sheet` (a cream card) set `--color-fg`, and the muted and line colours follow it. `btn`, `stroke-link` and `tag` are the only interface primitives. Headings use `display` (Bricolage Grotesque, narrow and heavy). The words in `*asterisks*` are filled with paint: `painted` plus one `ink-*` class (`ink-meadow`, `ink-plum` and `ink-ember` for light washes, `ink-dusk` for dark ones). `PaintedLogo` shows a company logo as one shape of thick paint; `pnpm generate:logo-masks` makes its masks from `public/logos`.
 
 **Path Aliases:**
 

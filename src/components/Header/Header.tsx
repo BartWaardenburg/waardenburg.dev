@@ -35,13 +35,7 @@ export function Header() {
 					<div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-5 py-3 md:px-10">
 						<a href="#top" className="group flex items-center gap-3">
 							<span className="sr-only">Back to top: </span>
-							<span
-								aria-hidden
-								className="dab grid h-9 w-10 place-items-center text-sm font-extrabold text-cream transition-transform duration-500 ease-out-expo group-hover:scale-110"
-							>
-								<span className="rotate-[7deg]">BW</span>
-							</span>
-							<span className="text-base font-bold tracking-tight whitespace-nowrap sm:text-lg">
+							<span className="text-lg font-extrabold tracking-tight whitespace-nowrap">
 								Bart Waardenburg
 							</span>
 						</a>

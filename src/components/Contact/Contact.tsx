@@ -36,21 +36,21 @@ export function Contact() {
 			className="paint brushed wash-soil flex min-h-[80svh] flex-col justify-between px-5 pt-32 pb-8 md:px-10 md:pt-44"
 		>
 			<div className="mx-auto w-full max-w-[1440px]">
-				<p className="flex items-center gap-3 font-semibold">
-					<span
-						aria-hidden
-						className="dab h-3 w-3 rotate-0 [--dab:var(--color-sun)]"
-					/>
-					{site.availability}
-				</p>
 				<h2
 					id="contact-title"
-					className="display mt-6 -ml-[0.04em] text-[clamp(4.5rem,17vw,13rem)] leading-[0.8]"
+					className="display -ml-[0.04em] text-[clamp(4.5rem,17vw,13rem)] leading-[0.8]"
 				>
-					<SplitWords text="Let's *talk.*" stagger={0.12} />
+					<SplitWords
+						text="Let's *talk.*"
+						stagger={0.12}
+						accentClassName="ink-dusk"
+					/>
 				</h2>
 				<Reveal>
-					<p className="mt-8 max-w-xl text-lg text-muted">
+					<p className="mt-8 text-xl font-semibold tracking-tight md:text-2xl">
+						{site.availability}
+					</p>
+					<p className="mt-4 max-w-xl text-lg text-muted">
 						DevRel, developer tools, growth engineering, or a hard tooling
 						problem you want explained well. I would love to hear about it.
 					</p>

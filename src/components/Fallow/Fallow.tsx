@@ -6,15 +6,6 @@ import type { Stats } from '@/lib/stats';
 
 const external = { target: '_blank', rel: 'noopener noreferrer' } as const;
 
-const DABS = [
-	'[--dab:var(--color-sun)]',
-	'[--dab:var(--color-sage)]',
-	'[--dab:#f2b8a8]',
-	'[--dab:#e08a5b]',
-	'[--dab:#b9a2d6]',
-	'[--dab:var(--color-cream)]',
-];
-
 /**
  * The raised bed: a timber frame around bare soil, like the fallow beds in the painting.
  * The terminal and the list of findings are planted in it.
@@ -27,16 +18,13 @@ function Bed() {
 				<div className="lg:py-2">
 					<h3 className="display text-3xl md:text-4xl">What one run reports</h3>
 					<ul className="mt-6">
-						{fallow.finds.map((f, i) => (
+						{fallow.finds.map((f) => (
 							<li
 								key={f.name}
-								className="grid grid-cols-[2.1rem_1fr] items-baseline gap-x-4 border-t border-line py-3.5 first:border-t-0"
+								className="border-t border-line py-3.5 first:border-t-0"
 							>
-								<span aria-hidden className={`dab ${DABS[i % DABS.length]}`} />
-								<p>
-									<span className="font-bold">{f.name}.</span>{' '}
-									<span className="text-muted">{f.body}</span>
-								</p>
+								<span className="font-bold text-sun">{f.name}.</span>{' '}
+								<span className="text-muted">{f.body}</span>
 							</li>
 						))}
 					</ul>
@@ -75,7 +63,7 @@ export function Fallow({ stats }: { stats: Stats }) {
 						>
 							<SplitWords text={fallow.name} />
 						</h2>
-						<p className="mt-5 max-w-2xl font-serif text-3xl leading-tight italic md:text-4xl">
+						<p className="mt-5 max-w-2xl text-2xl leading-tight font-semibold tracking-tight text-balance md:text-3xl">
 							{fallow.tagline}
 						</p>
 					</div>

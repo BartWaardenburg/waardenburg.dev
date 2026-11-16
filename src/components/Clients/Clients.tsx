@@ -1,7 +1,11 @@
 import { SplitWords } from '@/components/Motion';
+import { PaintedLogo } from '@/components/PaintedLogo';
 import { clients } from '@/content';
 
-/** The client work, as one sheet of paper pinned on the forest green. */
+// the light paints of the sky, one after the other
+const PAINTS = ['#f4ecdc', '#f6c453', '#f2b8a8', '#cdd89a', '#d3bfec'];
+
+/** The client work: each logo painted on the forest green, with the work next to it. */
 export function Clients() {
 	return (
 		<section
@@ -14,27 +18,31 @@ export function Clients() {
 					id="clients-title"
 					className="display text-[clamp(3.25rem,8vw,7rem)] leading-[0.86]"
 				>
-					<SplitWords text="Built *for.*" />
+					<SplitWords text="Built *for.*" accentClassName="ink-dusk" />
 				</h2>
-				<div className="sheet mt-12 px-6 py-3 md:mt-16 md:px-10 md:py-5">
-					<ul className="grid md:grid-cols-2 md:gap-x-14">
-						{clients.map((c) => (
-							<li
-								key={c.name}
-								className="border-b border-line py-6 last:border-b-0 md:[&:nth-last-child(2):nth-child(odd)]:border-b-0"
-							>
-								<div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-									<h3 className="display text-3xl">{c.name}</h3>
-									<p className="text-sm font-medium text-muted">
-										via {c.via} ·{' '}
-										<span className="font-mono text-xs">{c.years}</span>
-									</p>
-								</div>
-								<p className="mt-2 text-muted">{c.what}</p>
-							</li>
-						))}
-					</ul>
-				</div>
+				<ul className="mt-12 grid gap-x-16 md:mt-16 lg:grid-cols-2">
+					{clients.map((c, i) => (
+						<li
+							key={c.name}
+							className="grid gap-x-8 gap-y-5 border-t border-line py-8 sm:grid-cols-[13.5rem_1fr]"
+						>
+							<PaintedLogo
+								logo={c.logo}
+								paint={PAINTS[i % PAINTS.length]}
+								size={3.75}
+								className="max-w-full sm:mt-1"
+							/>
+							<div>
+								<h3 className="display text-3xl">{c.name}</h3>
+								<p className="mt-1 text-sm font-medium text-muted">
+									via {c.via} ·{' '}
+									<span className="font-mono text-xs">{c.years}</span>
+								</p>
+								<p className="mt-3 text-muted">{c.what}</p>
+							</div>
+						</li>
+					))}
+				</ul>
 			</div>
 		</section>
 	);

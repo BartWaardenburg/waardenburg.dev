@@ -1,11 +1,8 @@
 import { Reveal, ScrollWords } from '@/components/Motion';
 import { manifesto, pillars } from '@/content';
 
-const DABS = [
-	'[--dab:var(--color-forest)]',
-	'[--dab:var(--color-clay)]',
-	'[--dab:var(--color-sun)]',
-];
+// each pillar is written in its own paint
+const INKS = ['ink-ember', 'ink-plum', 'ink-meadow'];
 
 export function Manifesto() {
 	return (
@@ -23,8 +20,11 @@ export function Manifesto() {
 				<ol className="mt-20 grid gap-x-12 gap-y-12 md:mt-28 md:grid-cols-3">
 					{pillars.map((p, i) => (
 						<Reveal as="li" key={p.title} delay={i * 0.1}>
-							<span aria-hidden className={`dab ${DABS[i]}`} />
-							<h3 className="display mt-5 text-5xl md:text-6xl">{p.title}</h3>
+							<h3 className="display text-6xl md:text-7xl">
+								<span className={`painted ${INKS[i % INKS.length]}`}>
+									{p.title}
+								</span>
+							</h3>
 							<p className="mt-4 max-w-sm text-muted">{p.body}</p>
 						</Reveal>
 					))}

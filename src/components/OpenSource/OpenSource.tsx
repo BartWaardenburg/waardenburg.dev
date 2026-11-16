@@ -51,7 +51,7 @@ export function OpenSource() {
 					>
 						<SplitWords
 							text="Open source, *shipped.*"
-							italicClassName="text-pine"
+							accentClassName="ink-plum"
 						/>
 					</h2>
 					<Reveal>
@@ -72,14 +72,11 @@ export function OpenSource() {
 				<div className="mt-24 grid gap-10 lg:grid-cols-[1fr_2fr]">
 					<div>
 						<h3 className="display text-4xl md:text-5xl">
-							Contributed{' '}
-							<span className="font-serif font-normal text-pine italic">
-								upstream
-							</span>
+							Contributed <span className="painted ink-plum">upstream</span>
 						</h3>
 						<p className="mt-4 max-w-sm text-muted">
-							Merged pull requests to projects I use every day, from Preact
-							support in Storybook to a coverage hook in Vitest.
+							Fixes that landed in projects I use every day, from Preact support
+							in Storybook to a coverage hook in Vitest.
 						</p>
 					</div>
 					<ul className="border-t-2 border-fg">
