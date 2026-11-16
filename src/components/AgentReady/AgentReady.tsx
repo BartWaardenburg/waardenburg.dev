@@ -14,6 +14,9 @@ import { useEffect, useRef } from 'react';
 import { Arrow } from '@/components/Arrow';
 import { Reveal, SplitWords } from '@/components/Motion';
 import { isAgentReady as iar } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
+import lighthouse from '@/assets/lighthouse.webp';
+import { PaintedProp } from '@/components/PaintedProp';
 
 const overall = Math.round(
 	iar.categories.reduce((s, c) => s + (c.score * c.weight) / 100, 0),
@@ -93,7 +96,7 @@ function ScanCard({ drive }: { drive: MotionValue<number> }) {
 	const gradeScale = useTransform(drive, [0.9, 0.96], [1.8, 1]);
 
 	return (
-		<div className="sheet w-full p-6 md:p-8">
+		<div className="sheet relative w-full p-6 md:p-8">
 			<div className="flex items-center gap-3 rounded-lg bg-ink px-4 py-3 font-mono text-xs text-cream">
 				<span className="text-cream/60">URL</span>
 				<motion.span className="caret truncate">{url}</motion.span>
@@ -176,6 +179,7 @@ export function AgentReady() {
 			aria-labelledby="iar-title"
 			className="paint brushed wash-sage px-5 py-28 md:px-10 md:py-40"
 		>
+			<PaintLight />
 			<div className="mx-auto max-w-[1440px]">
 				<div className="grid gap-12 lg:grid-cols-[1fr_29rem] lg:gap-16">
 					<div className="flex flex-col">
@@ -210,7 +214,13 @@ export function AgentReady() {
 							</a>
 						</div>
 					</div>
-					<div ref={cardRef} className="lg:self-end">
+					<div ref={cardRef} className="relative lg:self-end">
+						{/* the lighthouse stands on the report, with its foot behind the top edge */}
+						<PaintedProp
+							image={lighthouse}
+							sizes="(min-width: 1024px) 190px, 120px"
+							className="absolute right-5 bottom-[calc(100%-1.4rem)] h-36 w-auto md:right-8 lg:h-44"
+						/>
 						<ScanCard drive={drive} />
 					</div>
 				</div>

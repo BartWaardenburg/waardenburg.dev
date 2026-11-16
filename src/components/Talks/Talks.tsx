@@ -3,11 +3,16 @@ import Image from 'next/image';
 import { Arrow } from '@/components/Arrow';
 import { Reveal, SplitWords } from '@/components/Motion';
 import { talks, teaching, type Talk } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
 
 const external = { target: '_blank', rel: 'noopener noreferrer' } as const;
 
 // talks without a recording get a painted cover in one of these colours
-const COVER_TINTS = ['bg-forest', 'bg-soil', 'bg-[#6f5a99]', 'bg-clay'];
+const COVER_PAINTS = [
+	"bg-[url('/art/fill-meadow.webp')]",
+	"bg-[url('/art/fill-plum.webp')]",
+	"bg-[url('/art/fill-ember.webp')]",
+];
 const painted = talks.filter((t) => !t.youtubeId);
 
 /** The same cover for every talk: the YouTube still when there is a recording, paint otherwise. */
@@ -41,9 +46,11 @@ function Cover({ talk, tint }: { talk: Talk; tint: number }) {
 				</>
 			) : (
 				<span
-					className={`absolute inset-0 flex items-end bg-[url('/art/impasto-strong.webp')] bg-[length:280px] p-5 bg-blend-soft-light ${COVER_TINTS[Math.max(0, tint) % COVER_TINTS.length]}`}
+					className={`absolute inset-0 flex items-end bg-cover bg-center p-5 transition-transform duration-700 ease-out-expo group-hover/cover:scale-105 ${COVER_PAINTS[Math.max(0, tint) % COVER_PAINTS.length]}`}
 				>
-					<span className="display text-3xl text-cream">{talk.event}</span>
+					<span className="display text-3xl text-cream [text-shadow:0_2px_10px_rgb(20_12_6/0.55)]">
+						{talk.event}
+					</span>
 				</span>
 			)}
 		</a>
@@ -89,6 +96,7 @@ export function Talks() {
 			aria-labelledby="talks-title"
 			className="paint brushed wash-clay px-5 py-28 md:px-10 md:py-40"
 		>
+			<PaintLight />
 			<div className="mx-auto max-w-[1440px]">
 				<div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-end">
 					<h2

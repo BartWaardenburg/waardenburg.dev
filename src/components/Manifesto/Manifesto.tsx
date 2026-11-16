@@ -1,5 +1,6 @@
 import { Reveal, ScrollWords } from '@/components/Motion';
 import { manifesto, pillars } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
 
 // each pillar is written in its own paint
 const INKS = ['ink-ember', 'ink-plum', 'ink-meadow'];
@@ -10,6 +11,7 @@ export function Manifesto() {
 			id="about"
 			className="paint brushed wash-cloud px-5 pt-24 pb-28 md:px-10 md:pt-32 md:pb-40"
 		>
+			<PaintLight />
 			<div className="mx-auto max-w-[1440px]">
 				<h2 className="sr-only">About</h2>
 				<ScrollWords

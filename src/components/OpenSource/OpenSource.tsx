@@ -1,6 +1,9 @@
 import { Arrow } from '@/components/Arrow';
 import { Reveal, SplitWords } from '@/components/Motion';
 import { contributions, openSource, type OssProject } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
+import seedlings from '@/assets/seedlings.webp';
+import { PaintedProp } from '@/components/PaintedProp';
 
 const external = { target: '_blank', rel: 'noopener noreferrer' } as const;
 
@@ -43,6 +46,7 @@ export function OpenSource() {
 			aria-labelledby="oss-title"
 			className="paint wash-grass px-5 pt-16 pb-28 md:px-10 md:pt-24 md:pb-40"
 		>
+			<PaintLight />
 			<div className="mx-auto max-w-[1440px]">
 				<div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
 					<h2
@@ -78,6 +82,11 @@ export function OpenSource() {
 							Fixes that landed in projects I use every day, from Preact support
 							in Storybook to a coverage hook in Vitest.
 						</p>
+						<PaintedProp
+							image={seedlings}
+							sizes="(min-width: 1024px) 340px, 240px"
+							className="mt-8 h-auto w-60 lg:mt-12 lg:w-[21rem]"
+						/>
 					</div>
 					<ul className="border-t-2 border-fg">
 						{contributions.map((c) => (

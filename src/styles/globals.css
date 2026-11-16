@@ -89,6 +89,8 @@ html.lenis body {
 	 */
 	.paint {
 		position: relative;
+		/* its own stacking context, so the paint light can lie under the content */
+		isolation: isolate;
 		background-color: var(--bg);
 		background-image: url('/art/impasto-soft.webp'), var(--wash);
 		background-blend-mode: soft-light, normal;
@@ -111,48 +113,134 @@ html.lenis body {
 		mask: url('/art/edge.svg') var(--edge-x, 0) 0 / 1200px 100% repeat-x;
 	}
 	.wash-sky {
+		--glow: #f2c4dc;
 		--bg: #cfaad2;
 		--wash: linear-gradient(180deg, #c3a2d6 0%, #cfaad2 16%, #dab2d2 40%);
 	}
 	.wash-cloud {
+		--glow: #f6cdab;
 		--bg: #f6efe1;
 		--top: #f6efe1;
 		--wash: linear-gradient(#f6efe1, #f6efe1);
 	}
 	.wash-dawn {
+		--glow: #fbe6a6;
 		--bg: #f6d9bd;
 		--top: #f7e6d4;
 		--wash: linear-gradient(180deg, #f7e6d4 0%, #f6d9bd 55%, #f3cba6 100%);
 		--edge-x: -410px;
 	}
 	.wash-sage {
+		--glow: #c3d588;
 		--bg: #dde0b3;
 		--top: #e6e6c2;
 		--wash: linear-gradient(180deg, #e6e6c2 0%, #d5dba4 100%);
 		--edge-x: -820px;
 	}
 	.wash-grass {
+		--glow: #e6ec9f;
 		--bg: #c6d090;
 		--wash: linear-gradient(180deg, #d5dba4 0%, #b7c57c 100%);
 	}
 	.wash-clay {
+		--glow: #f8cda4;
 		--bg: #e3a983;
 		--top: #eab894;
 		--wash: linear-gradient(180deg, #eab894 0%, #dc9a72 100%);
 		--edge-x: -230px;
 	}
 	.wash-forest {
+		--glow: #245c46;
 		--bg: #1c4838;
 		--top: #2b5c47;
 		--wash: linear-gradient(180deg, #2b5c47 0%, #1c4838 60%, #173d30 100%);
 		--edge-x: -640px;
 	}
 	.wash-soil {
+		--glow: #5c3a2a;
 		--bg: #2e1d15;
 		--top: #4a3024;
 		--wash: linear-gradient(180deg, #4a3024 0%, #2e1d15 50%, #20140e 100%);
 		--edge-x: -980px;
 	}
+	/*
+	 * The paint light (see PaintLight). Under the mouse, a second pigment shows and
+	 * the relief of the paint gets stronger. `--glow` is the pigment of each wash.
+	 */
+	.paint-light {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		overflow: hidden;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.6s var(--ease-out-expo);
+	}
+	.paint-light.is-on {
+		opacity: 1;
+	}
+	.paint-light i {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 34rem;
+		aspect-ratio: 1;
+		background-color: var(--glow);
+		background-image: url('/art/impasto-strong.webp');
+		background-blend-mode: overlay;
+		background-size: 448px;
+		-webkit-mask-image: radial-gradient(
+			closest-side,
+			#000 0%,
+			rgb(0 0 0 / 0.55) 42%,
+			transparent 100%
+		);
+		mask-image: radial-gradient(
+			closest-side,
+			#000 0%,
+			rgb(0 0 0 / 0.55) 42%,
+			transparent 100%
+		);
+		will-change: transform;
+	}
+	.paint-light i:nth-child(2) {
+		width: 24rem;
+	}
+	.paint-light i:nth-child(3) {
+		width: 15rem;
+	}
+
+	/* A strip of a painting between two sections (see PaintedBand). */
+	.painted-band {
+		position: relative;
+		isolation: isolate;
+		overflow: clip;
+		height: clamp(210px, 33vw, 480px);
+		background-color: var(--from);
+	}
+	.painted-band::before {
+		content: '';
+		position: absolute;
+		inset: -1px 0 auto;
+		z-index: 1;
+		height: clamp(20px, 3vw, 44px);
+		background-color: var(--from);
+		background-image: url('/art/impasto-soft.webp');
+		background-blend-mode: soft-light;
+		background-size: 448px;
+		-webkit-mask: url('/art/edge.svg') -530px 0 / 1200px 100% repeat-x;
+		mask: url('/art/edge.svg') -530px 0 / 1200px 100% repeat-x;
+		scale: 1 -1;
+	}
+	.painted-band-drift {
+		position: absolute;
+		inset: -9% 0;
+	}
+	.painted-prop {
+		display: block;
+		filter: drop-shadow(0 14px 12px rgb(40 26 12 / 0.28));
+	}
+
 	/* dark washes turn the text and its helpers light */
 	.wash-forest,
 	.wash-soil,
@@ -364,6 +452,24 @@ html.lenis body {
 	vertical-align: -0.2em;
 	background: var(--color-sun);
 	opacity: 0.9;
+}
+
+/* The painting in a band drifts a little while the band crosses the screen. */
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		.painted-band-drift {
+			animation: band-drift linear both;
+			animation-timeline: view();
+		}
+	}
+}
+@keyframes band-drift {
+	from {
+		transform: translateY(-7%);
+	}
+	to {
+		transform: translateY(7%);
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
