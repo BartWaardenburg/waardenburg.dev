@@ -29,20 +29,20 @@ export function SplitWords({
 		const starts = raw.startsWith('*');
 		const ends =
 			raw.replace(/[.,!?]$/, '').endsWith('*') && (raw.length > 1 || !starts);
-		const italic = open || starts;
+		const accent = open || starts;
 		if (starts) open = true;
 		if (ends) open = false;
-		return { word: raw.replaceAll('*', ''), italic };
+		return { word: raw.replaceAll('*', ''), accent };
 	});
 	return (
 		<span className={className}>
 			<span className="sr-only">{text.replaceAll('*', '')}</span>
 			<span aria-hidden data-reveal-words={immediate ? 'now' : ''}>
-				{words.map(({ word, italic }, i) => {
+				{words.map(({ word, accent }, i) => {
 					return (
 						<span key={`${word}-${i}`} className="sw-mask">
 							<span
-								className={`sw-word ${italic ? `painted ${accentClassName}` : ''}`}
+								className={`sw-word ${accent ? `painted ${accentClassName}` : ''}`}
 								style={{ '--wd': `${delay + i * stagger}s` } as CSSProperties}
 							>
 								{word}

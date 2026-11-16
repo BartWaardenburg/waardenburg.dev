@@ -19,7 +19,6 @@ export const nav = [
 ];
 
 export const hero = {
-	eyebrow: ['Developer tools', 'Talks & teaching', 'The Hague, NL'],
 	title: 'I build developer tools, and I teach people how to use them.',
 	lede: 'Creator of Fallow, the Rust-powered codebase analyzer for TypeScript and JavaScript, built on Oxc. Builder of IsAgentReady. Twelve years of shipping for the web before that.',
 };
@@ -380,7 +379,7 @@ export const teaching = [
 ];
 
 /** Official logo files in public/logos. The page paints them through the masks in public/logos/paint. */
-export const logos = {
+const logos = {
 	anwb: '/logos/anwb.svg',
 	incentro: '/logos/incentro.svg',
 	sdu: '/logos/sdu.svg',
