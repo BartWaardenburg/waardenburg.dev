@@ -1,7 +1,7 @@
 {
 	"name": "Bart Waardenburg",
 	"short_name": "BW",
-	"description": "Full-stack developer and front-end expert based in The Hague, Netherlands. Tech lead, design systems architect, and consultant.",
+	"description": "Creator of Fallow, the Rust-powered codebase analyzer for TypeScript and JavaScript built on Oxc, and builder of IsAgentReady. Speaker at dotJS. Twelve years of shipping for the web.",
 	"start_url": "/",
 	"id": "/",
 	"display": "standalone",
@@ -42,11 +42,6 @@
 			"sizes": "512x512",
 			"type": "image/png",
 			"purpose": "maskable"
-		},
-		{
-			"src": "/icon.svg",
-			"sizes": "any",
-			"type": "image/svg+xml"
 		}
 	],
 	"screenshots": [],

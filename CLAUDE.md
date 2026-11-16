@@ -13,6 +13,10 @@ pnpm type-check   # Run TypeScript type checking
 pnpm lint         # Run Oxlint
 pnpm format       # Format code with Prettier
 pnpm format:check # Check code formatting
+
+# Generated assets (run after a change of the source)
+pnpm generate:favicons   # Favicons and app icons, from scripts/art/icon.jpg
+pnpm generate:logo-masks # Paint masks for the logos, from public/logos
 ```
 
 ## Architecture
@@ -23,7 +27,7 @@ This is a Next.js 16 personal website: a single page, styled as an oil painting.
 
 - Next.js 16 with the App Router (`src/app/`)
 - React 19
-- TypeScript 5.9 with strict mode
+- TypeScript 7 with strict mode
 - Tailwind CSS 4 for styling (theme tokens in `src/styles/globals.css`)
 - Motion (`motion/react`) for scroll-linked animation, Lenis for smooth scrolling
 - Oxlint for linting, Prettier for formatting
@@ -36,7 +40,7 @@ This is a Next.js 16 personal website: a single page, styled as an oil painting.
 - `src/components/Motion/` - Animation primitives. `Reveal` and `SplitWords` are CSS-only and driven by one shared `RevealObserver`; keep them that way so they cost nothing to hydrate
 - `src/assets/` - The paintings and the cut-out props, imported statically so `next/image` knows their size
 - `public/art/` - The paint texture tiles, the letter fills and the brush-stroke edge mask used by the CSS
-- `src/lib/` - Stats fetching and hooks
+- `src/lib/` - Stats fetching, and the generated list of logo masks
 - `src/styles/` - Global CSS (includes Tailwind imports)
 
 **How the painted look works:**
