@@ -1,12 +1,14 @@
 import {
+	Bricolage_Grotesque,
 	Instrument_Serif,
-	Inter_Tight,
 	JetBrains_Mono,
 } from 'next/font/google';
 
-export const display = Inter_Tight({
+// The width axis gives the narrow poster headings, the optical size axis keeps body text open.
+export const display = Bricolage_Grotesque({
 	subsets: ['latin'],
 	display: 'swap',
+	axes: ['opsz', 'wdth'],
 	variable: '--font-display',
 });
 

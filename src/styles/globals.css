@@ -5,18 +5,21 @@
 	--font-mono: var(--font-code), ui-monospace, 'SF Mono', monospace;
 	--font-serif: var(--font-italic), ui-serif, Georgia, serif;
 
-	--color-bg: #0a0a09;
-	--color-bg-2: #11100e;
-	--color-fg: #efebe3;
-	--color-muted: #9a958c;
-	--color-dim: #858075;
-	--color-line: rgb(239 235 227 / 0.1);
-	/* sage leads; wine, ochre and slate answer it */
-	--color-accent: #a9bb9d;
-	--color-sage: #a9bb9d;
-	--color-wine: #c9606f;
-	--color-ochre: #d4a35e;
-	--color-slate: #8c9db5;
+	/* the palette of the allotment painting, from the sky down to the soil */
+	--color-bg: #f6efe1;
+	--color-fg: #1b1712;
+	--color-muted: color-mix(in srgb, var(--color-fg) 76%, transparent);
+	--color-line: color-mix(in srgb, var(--color-fg) 18%, transparent);
+	--color-accent: #1e5141;
+	--color-cream: #fbf5e8;
+	--color-ink: #1b1712;
+	--color-forest: #1e5141;
+	--color-pine: #123f30;
+	--color-sage: #a9b76a;
+	--color-clay: #b4532a;
+	--color-sun: #f6c453;
+	--color-timber: #a87748;
+	--color-soil: #3b271d;
 
 	--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -25,7 +28,8 @@
 	html {
 		background: var(--color-bg);
 		color: var(--color-fg);
-		color-scheme: dark;
+		color-scheme: light;
+		scrollbar-color: var(--color-forest) var(--color-bg);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		text-rendering: optimizeLegibility;
@@ -34,19 +38,20 @@
 	body {
 		background: var(--color-bg);
 		font-family: var(--font-sans);
+		font-optical-sizing: auto;
 		line-height: 1.55;
 		overflow-x: clip;
 	}
 
 	::selection {
-		background: var(--color-accent);
-		color: var(--color-bg);
+		background: var(--color-sun);
+		color: var(--color-ink);
 	}
 
 	:focus-visible {
-		outline: 2px solid var(--color-accent);
+		outline: 2.5px solid var(--color-fg);
 		outline-offset: 4px;
-		border-radius: 4px;
+		border-radius: 6px;
 	}
 
 	a {
@@ -67,21 +72,223 @@ html.lenis body {
 	overscroll-behavior: contain;
 }
 
-/* The particle canvas fades in once its first frame is drawn */
-.gl-canvas {
-	opacity: 0;
-	transition: opacity 1.2s var(--ease-out-expo);
-}
-html.gl-ready .gl-canvas {
-	opacity: 1;
-}
+/* Components sit below the utilities, so a utility class can always adjust them. */
+@layer components {
+	/* Poster headings: heavy, narrow, sentence case */
+	.display {
+		font-family: var(--font-sans);
+		font-weight: 800;
+		font-stretch: 76%;
+		letter-spacing: -0.02em;
+		line-height: 0.9;
+		text-wrap: balance;
+	}
 
-/* The DOM name is the fallback (and the accessible name); particles draw it when WebGL runs */
-.hero-name {
-	transition: opacity 0.8s ease;
-}
-html.gl .hero-name {
-	opacity: 0;
+	/*
+	 * Painted surfaces. A section picks a wash; the paint texture lies on top of it.
+	 * `brushed` adds a row of brush-stroke ends that overlap the section above.
+	 */
+	.paint {
+		position: relative;
+		background-color: var(--bg);
+		background-image: url('/art/impasto-soft.webp'), var(--wash);
+		background-blend-mode: soft-light, normal;
+		background-size:
+			448px,
+			100% 100%;
+	}
+	.brushed::before {
+		content: '';
+		position: absolute;
+		inset: auto 0 calc(100% - 1px);
+		z-index: 2;
+		height: clamp(20px, 3vw, 44px);
+		pointer-events: none;
+		background-color: var(--top);
+		background-image: url('/art/impasto-soft.webp');
+		background-blend-mode: soft-light;
+		background-size: 448px;
+		-webkit-mask: url('/art/edge.svg') var(--edge-x, 0) 0 / 1200px 100% repeat-x;
+		mask: url('/art/edge.svg') var(--edge-x, 0) 0 / 1200px 100% repeat-x;
+	}
+	.wash-sky {
+		--bg: #cfaad2;
+		--wash: linear-gradient(180deg, #c3a2d6 0%, #cfaad2 16%, #dab2d2 40%);
+	}
+	.wash-cloud {
+		--bg: #f6efe1;
+		--top: #f6efe1;
+		--wash: linear-gradient(#f6efe1, #f6efe1);
+	}
+	.wash-dawn {
+		--bg: #f6d9bd;
+		--top: #f7e6d4;
+		--wash: linear-gradient(180deg, #f7e6d4 0%, #f6d9bd 55%, #f3cba6 100%);
+		--edge-x: -410px;
+	}
+	.wash-sage {
+		--bg: #dde0b3;
+		--top: #e6e6c2;
+		--wash: linear-gradient(180deg, #e6e6c2 0%, #d5dba4 100%);
+		--edge-x: -820px;
+	}
+	.wash-grass {
+		--bg: #c6d090;
+		--wash: linear-gradient(180deg, #d5dba4 0%, #b7c57c 100%);
+	}
+	.wash-clay {
+		--bg: #e3a983;
+		--top: #eab894;
+		--wash: linear-gradient(180deg, #eab894 0%, #dc9a72 100%);
+		--edge-x: -230px;
+	}
+	.wash-forest {
+		--bg: #1c4838;
+		--top: #2b5c47;
+		--wash: linear-gradient(180deg, #2b5c47 0%, #1c4838 60%, #173d30 100%);
+		--edge-x: -640px;
+	}
+	.wash-soil {
+		--bg: #2e1d15;
+		--top: #4a3024;
+		--wash: linear-gradient(180deg, #4a3024 0%, #2e1d15 50%, #20140e 100%);
+		--edge-x: -980px;
+	}
+	/* dark washes turn the text and its helpers light */
+	.wash-forest,
+	.wash-soil,
+	.on-dark {
+		--color-fg: #f4ecdc;
+		--color-accent: var(--color-sun);
+		/* derived colours do not follow a new --color-fg on their own */
+		--color-muted: color-mix(in srgb, var(--color-fg) 76%, transparent);
+		--color-line: color-mix(in srgb, var(--color-fg) 18%, transparent);
+		color: var(--color-fg);
+	}
+
+	/* A cream sheet of paper on a painted surface. Always dark text. */
+	.sheet {
+		--color-fg: var(--color-ink);
+		--color-accent: var(--color-forest);
+		--color-muted: color-mix(in srgb, var(--color-fg) 76%, transparent);
+		--color-line: color-mix(in srgb, var(--color-fg) 18%, transparent);
+		color: var(--color-fg);
+		background-color: var(--color-cream);
+		background-image: url('/art/impasto-soft.webp');
+		background-blend-mode: soft-light;
+		background-size: 448px;
+		border-radius: 14px;
+		box-shadow: 0 22px 34px -24px rgb(54 30 12 / 0.6);
+	}
+	a.sheet {
+		transition:
+			transform 0.35s var(--ease-out-expo),
+			box-shadow 0.35s var(--ease-out-expo);
+	}
+	a.sheet:hover {
+		transform: translateY(-4px) rotate(-0.4deg);
+		box-shadow: 0 30px 40px -24px rgb(54 30 12 / 0.65);
+	}
+
+	/* One dab of paint, the list marker of this site */
+	.dab {
+		display: inline-block;
+		flex: none;
+		width: 2.1rem;
+		height: 0.7rem;
+		border-radius: 62% 38% 55% 45% / 58% 62% 38% 42%;
+		background-color: var(--dab, var(--color-forest));
+		background-image: url('/art/impasto-strong.webp');
+		background-blend-mode: soft-light;
+		background-size: 90px;
+		rotate: -7deg;
+	}
+
+	/* Buttons are one loaded brush stroke */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6em;
+		min-height: 3.25rem;
+		padding: 0.7em 1.5em;
+		font-weight: 700;
+		font-size: 1.05rem;
+		letter-spacing: -0.01em;
+		white-space: nowrap;
+		cursor: pointer;
+		color: var(--btn-fg, var(--color-cream));
+		background-color: var(--btn-bg, var(--color-forest));
+		background-image: url('/art/impasto-strong.webp');
+		background-blend-mode: soft-light;
+		background-size: 240px;
+		border-radius: 1.9rem 1.5rem 1.8rem 1.4rem / 1.5rem 1.9rem 1.4rem 1.8rem;
+		box-shadow: 0 12px 18px -12px rgb(40 26 12 / 0.75);
+		transition:
+			transform 0.3s var(--ease-out-expo),
+			background-color 0.3s ease,
+			box-shadow 0.3s var(--ease-out-expo);
+	}
+	.btn:hover {
+		transform: translateY(-2px) rotate(-0.8deg);
+		background-color: var(--btn-bg-hover, var(--color-pine));
+		box-shadow: 0 18px 22px -14px rgb(40 26 12 / 0.8);
+	}
+	.btn:active {
+		transform: translateY(0) scale(0.98);
+	}
+	.btn-ink {
+		--btn-bg: var(--color-ink);
+		--btn-bg-hover: var(--color-forest);
+	}
+	.btn-light {
+		--btn-bg: var(--color-cream);
+		--btn-bg-hover: var(--color-sun);
+		--btn-fg: var(--color-ink);
+	}
+	.btn-sm {
+		min-height: 2.6rem;
+		padding: 0.45em 1.15em;
+		font-size: 0.95rem;
+	}
+	.btn svg,
+	.stroke-link svg {
+		transition: transform 0.3s var(--ease-out-expo);
+	}
+	.btn:hover svg,
+	.stroke-link:hover svg {
+		transform: translate(2px, -2px);
+	}
+
+	/* Text links: a thin stroke that fills in like a highlighter */
+	.stroke-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		font-weight: 600;
+		background-image: linear-gradient(
+			var(--stroke, var(--color-sun)),
+			var(--stroke, var(--color-sun))
+		);
+		background-repeat: no-repeat;
+		background-position: 0 100%;
+		background-size: 100% 0.16em;
+		transition: background-size 0.3s var(--ease-out-expo);
+	}
+	.stroke-link:hover {
+		background-size: 100% 100%;
+		color: var(--color-ink);
+	}
+
+	/* Small plain labels for stacks and tags */
+	.tag {
+		display: inline-block;
+		border: 1px solid var(--color-line);
+		border-radius: 999px;
+		padding: 0.2em 0.8em;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		line-height: 1.5;
+	}
 }
 
 /* Scroll reveals (see RevealObserver). Content stays visible without JS. */
@@ -102,86 +309,19 @@ html.gl .hero-name {
 }
 .js [data-reveal] {
 	transition:
-		opacity 1.1s var(--ease-out-expo) var(--rd, 0s),
-		transform 1.1s var(--ease-out-expo) var(--rd, 0s),
-		filter 1.1s var(--ease-out-expo) var(--rd, 0s);
+		opacity 0.9s var(--ease-out-expo) var(--rd, 0s),
+		transform 0.9s var(--ease-out-expo) var(--rd, 0s);
 }
 .js [data-reveal]:not(.is-in) {
 	opacity: 0;
-	transform: translateY(var(--ry, 32px));
-	filter: blur(8px);
+	transform: translateY(var(--ry, 24px));
 }
 .scroll-word {
 	opacity: clamp(
-		0.4,
-		calc(0.4 + (var(--p, 1) * (var(--n) + 4) - var(--i)) * 0.2),
+		0.32,
+		calc(0.32 + (var(--p, 1) * (var(--n) + 4) - var(--i)) * 0.2),
 		1
 	);
-}
-
-/* Film grain */
-.grain {
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-	animation: grain 0.9s steps(4) infinite;
-}
-@keyframes grain {
-	0% {
-		transform: translate(0, 0);
-	}
-	25% {
-		transform: translate(-3%, 2%);
-	}
-	50% {
-		transform: translate(2%, -3%);
-	}
-	75% {
-		transform: translate(-2%, -1%);
-	}
-	100% {
-		transform: translate(0, 0);
-	}
-}
-
-/* A soft dark halo behind running text, a second guard for legibility over particles */
-main :is(h2, h3, p, dd, dt, li > a) {
-	text-shadow:
-		0 0 1px rgb(10 10 9 / 0.9),
-		0 0 12px rgb(10 10 9 / 0.85),
-		0 0 28px rgb(10 10 9 / 0.6);
-}
-
-/* Oversized background type: filled, barely there */
-.text-ghost {
-	color: rgb(239 235 227 / 0.06);
-}
-
-/* Panels: square, hairline, with registration marks in the corners */
-.glass {
-	--mark: rgb(239 235 227 / 0.55);
-	position: relative;
-	background: rgb(14 13 12 / 0.74);
-	backdrop-filter: blur(14px) saturate(1.1);
-	-webkit-backdrop-filter: blur(14px) saturate(1.1);
-	border: 1px solid var(--color-line);
-}
-.glass::before {
-	content: '';
-	position: absolute;
-	inset: -1px;
-	pointer-events: none;
-	background:
-		linear-gradient(var(--mark), var(--mark)) top left / 12px 1px no-repeat,
-		linear-gradient(var(--mark), var(--mark)) top left / 1px 12px no-repeat,
-		linear-gradient(var(--mark), var(--mark)) top right / 12px 1px no-repeat,
-		linear-gradient(var(--mark), var(--mark)) top right / 1px 12px no-repeat,
-		linear-gradient(var(--mark), var(--mark)) bottom left / 12px 1px no-repeat,
-		linear-gradient(var(--mark), var(--mark)) bottom left / 1px 12px no-repeat,
-		linear-gradient(var(--mark), var(--mark)) bottom right / 12px 1px no-repeat,
-		linear-gradient(var(--mark), var(--mark)) bottom right / 1px 12px no-repeat;
-	transition: --mark 0.4s ease;
-}
-.glass:hover {
-	--mark: var(--color-accent);
 }
 
 .caret::after {
@@ -191,8 +331,8 @@ main :is(h2, h3, p, dd, dt, li > a) {
 	height: 1.1em;
 	margin-left: 2px;
 	vertical-align: -0.2em;
-	background: var(--color-accent);
-	opacity: 0.8;
+	background: var(--color-sun);
+	opacity: 0.9;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -204,10 +344,4 @@ main :is(h2, h3, p, dd, dt, li > a) {
 		transition-duration: 0.001ms !important;
 		scroll-behavior: auto !important;
 	}
-}
-
-@property --mark {
-	syntax: '<color>';
-	inherits: false;
-	initial-value: rgb(239 235 227 / 0.55);
 }

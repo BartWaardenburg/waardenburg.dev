@@ -6,7 +6,6 @@ import {
 	useMotionValue,
 	useMotionValueEvent,
 	useReducedMotion,
-	type MotionValue,
 } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -16,51 +15,48 @@ interface TerminalLine {
 }
 
 const STYLE: Record<TerminalLine['kind'], string> = {
-	cmd: 'text-fg',
-	dim: 'text-dim',
+	cmd: 'text-[#fff8ea] font-semibold',
+	dim: 'text-[#f4ecdc]/55',
 	blank: '',
-	head: 'text-fg font-bold',
-	path: 'text-muted',
-	fail: 'text-wine',
+	head: 'text-sun font-bold',
+	path: 'text-[#cdd6bc]',
+	fail: 'text-[#f39270]',
 };
 
 interface TerminalProps {
 	lines: TerminalLine[];
 	title?: string;
-	/** 0..1 drives the typing from scroll; without it the terminal types itself once seen */
-	progress?: MotionValue<number> | undefined;
 	className?: string;
 }
 
-/** A terminal window that types out its session, scrubbed by scroll or on its own. */
+/** A terminal window that types out its session the first time it is seen. */
 export function Terminal({
 	lines,
-	title = 'zsh — fallow',
-	progress,
+	title = 'zsh: fallow',
 	className,
 }: TerminalProps) {
 	const ref = useRef<HTMLDivElement>(null);
 	const reduce = useReducedMotion();
 	const inView = useInView(ref, { once: true, margin: '0px 0px -15% 0px' });
 	const total = lines.reduce((s, l) => s + Math.max(1, l.text.length), 0);
-	const auto = useMotionValue(0);
+	const typed = useMotionValue(0);
 	const [chars, setChars] = useState(total);
 	const [ready, setReady] = useState(false);
-	const source = progress ?? auto;
 
+	// server HTML carries the full session; once hydrated, start from an empty prompt
 	useEffect(() => {
 		if (reduce) return;
 		setReady(true);
-		setChars(Math.floor(source.get() * total));
-	}, [reduce, source, total]);
+		setChars(Math.floor(typed.get() * total));
+	}, [reduce, typed, total]);
 
 	useEffect(() => {
-		if (progress || !inView || reduce) return;
-		const c = animate(auto, 1, { duration: 3.2, ease: 'linear', delay: 0.2 });
+		if (!inView || reduce) return;
+		const c = animate(typed, 1, { duration: 3.2, ease: 'linear', delay: 0.2 });
 		return () => c.stop();
-	}, [auto, inView, progress, reduce]);
+	}, [typed, inView, reduce]);
 
-	useMotionValueEvent(source, 'change', (v) => {
+	useMotionValueEvent(typed, 'change', (v) => {
 		if (!ready) return;
 		const next = Math.floor(Math.min(1, Math.max(0, v)) * total);
 		setChars((prev) => (prev === next ? prev : next));
@@ -72,18 +68,20 @@ export function Terminal({
 	return (
 		<div
 			ref={ref}
-			className={`glass shadow-[0_40px_120px_-40px_rgb(0_0_0/0.9)] ${className ?? ''}`}
+			className={`overflow-hidden rounded-xl bg-[#15110c] text-[#f4ecdc] shadow-[0_30px_44px_-22px_rgb(0_0_0/0.85)] ${className ?? ''}`}
 		>
-			<div className="flex items-center gap-2 border-b border-line px-4 py-3">
-				<span className="size-2 bg-wine" />
-				<span className="size-2 bg-ochre" />
-				<span className="size-2 bg-sage" />
-				<span className="ml-3 font-mono text-[11px] text-dim">{title}</span>
+			<div className="flex items-center gap-2 border-b border-[#f4ecdc]/10 px-4 py-3">
+				<span className="size-2.5 rounded-full bg-clay" />
+				<span className="size-2.5 rounded-full bg-sun" />
+				<span className="size-2.5 rounded-full bg-sage" />
+				<span className="ml-3 font-mono text-[11px] text-[#f4ecdc]/60">
+					{title}
+				</span>
 			</div>
 			<p className="sr-only">{lines.map((l) => l.text).join('\n')}</p>
 			<pre
 				aria-hidden
-				className="min-h-[19.5rem] p-5 font-mono text-[11px] leading-relaxed break-words whitespace-pre-wrap sm:text-xs"
+				className="min-h-[19.5rem] p-5 font-mono text-[11px] leading-relaxed break-words whitespace-pre-wrap sm:text-xs md:text-[13px]"
 			>
 				{lines.map((line, i) => {
 					const len = Math.max(1, line.text.length);
@@ -101,14 +99,14 @@ export function Terminal({
 							className={`${STYLE[line.kind]} min-h-[1.6em]`}
 							aria-hidden
 						>
-							{line.kind === 'cmd' && <span className="text-accent">❯ </span>}
+							{line.kind === 'cmd' && <span className="text-sun">❯ </span>}
 							<span className={caret ? 'caret' : ''}>{text}</span>
 						</div>
 					);
 				})}
 				{!caretPlaced && (
 					<div aria-hidden>
-						<span className="text-accent">❯ </span>
+						<span className="text-sun">❯ </span>
 						<span className="caret" />
 					</div>
 				)}

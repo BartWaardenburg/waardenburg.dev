@@ -99,13 +99,12 @@ export const viewport: Viewport = {
 	width: 'device-width',
 	initialScale: 1,
 	maximumScale: 5,
-	themeColor: '#07070a',
-	colorScheme: 'dark',
+	themeColor: '#f6efe1',
+	colorScheme: 'light',
 };
 
-// Decide before first paint whether the particle field will draw the hero name,
-// so the fallback text never flashes.
-const glProbe = `(function(){document.documentElement.classList.add('js');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var c=document.createElement('canvas');if(c.getContext('webgl2'))document.documentElement.classList.add('gl');}catch(e){}})();`;
+// Marks the document as scripted before first paint, so scroll reveals can start hidden.
+const jsProbe = `document.documentElement.classList.add('js');`;
 
 export default function RootLayout({
 	children,
@@ -119,7 +118,7 @@ export default function RootLayout({
 			suppressHydrationWarning
 		>
 			<head>
-				<script dangerouslySetInnerHTML={{ __html: glProbe }} />
+				<script dangerouslySetInnerHTML={{ __html: jsProbe }} />
 				<JsonLd />
 			</head>
 			<body>{children}</body>
