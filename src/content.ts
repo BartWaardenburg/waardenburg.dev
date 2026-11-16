@@ -401,6 +401,16 @@ export const logos = {
 	isagentready: '/logos/isagentready.svg',
 } as const;
 
+/**
+ * Logos whose text is too small to read on the page. An entry with one of these
+ * keeps its written title; all other entries show the logo in place of the title.
+ */
+export const crestLogos: ReadonlySet<string> = new Set([
+	logos.rijksoverheid,
+	logos.ind,
+	logos.rvig,
+]);
+
 export interface Client {
 	name: string;
 	logo: string;

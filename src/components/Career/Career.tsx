@@ -5,7 +5,10 @@ import { useRef } from 'react';
 
 import { Counter, Reveal, SplitWords } from '@/components/Motion';
 import { PaintedLogo } from '@/components/PaintedLogo';
-import { career } from '@/content';
+import { career, crestLogos } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
+import signpost from '@/assets/signpost.webp';
+import { PaintedProp } from '@/components/PaintedProp';
 
 const FIRST_YEAR = 2013;
 
@@ -23,6 +26,7 @@ export function Career() {
 			aria-labelledby="career-title"
 			className="paint brushed wash-forest px-5 pt-28 pb-20 md:px-10 md:pt-40 md:pb-28"
 		>
+			<PaintLight />
 			<div className="mx-auto grid max-w-[1440px] gap-16 lg:grid-cols-[0.9fr_1.1fr]">
 				<div className="lg:sticky lg:top-28 lg:self-start">
 					<h2
@@ -50,6 +54,11 @@ export function Career() {
 						systems, accessibility, and architecture for sites with hundreds of
 						thousands of daily users.
 					</p>
+					<PaintedProp
+						image={signpost}
+						sizes="(min-width: 1024px) 220px, 150px"
+						className="mt-10 h-52 w-auto lg:h-72"
+					/>
 				</div>
 
 				<ol ref={list} className="relative">
@@ -74,8 +83,19 @@ export function Career() {
 							/>
 							<p className="font-mono text-xs text-accent">{r.years}</p>
 							<PaintedLogo logo={r.logo} className="mt-5 max-w-full" />
-							<h3 className="display mt-5 text-4xl md:text-5xl">{r.org}</h3>
-							<p className="mt-2 text-xl leading-tight font-semibold tracking-tight">
+							{/* a logo that shows the name stands in for the title */}
+							<h3
+								className={
+									crestLogos.has(r.logo)
+										? 'display mt-5 text-4xl md:text-5xl'
+										: 'sr-only'
+								}
+							>
+								{r.org}
+							</h3>
+							<p
+								className={`text-xl leading-tight font-semibold tracking-tight ${crestLogos.has(r.logo) ? 'mt-2' : 'mt-5'}`}
+							>
 								{r.role}
 							</p>
 							<p className="mt-4 max-w-2xl text-muted">{r.body}</p>

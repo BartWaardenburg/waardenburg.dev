@@ -1,0 +1,1 @@
+export { PaintedProp } from './PaintedProp';

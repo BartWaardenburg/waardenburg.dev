@@ -13,6 +13,7 @@ import allotment from '@/assets/allotment.jpg';
 import { Arrow } from '@/components/Arrow';
 import { SplitWords } from '@/components/Motion';
 import { hero, site } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -33,6 +34,7 @@ export function Hero() {
 			ref={ref}
 			className="paint wash-sky isolate flex min-h-[min(100svh,1080px)] flex-col overflow-hidden px-5 pt-28 pb-[clamp(300px,34vw,430px)] md:px-10 md:pt-36"
 		>
+			<PaintLight className="[mask-image:linear-gradient(black_16%,transparent_42%)]" />
 			{/* the painting stands on the bottom edge; its sky fades into the wash above it */}
 			<motion.div
 				aria-hidden

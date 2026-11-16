@@ -3,6 +3,7 @@ import { Counter, Reveal, SplitWords } from '@/components/Motion';
 import { Terminal } from '@/components/Terminal';
 import { fallow } from '@/content';
 import type { Stats } from '@/lib/stats';
+import { PaintLight } from '@/components/PaintLight';
 
 const external = { target: '_blank', rel: 'noopener noreferrer' } as const;
 
@@ -54,6 +55,7 @@ export function Fallow({ stats }: { stats: Stats }) {
 			aria-labelledby="fallow-title"
 			className="paint brushed wash-dawn px-5 py-28 md:px-10 md:py-40"
 		>
+			<PaintLight />
 			<div className="mx-auto max-w-[1440px]">
 				<div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:gap-16">
 					<div>

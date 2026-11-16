@@ -1,6 +1,7 @@
 import { SplitWords } from '@/components/Motion';
 import { PaintedLogo } from '@/components/PaintedLogo';
-import { clients } from '@/content';
+import { clients, crestLogos } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
 
 // the light paints of the sky, one after the other
 const PAINTS = ['#f4ecdc', '#f6c453', '#f2b8a8', '#cdd89a', '#d3bfec'];
@@ -13,6 +14,7 @@ export function Clients() {
 			aria-labelledby="clients-title"
 			className="paint wash-forest px-5 pt-16 pb-28 [--wash:linear-gradient(#173d30,#173d30)] md:px-10 md:pt-24 md:pb-40"
 		>
+			<PaintLight />
 			<div className="mx-auto max-w-[1440px]">
 				<h2
 					id="clients-title"
@@ -33,8 +35,15 @@ export function Clients() {
 								className="max-w-full sm:mt-1"
 							/>
 							<div>
-								<h3 className="display text-3xl">{c.name}</h3>
-								<p className="mt-1 text-sm font-medium text-muted">
+								{/* a logo that shows the name stands in for the title */}
+								<h3
+									className={
+										crestLogos.has(c.logo) ? 'display mb-1 text-3xl' : 'sr-only'
+									}
+								>
+									{c.name}
+								</h3>
+								<p className="text-sm font-medium text-muted">
 									via {c.via} ·{' '}
 									<span className="font-mono text-xs">{c.years}</span>
 								</p>

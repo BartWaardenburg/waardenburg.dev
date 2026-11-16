@@ -1,0 +1,1 @@
+export { PaintedBand } from './PaintedBand';

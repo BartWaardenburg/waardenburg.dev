@@ -5,6 +5,9 @@ import { useState } from 'react';
 import { Arrow } from '@/components/Arrow';
 import { Reveal, SplitWords } from '@/components/Motion';
 import { site } from '@/content';
+import { PaintLight } from '@/components/PaintLight';
+import mailbox from '@/assets/mailbox.webp';
+import { PaintedProp } from '@/components/PaintedProp';
 
 const COPIED_MS = 1800;
 
@@ -35,54 +38,62 @@ export function Contact() {
 			aria-labelledby="contact-title"
 			className="paint brushed wash-soil flex min-h-[80svh] flex-col justify-between px-5 pt-32 pb-8 md:px-10 md:pt-44"
 		>
-			<div className="mx-auto w-full max-w-[1440px]">
-				<h2
-					id="contact-title"
-					className="display -ml-[0.04em] text-[clamp(4.5rem,17vw,13rem)] leading-[0.8]"
-				>
-					<SplitWords
-						text="Let's *talk.*"
-						stagger={0.12}
-						accentClassName="ink-dusk"
-					/>
-				</h2>
-				<Reveal>
-					<p className="mt-8 text-xl font-semibold tracking-tight md:text-2xl">
-						{site.availability}
-					</p>
-					<p className="mt-4 max-w-xl text-lg text-muted">
-						DevRel, developer tools, growth engineering, or a hard tooling
-						problem you want explained well. I would love to hear about it.
-					</p>
-					<div className="mt-10 flex flex-wrap items-center gap-4">
-						<a href={`mailto:${site.email}`} className="btn btn-light">
-							{site.email}
-						</a>
-						<button
-							type="button"
-							onClick={copy}
-							className="stroke-link cursor-pointer px-1 py-2"
-						>
-							<span aria-live="polite">
-								{copied ? 'Copied' : 'Copy address'}
-							</span>
-						</button>
-					</div>
-					<ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3">
-						{LINKS.map((l) => (
-							<li key={l.label}>
-								<a
-									href={l.href}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="stroke-link"
-								>
-									{l.label} <Arrow />
-								</a>
-							</li>
-						))}
-					</ul>
-				</Reveal>
+			<PaintLight />
+			<div className="mx-auto grid w-full max-w-[1440px] gap-x-12 gap-y-14 lg:grid-cols-[1fr_auto] lg:items-end">
+				<div>
+					<h2
+						id="contact-title"
+						className="display -ml-[0.04em] text-[clamp(4.5rem,17vw,13rem)] leading-[0.8]"
+					>
+						<SplitWords
+							text="Let's *talk.*"
+							stagger={0.12}
+							accentClassName="ink-dusk"
+						/>
+					</h2>
+					<Reveal>
+						<p className="mt-8 text-xl font-semibold tracking-tight md:text-2xl">
+							{site.availability}
+						</p>
+						<p className="mt-4 max-w-xl text-lg text-muted">
+							DevRel, developer tools, growth engineering, or a hard tooling
+							problem you want explained well. I would love to hear about it.
+						</p>
+						<div className="mt-10 flex flex-wrap items-center gap-4">
+							<a href={`mailto:${site.email}`} className="btn btn-light">
+								{site.email}
+							</a>
+							<button
+								type="button"
+								onClick={copy}
+								className="stroke-link cursor-pointer px-1 py-2"
+							>
+								<span aria-live="polite">
+									{copied ? 'Copied' : 'Copy address'}
+								</span>
+							</button>
+						</div>
+						<ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3">
+							{LINKS.map((l) => (
+								<li key={l.label}>
+									<a
+										href={l.href}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="stroke-link"
+									>
+										{l.label} <Arrow />
+									</a>
+								</li>
+							))}
+						</ul>
+					</Reveal>
+				</div>
+				<PaintedProp
+					image={mailbox}
+					sizes="(min-width: 1024px) 480px, 260px"
+					className="h-56 w-auto justify-self-end sm:h-72 lg:h-[26rem]"
+				/>
 			</div>
 
 			<footer className="mx-auto mt-24 w-full max-w-[1440px] border-t border-line pt-6 text-sm text-muted">
