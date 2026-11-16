@@ -5,7 +5,7 @@ import { useRef } from 'react';
 
 import { Counter, Reveal, SplitWords } from '@/components/Motion';
 import { PaintedLogo } from '@/components/PaintedLogo';
-import { career } from '@/content';
+import { career, crestLogos } from '@/content';
 import { PaintLight } from '@/components/PaintLight';
 import signpost from '@/assets/signpost.webp';
 import { PaintedProp } from '@/components/PaintedProp';
@@ -83,8 +83,19 @@ export function Career() {
 							/>
 							<p className="font-mono text-xs text-accent">{r.years}</p>
 							<PaintedLogo logo={r.logo} className="mt-5 max-w-full" />
-							<h3 className="display mt-5 text-4xl md:text-5xl">{r.org}</h3>
-							<p className="mt-2 text-xl leading-tight font-semibold tracking-tight">
+							{/* a logo that shows the name stands in for the title */}
+							<h3
+								className={
+									crestLogos.has(r.logo)
+										? 'display mt-5 text-4xl md:text-5xl'
+										: 'sr-only'
+								}
+							>
+								{r.org}
+							</h3>
+							<p
+								className={`text-xl leading-tight font-semibold tracking-tight ${crestLogos.has(r.logo) ? 'mt-2' : 'mt-5'}`}
+							>
 								{r.role}
 							</p>
 							<p className="mt-4 max-w-2xl text-muted">{r.body}</p>
