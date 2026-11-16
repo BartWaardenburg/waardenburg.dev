@@ -1,0 +1,1 @@
+export { PaintedLogo } from './PaintedLogo';

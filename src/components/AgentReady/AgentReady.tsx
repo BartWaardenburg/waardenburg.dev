@@ -30,12 +30,6 @@ const grade =
 					: 'D';
 
 const BAR_TINTS = ['bg-forest', 'bg-clay', 'bg-sun', 'bg-forest', 'bg-clay'];
-const DABS = [
-	'[--dab:var(--color-forest)]',
-	'[--dab:var(--color-clay)]',
-	'[--dab:var(--color-sun)]',
-	'[--dab:#8e76b8]',
-];
 
 function CategoryBar({
 	drive,
@@ -191,7 +185,7 @@ export function AgentReady() {
 						>
 							<SplitWords text={iar.name} />
 						</h2>
-						<p className="mt-5 max-w-2xl font-serif text-3xl leading-tight italic md:text-4xl">
+						<p className="mt-5 max-w-2xl text-2xl leading-tight font-semibold tracking-tight text-balance md:text-3xl">
 							{iar.tagline}
 						</p>
 						<p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
@@ -223,9 +217,13 @@ export function AgentReady() {
 
 				<ul className="mt-20 grid gap-x-10 gap-y-10 sm:grid-cols-2 md:mt-28 lg:grid-cols-4">
 					{iar.surfaces.map((s, i) => (
-						<Reveal as="li" key={s.name} delay={i * 0.08}>
-							<span aria-hidden className={`dab ${DABS[i % DABS.length]}`} />
-							<h3 className="display mt-4 text-3xl">{s.name}</h3>
+						<Reveal
+							as="li"
+							key={s.name}
+							delay={i * 0.08}
+							className="border-t-2 border-fg pt-5"
+						>
+							<h3 className="display text-3xl">{s.name}</h3>
 							<p className="mt-2 text-muted">{s.body}</p>
 						</Reveal>
 					))}

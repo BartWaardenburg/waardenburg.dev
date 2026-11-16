@@ -43,9 +43,7 @@ function Cover({ talk, tint }: { talk: Talk; tint: number }) {
 				<span
 					className={`absolute inset-0 flex items-end bg-[url('/art/impasto-strong.webp')] bg-[length:280px] p-5 bg-blend-soft-light ${COVER_TINTS[Math.max(0, tint) % COVER_TINTS.length]}`}
 				>
-					<span className="font-serif text-4xl leading-none text-cream italic">
-						{talk.event}
-					</span>
+					<span className="display text-3xl text-cream">{talk.event}</span>
 				</span>
 			)}
 		</a>
@@ -99,7 +97,7 @@ export function Talks() {
 					>
 						<SplitWords
 							text="I explain things *on stage.*"
-							italicClassName="text-soil"
+							accentClassName="ink-meadow"
 						/>
 					</h2>
 					<dl className="grid grid-cols-3 gap-6">

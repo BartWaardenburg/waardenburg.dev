@@ -61,7 +61,7 @@ export function Hero() {
 						text="*Teach.*"
 						immediate
 						delay={0.12}
-						italicClassName="text-pine"
+						accentClassName="ink-meadow"
 						className="block"
 					/>
 				</h1>
@@ -83,13 +83,6 @@ export function Hero() {
 							Get in touch <Arrow />
 						</a>
 					</div>
-					<p className="sheet mt-7 inline-flex items-center gap-3 !rounded-full px-4 py-2 text-sm font-semibold">
-						<span
-							aria-hidden
-							className="dab h-3 w-3 rotate-0 [--dab:var(--color-clay)]"
-						/>
-						{site.availability}
-					</p>
 				</motion.div>
 			</motion.div>
 		</section>

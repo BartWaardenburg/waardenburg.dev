@@ -225,7 +225,7 @@ export interface Contribution {
 	url: string;
 }
 
-// Merged pull requests to other projects, newest first.
+// Fixes that landed in other projects, newest first.
 export const contributions: Contribution[] = [
 	{
 		project: 'Turso · libsql-client-ts',
@@ -259,9 +259,9 @@ export const contributions: Contribution[] = [
 	},
 	{
 		project: 'Preact SSR prepass',
-		what: 'Skip effects during prepass so components with layout effects render on the server',
+		what: 'Reported that prepass fails on layout effects and proposed the fix. The maintainers landed it, with credit, in the linked pull request',
 		year: '2020',
-		url: 'https://github.com/preactjs/preact-ssr-prepass/pull/6',
+		url: 'https://github.com/preactjs/preact-ssr-prepass/pull/9',
 	},
 	{
 		project: 'Storybook',
@@ -290,7 +290,10 @@ export const talks: Talk[] = [
 		place: 'London',
 		date: 'Oct 2026',
 		body: 'Generating a React component takes seconds. Changing a real React or Next.js codebase safely does not. How codebase intelligence gives agents the system context to know what is dead, what is duplicated and which boundaries a refactor crosses.',
-		link: { url: 'https://reactadvanced.com/', label: 'Event page' },
+		link: {
+			url: 'https://gitnation.com/contents/agentic-engineering-for-react-teams-the-tooling-behind-20x-productivity',
+			label: 'Watch on GitNation',
+		},
 		featured: true,
 	},
 	{
@@ -376,7 +379,7 @@ export const teaching = [
 	{ value: '35', label: 'developers in the chapter I led at ANWB' },
 ];
 
-/** Official logo files in public/logos. */
+/** Official logo files in public/logos. The page paints them through the masks in public/logos/paint. */
 export const logos = {
 	anwb: '/logos/anwb.svg',
 	incentro: '/logos/incentro.svg',

@@ -4,6 +4,7 @@ import { motion, useScroll, useSpring } from 'motion/react';
 import { useRef } from 'react';
 
 import { Counter, Reveal, SplitWords } from '@/components/Motion';
+import { PaintedLogo } from '@/components/PaintedLogo';
 import { career } from '@/content';
 
 const FIRST_YEAR = 2013;
@@ -28,7 +29,10 @@ export function Career() {
 						id="career-title"
 						className="display text-[clamp(3.25rem,8vw,7rem)] leading-[0.86]"
 					>
-						<SplitWords text="The long *trail* here." />
+						<SplitWords
+							text="The long *trail* here."
+							accentClassName="ink-dusk"
+						/>
 					</h2>
 					<div className="mt-10 flex items-end gap-4">
 						<span className="display text-[clamp(5.5rem,12vw,10.5rem)] leading-[0.8] text-accent">
@@ -66,11 +70,12 @@ export function Career() {
 						>
 							<span
 								aria-hidden
-								className="dab absolute top-2 -left-[2px] h-4 w-5 [--dab:var(--color-sun)]"
+								className="absolute top-[0.45rem] left-0 h-0.5 w-4 rounded-full bg-accent"
 							/>
 							<p className="font-mono text-xs text-accent">{r.years}</p>
-							<h3 className="display mt-2 text-4xl md:text-5xl">{r.org}</h3>
-							<p className="mt-2 font-serif text-2xl leading-tight italic">
+							<PaintedLogo logo={r.logo} className="mt-5 max-w-full" />
+							<h3 className="display mt-5 text-4xl md:text-5xl">{r.org}</h3>
+							<p className="mt-2 text-xl leading-tight font-semibold tracking-tight">
 								{r.role}
 							</p>
 							<p className="mt-4 max-w-2xl text-muted">{r.body}</p>

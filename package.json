@@ -17,6 +17,7 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"generate:favicons": "node scripts/generate-favicons.mjs",
+		"generate:logo-masks": "node scripts/generate-logo-masks.mjs && prettier --write src/lib/logoMasks.ts",
 		"prepare": "husky"
 	},
 	"dependencies": {

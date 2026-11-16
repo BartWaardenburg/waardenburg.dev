@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 
 import { JsonLd } from '@/components/JsonLd';
-import { display, mono, serif } from '@/fonts';
+import { display, mono } from '@/fonts';
 import '@/styles/globals.css';
 
 const title = 'Bart Waardenburg — Developer tools, talks & teaching';
@@ -114,7 +114,7 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			className={`${display.variable} ${mono.variable} ${serif.variable}`}
+			className={`${display.variable} ${mono.variable}`}
 			suppressHydrationWarning
 		>
 			<head>
